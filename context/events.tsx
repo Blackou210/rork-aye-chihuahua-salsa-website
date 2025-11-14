@@ -1,11 +1,10 @@
 import createContextHook from "@nkzw/create-context-hook";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Event, EVENTS as DEFAULT_EVENTS } from "../constants/events";
+import { Event } from "../constants/events";
 
 const STORAGE_KEY = "ayechihuahua_events";
-const EMPTY_EVENTS_JSON = "[]";
-const DEFAULT_EVENT_IDS = new Set(DEFAULT_EVENTS.map((event) => event.id));
+const HAS_INITIALIZED_KEY = "ayechihuahua_events_initialized";
 
 const isValidEvent = (value: unknown): value is Event => {
   if (!value || typeof value !== "object") {
@@ -28,7 +27,7 @@ const sanitizeEvents = (raw: unknown): Event[] => {
   if (!Array.isArray(raw)) {
     return [];
   }
-  return raw.filter((item) => isValidEvent(item) && !DEFAULT_EVENT_IDS.has(item.id));
+  return raw.filter((item) => isValidEvent(item));
 };
 
 export const [EventsProvider, useEvents] = createContextHook(() => {
@@ -42,12 +41,14 @@ export const [EventsProvider, useEvents] = createContextHook(() => {
       console.log("Loading events from storage");
       try {
         const stored = await AsyncStorage.getItem(STORAGE_KEY);
+        
         if (!stored) {
-          console.log("Storage empty, initializing with no events");
+          console.log("Storage empty, initializing with empty array");
           if (isActive) {
             setEvents([]);
           }
-          await AsyncStorage.setItem(STORAGE_KEY, EMPTY_EVENTS_JSON);
+          await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+          await AsyncStorage.setItem(HAS_INITIALIZED_KEY, "true");
           return;
         }
 
@@ -58,17 +59,18 @@ export const [EventsProvider, useEvents] = createContextHook(() => {
           console.log("Stored events were not an array, resetting storage");
           await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(sanitized));
         } else if (sanitized.length !== parsed.length) {
-          console.log("Removed invalid or default events:", parsed.length - sanitized.length);
+          console.log("Removed invalid events:", parsed.length - sanitized.length);
           await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(sanitized));
         }
 
         if (isActive) {
           setEvents(sanitized);
-          console.log("Events in memory:", sanitized.length);
+          console.log("Events loaded:", sanitized.length);
         }
       } catch (error) {
         console.error("Failed to load events:", error);
         await AsyncStorage.removeItem(STORAGE_KEY);
+        await AsyncStorage.removeItem(HAS_INITIALIZED_KEY);
         if (isActive) {
           setEvents([]);
         }
