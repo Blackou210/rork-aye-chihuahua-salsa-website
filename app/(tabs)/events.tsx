@@ -1,7 +1,7 @@
 import Colors from "@/constants/colors";
 import { Event } from "@/constants/events";
 import { useEvents } from "@/context/events";
-import { Calendar, MapPin, Clock } from "lucide-react-native";
+import { Calendar, MapPin, Clock, Map } from "lucide-react-native";
 import React from "react";
 import { FlatList, ImageBackground, Linking, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
 
@@ -17,6 +17,25 @@ export default function EventsScreen() {
   }
   const handleGetDirections = (address: string) => {
     const url = `https://maps.google.com/?q=${encodeURIComponent(address)}`;
+    Linking.openURL(url);
+  };
+
+  const handleViewAllOnMap = () => {
+    const upcomingEvents = EVENTS.filter(event => isUpcoming(event.date));
+    if (upcomingEvents.length === 0) {
+      const url = `https://maps.google.com/`;
+      Linking.openURL(url);
+      return;
+    }
+    
+    if (upcomingEvents.length === 1) {
+      const url = `https://maps.google.com/?q=${encodeURIComponent(upcomingEvents[0].address)}`;
+      Linking.openURL(url);
+      return;
+    }
+    
+    const addresses = upcomingEvents.map(e => e.address).join(' | ');
+    const url = `https://maps.google.com/?q=${encodeURIComponent(addresses)}`;
     Linking.openURL(url);
   };
 
@@ -106,10 +125,20 @@ export default function EventsScreen() {
       imageStyle={styles.backgroundImage}
     >
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Find Us At</Text>
-        <Text style={styles.headerSubtitle}>
-          {upcomingEvents.length} upcoming {upcomingEvents.length === 1 ? 'event' : 'events'}
-        </Text>
+        <View style={styles.headerTextContainer}>
+          <Text style={styles.headerTitle}>Find Us At</Text>
+          <Text style={styles.headerSubtitle}>
+            {upcomingEvents.length} upcoming {upcomingEvents.length === 1 ? 'event' : 'events'}
+          </Text>
+        </View>
+        <TouchableOpacity
+          style={styles.mapButton}
+          onPress={handleViewAllOnMap}
+          activeOpacity={0.7}
+        >
+          <Map size={20} color="#fff" />
+          <Text style={styles.mapButtonText}>Map</Text>
+        </TouchableOpacity>
       </View>
 
       <FlatList
@@ -139,11 +168,17 @@ const styles = StyleSheet.create({
     opacity: 0.2,
   },
   header: {
+    flexDirection: "row" as const,
+    justifyContent: "space-between" as const,
+    alignItems: "center" as const,
     paddingHorizontal: 20,
     paddingVertical: 16,
     backgroundColor: Colors.light.cardBg,
     borderBottomWidth: 1,
     borderBottomColor: Colors.light.border,
+  },
+  headerTextContainer: {
+    flex: 1,
   },
   headerTitle: {
     fontSize: 24,
@@ -154,6 +189,25 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.light.textSecondary,
     marginTop: 2,
+  },
+  mapButton: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    gap: 6,
+    backgroundColor: Colors.light.primary,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  mapButtonText: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "600" as const,
   },
   eventList: {
     padding: 16,
