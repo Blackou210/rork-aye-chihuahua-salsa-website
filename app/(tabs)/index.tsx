@@ -3,7 +3,7 @@ import { PRODUCTS } from "@/constants/products";
 import { useCart } from "@/context/cart";
 import { Product, SalsaSize } from "@/types/order";
 import { Image } from "expo-image";
-import { ShoppingCart, MapPin, Clock, Facebook, Instagram } from "lucide-react-native";
+import { ShoppingCart, MapPin, Clock, Facebook, Instagram, Navigation } from "lucide-react-native";
 import React, { useState } from "react";
 import { ImageBackground, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View, Linking, Pressable } from "react-native";
 import { router } from "expo-router";
@@ -151,6 +151,16 @@ export default function HomeScreen() {
                       <Text style={styles.eventInfoText}>{event.startTime} - {event.endTime}</Text>
                     </View>
                   </View>
+                  <TouchableOpacity 
+                    style={styles.mapButton}
+                    onPress={() => {
+                      const encodedAddress = encodeURIComponent(event.address);
+                      Linking.openURL(`https://maps.google.com/?q=${encodedAddress}`);
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <Navigation size={20} color={Colors.light.primary} />
+                  </TouchableOpacity>
                 </View>
               );
             })}
@@ -335,6 +345,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     padding: 16,
     flexDirection: "row" as const,
+    alignItems: "center" as const,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -365,6 +376,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center" as const,
     gap: 4,
+    marginRight: 12,
+  },
+  mapButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: Colors.light.primary + "20",
+    justifyContent: "center" as const,
+    alignItems: "center" as const,
   },
   eventTitle: {
     fontSize: 16,
