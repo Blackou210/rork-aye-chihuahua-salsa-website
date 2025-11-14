@@ -119,20 +119,30 @@ export default function AdminScreen() {
   };
 
   const handleDelete = (event: Event) => {
+    console.log('\n=== handleDelete called ===');
+    console.log('Event to delete:', { id: event.id, title: event.title, idType: typeof event.id });
+    
     Alert.alert(
       "Delete Event",
       `Are you sure you want to delete "${event.title}"?`,
       [
-        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Cancel", 
+          style: "cancel",
+          onPress: () => console.log('Delete cancelled')
+        },
         {
           text: "Delete",
           style: "destructive",
           onPress: async () => {
+            console.log('\n=== Delete confirmed ===');
+            console.log('Calling deleteEvent with id:', event.id);
             try {
               await deleteEvent(event.id);
+              console.log('\u2705 deleteEvent completed successfully');
             } catch (error) {
-              Alert.alert("Error", "Failed to delete event");
-              console.error("Delete error:", error);
+              console.error('\u274c Delete error:', error);
+              Alert.alert("Error", "Failed to delete event: " + (error instanceof Error ? error.message : String(error)));
             }
           },
         },

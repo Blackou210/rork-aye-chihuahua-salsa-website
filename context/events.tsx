@@ -77,27 +77,43 @@ export const [EventsProvider, useEvents] = createContextHook(() => {
   }, []);
 
   const deleteEvent = useCallback(async (id: string) => {
-    console.log('Deleting event with id:', id);
-    try {
-      setEvents((currentEvents) => {
-        const updatedEvents = currentEvents.filter((event) => event.id !== id);
-        console.log('Events before delete:', currentEvents.length);
-        console.log('Events after delete:', updatedEvents.length);
-        
-        AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedEvents))
-          .then(() => {
-            console.log('Event deleted successfully, new total:', updatedEvents.length);
-          })
-          .catch((error) => {
-            console.error("Failed to save events after delete:", error);
+    console.log('=== START DELETE EVENT ===');
+    console.log('Attempting to delete event with id:', id);
+    console.log('ID type:', typeof id);
+    
+    return new Promise<void>((resolve, reject) => {
+      try {
+        setEvents((currentEvents) => {
+          console.log('Current events count:', currentEvents.length);
+          console.log('Current event IDs:', currentEvents.map(e => ({ id: e.id, type: typeof e.id, title: e.title })));
+          
+          const updatedEvents = currentEvents.filter((event) => {
+            const matches = event.id !== id;
+            console.log(`Event ${event.id} (type: ${typeof event.id}) vs ${id} (type: ${typeof id}): keep=${matches}`);
+            return matches;
           });
-        
-        return updatedEvents;
-      });
-    } catch (error) {
-      console.error('Error in deleteEvent:', error);
-      throw error;
-    }
+          
+          console.log('Events after filter:', updatedEvents.length);
+          console.log('=== SAVING TO STORAGE ===');
+          
+          AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedEvents))
+            .then(() => {
+              console.log('✅ Event deleted and saved successfully!');
+              console.log('Final event count:', updatedEvents.length);
+              resolve();
+            })
+            .catch((error) => {
+              console.error('❌ Failed to save events after delete:', error);
+              reject(error);
+            });
+          
+          return updatedEvents;
+        });
+      } catch (error) {
+        console.error('❌ Error in deleteEvent:', error);
+        reject(error);
+      }
+    });
   }, []);
 
   return useMemo(() => ({
