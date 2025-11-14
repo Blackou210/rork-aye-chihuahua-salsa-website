@@ -28,25 +28,18 @@ export default function HomeScreen() {
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  console.log('Today date for comparison:', today.toISOString());
+  const todayDateString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  console.log('Today date for comparison:', todayDateString);
   
   const upcomingEvents = events
     .filter(event => {
       console.log(`Checking event "${event.title}" with date: ${event.date}`);
-      const [year, month, day] = event.date.split('-').map(Number);
-      console.log(`Parsed: year=${year}, month=${month}, day=${day}`);
-      const eventDate = new Date(year, month - 1, day, 12, 0, 0);
-      console.log(`Event date object: ${eventDate.toISOString()}`);
-      const isUpcoming = eventDate >= today;
-      console.log(`Is upcoming: ${isUpcoming}`);
+      const isUpcoming = event.date >= todayDateString;
+      console.log(`Is upcoming: ${isUpcoming} (${event.date} >= ${todayDateString})`);
       return isUpcoming;
     })
     .sort((a, b) => {
-      const [aYear, aMonth, aDay] = a.date.split('-').map(Number);
-      const [bYear, bMonth, bDay] = b.date.split('-').map(Number);
-      const aDate = new Date(aYear, aMonth - 1, aDay);
-      const bDate = new Date(bYear, bMonth - 1, bDay);
-      return aDate.getTime() - bDate.getTime();
+      return a.date.localeCompare(b.date);
     })
     .slice(0, 3);
 
