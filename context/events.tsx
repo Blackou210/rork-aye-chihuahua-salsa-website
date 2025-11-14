@@ -19,7 +19,8 @@ const isValidEvent = (value: unknown): value is Event => {
     typeof candidate.date === "string" &&
     typeof candidate.startTime === "string" &&
     typeof candidate.endTime === "string" &&
-    (typeof candidate.description === "undefined" || typeof candidate.description === "string")
+    (typeof candidate.description === "undefined" || typeof candidate.description === "string") &&
+    typeof candidate.displayOnHome === "boolean"
   );
 };
 
@@ -103,6 +104,7 @@ export const [EventsProvider, useEvents] = createContextHook(() => {
       const newEvent: Event = {
         ...event,
         id: Date.now().toString(),
+        displayOnHome: event.displayOnHome ?? true,
       };
       console.log("Adding new event:", newEvent);
 

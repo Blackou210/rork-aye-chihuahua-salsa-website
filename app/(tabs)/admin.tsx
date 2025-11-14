@@ -3,7 +3,7 @@ import { Event } from "@/constants/events";
 import { useEvents } from "@/context/events";
 import { useCart } from "@/context/cart";
 import { Order, OrderStatus } from "@/types/order";
-import { Plus, Edit, Trash2, X, Save, Mail, MessageCircle, Clock, Check, PackageCheck, Lock, Phone, ChevronRight } from "lucide-react-native";
+import { Plus, Edit, Trash2, X, Save, Mail, MessageCircle, Clock, Check, PackageCheck, Lock, Phone, ChevronRight, Eye, EyeOff } from "lucide-react-native";
 import React, { useState, useCallback } from "react";
 import { useFocusEffect } from "expo-router";
 import {
@@ -55,6 +55,7 @@ export default function AdminScreen() {
     startTime: "",
     endTime: "",
     description: "",
+    displayOnHome: true,
   });
 
   const resetAuth = useCallback(() => {
@@ -83,6 +84,7 @@ export default function AdminScreen() {
       startTime: "",
       endTime: "",
       description: "",
+      displayOnHome: true,
     });
     setEditingEvent(null);
   };
@@ -105,6 +107,7 @@ export default function AdminScreen() {
       startTime: event.startTime,
       endTime: event.endTime,
       description: event.description || "",
+      displayOnHome: event.displayOnHome ?? true,
     });
     setModalVisible(true);
   };
@@ -411,7 +414,15 @@ export default function AdminScreen() {
   const renderEventItem = ({ item }: { item: Event }) => (
     <View style={styles.eventItem}>
       <View style={styles.eventItemContent}>
-        <Text style={styles.eventItemTitle}>{item.title}</Text>
+        <View style={styles.eventItemHeader}>
+          <Text style={styles.eventItemTitle}>{item.title}</Text>
+          <View style={[styles.displayBadge, item.displayOnHome ? styles.displayBadgeActive : styles.displayBadgeInactive]}>
+            {item.displayOnHome ? <Eye size={12} color="#fff" /> : <EyeOff size={12} color="#fff" />}
+            <Text style={styles.displayBadgeText}>
+              {item.displayOnHome ? "Visible" : "Hidden"}
+            </Text>
+          </View>
+        </View>
         <Text style={styles.eventItemDate}>{formatDate(item.date)}</Text>
         <Text style={styles.eventItemLocation}>{item.location}</Text>
       </View>
@@ -640,6 +651,36 @@ export default function AdminScreen() {
                 numberOfLines={4}
                 textAlignVertical="top"
               />
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Home Page Display</Text>
+              <TouchableOpacity
+                style={styles.toggleContainer}
+                onPress={() => setFormData({ ...formData, displayOnHome: !formData.displayOnHome })}
+                activeOpacity={0.7}
+              >
+                <View style={styles.toggleInfo}>
+                  {formData.displayOnHome ? (
+                    <Eye size={20} color={Colors.light.primary} />
+                  ) : (
+                    <EyeOff size={20} color={Colors.light.textSecondary} />
+                  )}
+                  <View style={styles.toggleTextContainer}>
+                    <Text style={styles.toggleLabel}>
+                      {formData.displayOnHome ? "Active" : "Disabled"}
+                    </Text>
+                    <Text style={styles.toggleSubtext}>
+                      {formData.displayOnHome 
+                        ? "Event will be shown on home screen" 
+                        : "Event will not be displayed on home screen"}
+                    </Text>
+                  </View>
+                </View>
+                <View style={[styles.toggle, formData.displayOnHome && styles.toggleActive]}>
+                  <View style={[styles.toggleThumb, formData.displayOnHome && styles.toggleThumbActive]} />
+                </View>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </View>
@@ -1059,5 +1100,84 @@ const styles = StyleSheet.create({
   },
   deleteStatusButton: {
     backgroundColor: "#EF4444",
+  },
+  eventItemHeader: {
+    flexDirection: "row" as const,
+    justifyContent: "space-between" as const,
+    alignItems: "center" as const,
+    marginBottom: 4,
+  },
+  displayBadge: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  displayBadgeActive: {
+    backgroundColor: Colors.light.success,
+  },
+  displayBadgeInactive: {
+    backgroundColor: Colors.light.textSecondary,
+  },
+  displayBadgeText: {
+    fontSize: 10,
+    fontWeight: "600" as const,
+    color: "#fff",
+  },
+  toggleContainer: {
+    backgroundColor: Colors.light.cardBg,
+    borderWidth: 1,
+    borderColor: Colors.light.border,
+    borderRadius: 12,
+    padding: 16,
+    flexDirection: "row" as const,
+    justifyContent: "space-between" as const,
+    alignItems: "center" as const,
+  },
+  toggleInfo: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    gap: 12,
+    flex: 1,
+  },
+  toggleTextContainer: {
+    flex: 1,
+  },
+  toggleLabel: {
+    fontSize: 16,
+    fontWeight: "600" as const,
+    color: Colors.light.text,
+    marginBottom: 2,
+  },
+  toggleSubtext: {
+    fontSize: 12,
+    color: Colors.light.textSecondary,
+  },
+  toggle: {
+    width: 52,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: Colors.light.border,
+    padding: 2,
+    justifyContent: "center" as const,
+  },
+  toggleActive: {
+    backgroundColor: Colors.light.primary,
+  },
+  toggleThumb: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  toggleThumbActive: {
+    transform: [{ translateX: 20 }],
   },
 });

@@ -34,9 +34,12 @@ export default function HomeScreen() {
   const upcomingEvents = events
     .filter(event => {
       console.log(`Checking event "${event.title}" with date: ${event.date}`);
+      console.log(`Display on home: ${event.displayOnHome}`);
       const isUpcoming = event.date >= todayDateString;
+      const shouldDisplay = event.displayOnHome && isUpcoming;
       console.log(`Is upcoming: ${isUpcoming} (${event.date} >= ${todayDateString})`);
-      return isUpcoming;
+      console.log(`Should display: ${shouldDisplay}`);
+      return shouldDisplay;
     })
     .sort((a, b) => {
       return a.date.localeCompare(b.date);

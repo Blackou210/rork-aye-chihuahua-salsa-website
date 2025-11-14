@@ -7,6 +7,7 @@ export interface Event {
   startTime: string;
   endTime: string;
   description?: string;
+  displayOnHome: boolean;
 }
 
 export const EVENTS: Event[] = [
@@ -19,6 +20,7 @@ export const EVENTS: Event[] = [
     startTime: "9:00 AM",
     endTime: "1:00 PM",
     description: "Come visit us at the New Braunfels Farmers Market for fresh salsa!",
+    displayOnHome: true,
   },
   {
     id: "2",
@@ -29,6 +31,7 @@ export const EVENTS: Event[] = [
     startTime: "9:00 AM",
     endTime: "1:00 PM",
     description: "Find us at the Pearl Farmers Market this Saturday!",
+    displayOnHome: true,
   },
   {
     id: "3",
@@ -39,6 +42,7 @@ export const EVENTS: Event[] = [
     startTime: "9:00 AM",
     endTime: "1:00 PM",
     description: "Come visit us at the New Braunfels Farmers Market for fresh salsa!",
+    displayOnHome: true,
   },
   {
     id: "4",
@@ -49,5 +53,6 @@ export const EVENTS: Event[] = [
     startTime: "9:00 AM",
     endTime: "1:00 PM",
     description: "Find us at the Pearl Farmers Market this Saturday!",
+    displayOnHome: true,
   },
 ];
