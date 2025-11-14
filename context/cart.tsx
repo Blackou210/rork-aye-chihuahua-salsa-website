@@ -182,6 +182,11 @@ export const [CartProvider, useCart] = createContextHook(() => {
     saveOrders(newOrders);
   }, [orders, saveOrders]);
 
+  const deleteOrder = useCallback(async (orderId: string) => {
+    const newOrders = orders.filter(order => order.id !== orderId);
+    await saveOrders(newOrders);
+  }, [orders, saveOrders]);
+
   const placeOrder = useCallback(async (customerName: string, customerEmail: string, customerPhone: string, notes?: string) => {
     const newCounter = orderCounter + 1;
     const orderNumber = String(newCounter).padStart(3, '0');
@@ -227,7 +232,8 @@ export const [CartProvider, useCart] = createContextHook(() => {
     getCartItemCount,
     placeOrder,
     updateOrderStatus,
+    deleteOrder,
     tipPercentage,
     setTipPercentage,
-  }), [cart, orders, isLoaded, addToCart, removeFromCart, updateQuantity, clearCart, getCartSubtotal, getCartTax, getCartTip, getCartTotal, getCartItemCount, placeOrder, updateOrderStatus, tipPercentage]);
+  }), [cart, orders, isLoaded, addToCart, removeFromCart, updateQuantity, clearCart, getCartSubtotal, getCartTax, getCartTip, getCartTotal, getCartItemCount, placeOrder, updateOrderStatus, deleteOrder, tipPercentage]);
 });

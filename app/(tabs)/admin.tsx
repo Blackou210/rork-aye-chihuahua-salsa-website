@@ -33,7 +33,7 @@ const ADMIN_PIN = "0722";
 
 export default function AdminScreen() {
   const { events, addEvent, updateEvent, deleteEvent } = useEvents();
-  const { orders, updateOrderStatus } = useCart();
+  const { orders, updateOrderStatus, deleteOrder } = useCart();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [pinInput, setPinInput] = useState("");
   const [activeTab, setActiveTab] = useState<'events' | 'orders'>('events');
@@ -174,6 +174,28 @@ export default function AdminScreen() {
     Linking.openURL(telUrl);
   };
 
+  const handleDeleteOrder = (order: Order) => {
+    Alert.alert(
+      "Delete Order",
+      `Are you sure you want to delete order #${order.id}?`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await deleteOrder(order.id);
+            } catch (error) {
+              Alert.alert("Error", "Failed to delete order");
+              console.error("Delete order error:", error);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", { 
@@ -284,6 +306,13 @@ export default function AdminScreen() {
           >
             <Mail size={18} color="#fff" />
             <Text style={styles.actionButtonText}>Email</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.deleteOrderButton}
+            onPress={() => handleDeleteOrder(item)}
+          >
+            <Trash2 size={18} color="#fff" />
+            <Text style={styles.actionButtonText}>Delete</Text>
           </TouchableOpacity>
         </View>
 
@@ -775,6 +804,17 @@ const styles = StyleSheet.create({
     justifyContent: "center" as const,
     gap: 8,
     backgroundColor: Colors.light.primary,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+  },
+  deleteOrderButton: {
+    flex: 1,
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    justifyContent: "center" as const,
+    gap: 8,
+    backgroundColor: "#EF4444",
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 12,
