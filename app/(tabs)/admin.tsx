@@ -4,7 +4,7 @@ import { useEvents } from "@/context/events";
 import { useCart } from "@/context/cart";
 import { Order, OrderStatus } from "@/types/order";
 import { Plus, Edit, Trash2, X, Save, Mail, MessageCircle, Clock, Check, PackageCheck, Lock, Phone, ChevronRight } from "lucide-react-native";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useFocusEffect } from "expo-router";
 import {
   View,
@@ -50,12 +50,12 @@ export default function AdminScreen() {
     description: "",
   });
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setIsAuthenticated(false);
-      setPinInput("");
-    }, [])
-  );
+  const resetAuth = useCallback(() => {
+    setIsAuthenticated(false);
+    setPinInput("");
+  }, []);
+
+  useFocusEffect(resetAuth);
 
   const handleLogin = () => {
     if (pinInput === ADMIN_PIN) {

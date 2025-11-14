@@ -160,7 +160,7 @@ export const [EventsProvider, useEvents] = createContextHook(() => {
     });
   }, [persistEvents]);
 
-  return useMemo(
+  const value = useMemo(
     () => ({
       events,
       isLoading,
@@ -170,4 +170,6 @@ export const [EventsProvider, useEvents] = createContextHook(() => {
     }),
     [events, isLoading, addEvent, updateEvent, deleteEvent]
   );
+
+  return value;
 });
