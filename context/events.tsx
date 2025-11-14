@@ -78,16 +78,26 @@ export const [EventsProvider, useEvents] = createContextHook(() => {
 
   const deleteEvent = useCallback(async (id: string) => {
     console.log('Deleting event with id:', id);
-    setEvents((currentEvents) => {
-      const updatedEvents = currentEvents.filter((event) => event.id !== id);
-      console.log('Events before delete:', currentEvents.length);
-      console.log('Events after delete:', updatedEvents.length);
-      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedEvents)).catch((error) =>
-        console.error("Failed to save events after delete:", error)
-      );
-      console.log('Event deleted successfully, new total:', updatedEvents.length);
-      return updatedEvents;
-    });
+    try {
+      setEvents((currentEvents) => {
+        const updatedEvents = currentEvents.filter((event) => event.id !== id);
+        console.log('Events before delete:', currentEvents.length);
+        console.log('Events after delete:', updatedEvents.length);
+        
+        AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedEvents))
+          .then(() => {
+            console.log('Event deleted successfully, new total:', updatedEvents.length);
+          })
+          .catch((error) => {
+            console.error("Failed to save events after delete:", error);
+          });
+        
+        return updatedEvents;
+      });
+    } catch (error) {
+      console.error('Error in deleteEvent:', error);
+      throw error;
+    }
   }, []);
 
   return useMemo(() => ({
