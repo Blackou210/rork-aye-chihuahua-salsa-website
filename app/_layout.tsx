@@ -44,8 +44,6 @@ export default function RootLayout() {
           await AsyncStorage.multiRemove(corruptedKeys);
           console.log(`Cleared ${corruptedKeys.length} corrupted storage keys`);
         }
-        
-        await playChihuahuaBark();
       } catch (error) {
         console.error('Failed to initialize app:', error);
       } finally {
@@ -54,6 +52,7 @@ export default function RootLayout() {
     };
     
     initializeApp();
+    playChihuahuaBark();
   }, []);
 
   const playChihuahuaBark = async () => {
