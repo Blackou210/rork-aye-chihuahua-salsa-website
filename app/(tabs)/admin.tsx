@@ -17,6 +17,7 @@ import {
   ScrollView,
   Alert,
   Linking,
+  Platform,
 } from "react-native";
 type EventFormData = Omit<Event, "id">;
 
@@ -121,34 +122,52 @@ export default function AdminScreen() {
   const handleDelete = (event: Event) => {
     console.log('\n=== handleDelete called ===');
     console.log('Event to delete:', { id: event.id, title: event.title, idType: typeof event.id });
-    
+
+    const performDelete = async () => {
+      console.log('\n=== Delete confirmed ===');
+      console.log('Calling deleteEvent with id:', event.id);
+      try {
+        await deleteEvent(event.id);
+        console.log('\u2705 deleteEvent completed successfully');
+      } catch (error) {
+        console.error('\u274c Delete error:', error);
+        Alert.alert("Error", "Failed to delete event: " + (error instanceof Error ? error.message : String(error)));
+      }
+    };
+
+    if (Platform.OS === "web") {
+      const confirmMessage = `Are you sure you want to delete "${event.title}"?`;
+      if (typeof window !== "undefined") {
+        const confirmed = window.confirm(confirmMessage);
+        if (!confirmed) {
+          console.log('Delete cancelled via web confirm dialog');
+          return;
+        }
+      }
+      void performDelete();
+      return;
+    }
+
     Alert.alert(
       "Delete Event",
       `Are you sure you want to delete "${event.title}"?`,
       [
-        { 
-          text: "Cancel", 
+        {
+          text: "Cancel",
           style: "cancel",
-          onPress: () => console.log('Delete cancelled')
+          onPress: () => console.log('Delete cancelled'),
         },
         {
           text: "Delete",
           style: "destructive",
-          onPress: async () => {
-            console.log('\n=== Delete confirmed ===');
-            console.log('Calling deleteEvent with id:', event.id);
-            try {
-              await deleteEvent(event.id);
-              console.log('\u2705 deleteEvent completed successfully');
-            } catch (error) {
-              console.error('\u274c Delete error:', error);
-              Alert.alert("Error", "Failed to delete event: " + (error instanceof Error ? error.message : String(error)));
-            }
+          onPress: () => {
+            void performDelete();
           },
         },
       ]
     );
   };
+
 
   const handleSendText = (order: Order) => {
     const itemsList = order.items.map(item => 
@@ -376,6 +395,7 @@ export default function AdminScreen() {
           style={styles.deleteButton}
           onPress={() => handleDelete(item)}
           activeOpacity={0.7}
+          testID={`delete-event-${item.id}`}
         >
           <Trash2 size={20} color="#fff" />
         </TouchableOpacity>
