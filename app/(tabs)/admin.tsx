@@ -411,6 +411,25 @@ export default function AdminScreen() {
     );
   };
 
+  const handleToggleDisplayOnHome = async (event: Event) => {
+    console.log('\n=== Toggling displayOnHome ===');
+    console.log('Event:', event.title);
+    console.log('Current displayOnHome:', event.displayOnHome);
+    console.log('New displayOnHome:', !event.displayOnHome);
+    
+    try {
+      await updateEvent(event.id, {
+        ...event,
+        displayOnHome: !event.displayOnHome,
+      });
+      console.log('✅ Display status updated successfully');
+    } catch (error) {
+      console.error('❌ Toggle error:', error);
+      Alert.alert("Error", "Failed to update display status");
+    }
+    console.log('=== End Toggle ===\n');
+  };
+
   const renderEventItem = ({ item }: { item: Event }) => (
     <View style={styles.eventItem}>
       <View style={styles.eventItemContent}>
@@ -427,6 +446,13 @@ export default function AdminScreen() {
         <Text style={styles.eventItemLocation}>{item.location}</Text>
       </View>
       <View style={styles.eventItemActions}>
+        <TouchableOpacity
+          style={[styles.pushButton, item.displayOnHome ? styles.pushButtonActive : styles.pushButtonInactive]}
+          onPress={() => handleToggleDisplayOnHome(item)}
+          activeOpacity={0.7}
+        >
+          {item.displayOnHome ? <Eye size={18} color="#fff" /> : <EyeOff size={18} color="#fff" />}
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.editButton}
           onPress={() => openEditModal(item)}
@@ -1179,5 +1205,18 @@ const styles = StyleSheet.create({
   },
   toggleThumbActive: {
     transform: [{ translateX: 20 }],
+  },
+  pushButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: "center" as const,
+    justifyContent: "center" as const,
+  },
+  pushButtonActive: {
+    backgroundColor: Colors.light.success,
+  },
+  pushButtonInactive: {
+    backgroundColor: Colors.light.textSecondary,
   },
 });
