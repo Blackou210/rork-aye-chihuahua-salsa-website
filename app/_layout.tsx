@@ -4,9 +4,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Audio } from "expo-av";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -43,6 +44,8 @@ export default function RootLayout() {
           await AsyncStorage.multiRemove(corruptedKeys);
           console.log(`Cleared ${corruptedKeys.length} corrupted storage keys`);
         }
+        
+        await playChihuahuaBark();
       } catch (error) {
         console.error('Failed to initialize app:', error);
       } finally {
@@ -52,6 +55,32 @@ export default function RootLayout() {
     
     initializeApp();
   }, []);
+
+  const playChihuahuaBark = async () => {
+    try {
+      console.log('Playing Chihuahua bark sound...');
+      
+      if (Platform.OS !== 'web') {
+        await Audio.setAudioModeAsync({
+          playsInSilentModeIOS: true,
+          staysActiveInBackground: false,
+        });
+      }
+      
+      const { sound } = await Audio.Sound.createAsync(
+        { uri: 'https://www.soundjay.com/dog/sounds/dog-bark-1.mp3' },
+        { shouldPlay: true, volume: 0.7 }
+      );
+      
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.isLoaded && status.didJustFinish) {
+          sound.unloadAsync();
+        }
+      });
+    } catch (error) {
+      console.error('Failed to play bark sound:', error);
+    }
+  };
 
   return (
     <QueryClientProvider client={queryClient}>
