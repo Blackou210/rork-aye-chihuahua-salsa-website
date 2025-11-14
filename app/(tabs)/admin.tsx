@@ -564,12 +564,12 @@ export default function AdminScreen() {
             </View>
 
             <View style={styles.formGroup}>
-              <Text style={styles.label}>Date (YYYY-MM-DD) *</Text>
+              <Text style={styles.label}>Date (DD-MM-YYYY) *</Text>
               <TextInput
                 style={styles.input}
                 value={formData.date}
                 onChangeText={(text) => setFormData({ ...formData, date: text })}
-                placeholder="e.g. 2025-01-18"
+                placeholder="e.g. 18-01-2025"
                 placeholderTextColor={Colors.light.textSecondary}
               />
             </View>
