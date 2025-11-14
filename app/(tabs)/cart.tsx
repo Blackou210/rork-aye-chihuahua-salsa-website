@@ -302,6 +302,10 @@ export default function CartScreen() {
               <Text style={styles.warningText}>⚠️ ALL SALSA MUST BE REFRIGERATED AND THROWN AWAY AFTER TWO WEEKS RECEIVED - HAS NO PRESERVATIVES</Text>
             </View>
             
+            <TouchableOpacity style={styles.checkoutButton} onPress={() => setShowCheckout(true)}>
+              <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
+            </TouchableOpacity>
+            
             <TouchableOpacity 
               style={styles.cashAppQuickButton}
               onPress={async () => {
@@ -334,10 +338,6 @@ export default function CartScreen() {
                 <Text style={styles.cashAppQuickTitle}>Pay ${cartTotal.toFixed(2)} with Cash App</Text>
                 <Text style={styles.cashAppQuickSubtitle}>$aychihuahuasalsa</Text>
               </View>
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.checkoutButton} onPress={() => setShowCheckout(true)}>
-              <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
             </TouchableOpacity>
           </View>
         </>
@@ -715,6 +715,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     alignItems: "center" as const,
+    marginBottom: 8,
   },
   checkoutButtonText: {
     fontSize: 16,
@@ -1050,7 +1051,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#00D64F",
     borderRadius: 12,
     padding: 14,
-    marginBottom: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
