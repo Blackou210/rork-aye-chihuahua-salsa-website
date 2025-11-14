@@ -93,12 +93,15 @@ export default function AdminScreen() {
   };
 
   const openEditModal = (event: Event) => {
+    const [year, month, day] = event.date.split('-');
+    const displayDate = `${day}-${month}-${year}`;
+    
     setEditingEvent(event);
     setFormData({
       title: event.title,
       location: event.location,
       address: event.address,
-      date: event.date,
+      date: displayDate,
       startTime: event.startTime,
       endTime: event.endTime,
       description: event.description || "",
@@ -112,18 +115,38 @@ export default function AdminScreen() {
       return;
     }
 
+    const datePattern = /^(\d{2})-(\d{2})-(\d{4})$/;
+    const match = formData.date.match(datePattern);
+    
+    if (!match) {
+      Alert.alert("Error", "Please enter date in DD-MM-YYYY format (e.g., 17-01-2025)");
+      return;
+    }
+
+    const [, day, month, year] = match;
+    const isoDate = `${year}-${month}-${day}`;
+
+    console.log('\n=== SAVING EVENT ===');
+    console.log('User input date:', formData.date);
+    console.log('Converted to ISO:', isoDate);
+    console.log('Event data:', { ...formData, date: isoDate });
+
     try {
+      const eventToSave = { ...formData, date: isoDate };
       if (editingEvent) {
-        await updateEvent(editingEvent.id, formData);
+        await updateEvent(editingEvent.id, eventToSave);
+        console.log('✅ Event updated successfully');
       } else {
-        await addEvent(formData);
+        await addEvent(eventToSave);
+        console.log('✅ Event added successfully');
       }
       setModalVisible(false);
       resetForm();
     } catch (error) {
-      Alert.alert("Error", "Failed to save event");
-      console.error("Save error:", error);
+      console.error('❌ Save error:', error);
+      Alert.alert("Error", "Failed to save event: " + (error instanceof Error ? error.message : String(error)));
     }
+    console.log('=== END SAVING EVENT ===\n');
   };
 
   const handleDelete = (event: Event) => {
@@ -571,12 +594,12 @@ export default function AdminScreen() {
             </View>
 
             <View style={styles.formGroup}>
-              <Text style={styles.label}>Date (YYYY-MM-DD) *</Text>
+              <Text style={styles.label}>Date (DD-MM-YYYY) *</Text>
               <TextInput
                 style={styles.input}
                 value={formData.date}
                 onChangeText={(text) => setFormData({ ...formData, date: text })}
-                placeholder="e.g. 2025-01-18"
+                placeholder="e.g. 17-01-2025"
                 placeholderTextColor={Colors.light.textSecondary}
               />
             </View>

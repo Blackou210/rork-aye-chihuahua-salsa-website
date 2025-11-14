@@ -47,6 +47,12 @@ export default function HomeScreen() {
   console.log('Upcoming events:', JSON.stringify(upcomingEvents, null, 2));
   console.log('=== END EVENTS DEBUG ===\n');
 
+  console.log('\n🚨 DISPLAY LOGIC CHECK:');
+  console.log('isLoading:', isLoading);
+  console.log('upcomingEvents.length:', upcomingEvents.length);
+  console.log('Should show events:', !isLoading && upcomingEvents.length > 0);
+  console.log('🚨 END DISPLAY CHECK\n');
+
   const handleHeaderTap = () => {
     const now = Date.now();
     
@@ -159,9 +165,15 @@ export default function HomeScreen() {
           </View>
         ))}
 
-        {!isLoading && upcomingEvents.length > 0 && (
+        {events.length > 0 && (
           <View style={styles.eventsSection}>
             <Text style={styles.sectionTitle}>Find Us At</Text>
+            {upcomingEvents.length === 0 && (
+              <View style={styles.noEventsContainer}>
+                <Text style={styles.noEventsText}>No upcoming events at this time</Text>
+                <Text style={styles.noEventsSubtext}>Check back soon for our next market dates!</Text>
+              </View>
+            )}
             {upcomingEvents.map((event) => {
               const [year, month, day] = event.date.split('-').map(Number);
               const eventDate = new Date(year, month - 1, day, 12, 0, 0);
@@ -615,5 +627,21 @@ const styles = StyleSheet.create({
     color: Colors.light.primary,
     fontSize: 10,
     fontWeight: "700" as const,
+  },
+  noEventsContainer: {
+    padding: 24,
+    alignItems: "center" as const,
+  },
+  noEventsText: {
+    fontSize: 16,
+    fontWeight: "600" as const,
+    color: Colors.light.text,
+    textAlign: "center" as const,
+    marginBottom: 8,
+  },
+  noEventsSubtext: {
+    fontSize: 14,
+    color: Colors.light.textSecondary,
+    textAlign: "center" as const,
   },
 });
