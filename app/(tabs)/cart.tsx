@@ -408,7 +408,10 @@ export default function CartScreen() {
                     <View style={styles.stepNumber}>
                       <Text style={styles.stepNumberText}>3</Text>
                     </View>
-                    <Text style={styles.stepText}>Send ${cartTotal.toFixed(2)} via Cash App to $aychihuahuasalsa</Text>
+                    <View style={styles.stepTextContainer}>
+                      <Text style={styles.stepText}>Send ${cartTotal.toFixed(2)} via Cash App to </Text>
+                      <Text style={styles.emailText}>{email || 'your@email.com'}</Text>
+                    </View>
                   </View>
                 </View>
 
@@ -975,10 +978,19 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   stepText: {
-    flex: 1,
     fontSize: 13,
     color: Colors.light.text,
     lineHeight: 18,
+  },
+  stepTextContainer: {
+    flex: 1,
+    flexDirection: "column" as const,
+  },
+  emailText: {
+    fontSize: 18,
+    fontWeight: "700" as const,
+    color: Colors.light.primary,
+    marginTop: 4,
   },
   itemNumber: {
     width: 32,
