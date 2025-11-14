@@ -230,7 +230,7 @@ export default function AdminScreen() {
       case "ready":
         return ["completed", "cancelled"];
       case "completed":
-        return ["pending"];
+        return [];
       case "cancelled":
         return ["pending"];
       default:
@@ -316,28 +316,33 @@ export default function AdminScreen() {
           </TouchableOpacity>
         </View>
 
-        {availableStatuses.length > 0 && (
-          <View style={styles.statusChangeContainer}>
-            <Text style={styles.statusChangeLabel}>Change Status:</Text>
-            <View style={styles.statusChangeButtons}>
-              {availableStatuses.map((status) => {
-                const config = ORDER_STATUS_CONFIG[status];
-                const StatusIcon = config.icon;
-                return (
-                  <TouchableOpacity
-                    key={status}
-                    style={[styles.statusChangeButton, { backgroundColor: config.color }]}
-                    onPress={() => handleChangeStatus(item, status)}
-                  >
-                    <StatusIcon size={16} color="#fff" />
-                    <Text style={styles.statusChangeButtonText}>{config.label}</Text>
-                    <ChevronRight size={16} color="#fff" />
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
+        <View style={styles.statusChangeContainer}>
+          <Text style={styles.statusChangeLabel}>Actions:</Text>
+          <View style={styles.statusChangeButtons}>
+            {availableStatuses.map((status) => {
+              const config = ORDER_STATUS_CONFIG[status];
+              const StatusIcon = config.icon;
+              return (
+                <TouchableOpacity
+                  key={status}
+                  style={[styles.statusChangeButton, { backgroundColor: config.color }]}
+                  onPress={() => handleChangeStatus(item, status)}
+                >
+                  <StatusIcon size={16} color="#fff" />
+                  <Text style={styles.statusChangeButtonText}>{config.label}</Text>
+                  <ChevronRight size={16} color="#fff" />
+                </TouchableOpacity>
+              );
+            })}
+            <TouchableOpacity
+              style={[styles.statusChangeButton, styles.deleteStatusButton]}
+              onPress={() => handleDeleteOrder(item)}
+            >
+              <Trash2 size={16} color="#fff" />
+              <Text style={styles.statusChangeButtonText}>Delete Order</Text>
+            </TouchableOpacity>
           </View>
-        )}
+        </View>
       </View>
     );
   };
@@ -989,5 +994,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600" as const,
     color: "#fff",
+  },
+  deleteStatusButton: {
+    backgroundColor: "#EF4444",
   },
 });
