@@ -35,6 +35,13 @@ const ADMIN_PIN = "0722";
 export default function AdminScreen() {
   const { events, addEvent, updateEvent, deleteEvent } = useEvents();
   const { orders, updateOrderStatus, deleteOrder } = useCart();
+
+  console.log('\n=== ADMIN PANEL DEBUG ===');
+  console.log('📅 Total Events:', events.length);
+  console.log('Events:', JSON.stringify(events, null, 2));
+  console.log('📦 Total Orders:', orders.length);
+  console.log('Orders:', JSON.stringify(orders, null, 2));
+  console.log('=== END ADMIN DEBUG ===\n');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [pinInput, setPinInput] = useState("");
   const [activeTab, setActiveTab] = useState<'events' | 'orders'>('events');
