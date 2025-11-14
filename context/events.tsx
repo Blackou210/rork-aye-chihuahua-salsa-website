@@ -6,11 +6,13 @@ import { Event } from "../constants/events";
 const STORAGE_KEY = "ayechihuahua_events";
 const HAS_INITIALIZED_KEY = "ayechihuahua_events_initialized";
 
-const isValidEvent = (value: unknown): value is Event => {
+type StoredEvent = Omit<Event, "displayOnHome"> & { displayOnHome?: boolean };
+
+const isValidStoredEvent = (value: unknown): value is StoredEvent => {
   if (!value || typeof value !== "object") {
     return false;
   }
-  const candidate = value as Partial<Event>;
+  const candidate = value as Partial<StoredEvent>;
   return (
     typeof candidate.id === "string" &&
     typeof candidate.title === "string" &&
@@ -19,8 +21,7 @@ const isValidEvent = (value: unknown): value is Event => {
     typeof candidate.date === "string" &&
     typeof candidate.startTime === "string" &&
     typeof candidate.endTime === "string" &&
-    (typeof candidate.description === "undefined" || typeof candidate.description === "string") &&
-    typeof candidate.displayOnHome === "boolean"
+    (typeof candidate.description === "undefined" || typeof candidate.description === "string")
   );
 };
 
@@ -28,7 +29,19 @@ const sanitizeEvents = (raw: unknown): Event[] => {
   if (!Array.isArray(raw)) {
     return [];
   }
-  return raw.filter((item) => isValidEvent(item));
+  return raw
+    .filter((item): item is StoredEvent => isValidStoredEvent(item))
+    .map((item) => ({
+      id: item.id,
+      title: item.title,
+      location: item.location,
+      address: item.address,
+      date: item.date,
+      startTime: item.startTime,
+      endTime: item.endTime,
+      description: item.description,
+      displayOnHome: item.displayOnHome ?? true,
+    }));
 };
 
 export const [EventsProvider, useEvents] = createContextHook(() => {
