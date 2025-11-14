@@ -3,7 +3,7 @@ import { Event } from "@/constants/events";
 import { useEvents } from "@/context/events";
 import { useCart } from "@/context/cart";
 import { Order } from "@/types/order";
-import { Plus, Edit, Trash2, X, Save, Mail, MessageCircle, Clock, Check, PackageCheck, Lock, Phone } from "lucide-react-native";
+import { Plus, Edit, Trash2, X, Save, Mail, MessageCircle, Clock, Check, PackageCheck, Lock, Phone, ChevronRight } from "lucide-react-native";
 import React, { useState } from "react";
 import { useFocusEffect } from "expo-router";
 import {
@@ -33,7 +33,7 @@ const ADMIN_PIN = "0722";
 
 export default function AdminScreen() {
   const { events, addEvent, updateEvent, deleteEvent } = useEvents();
-  const { orders } = useCart();
+  const { orders, updateOrderStatus } = useCart();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [pinInput, setPinInput] = useState("");
   const [activeTab, setActiveTab] = useState<'events' | 'orders'>('events');
@@ -183,10 +183,44 @@ export default function AdminScreen() {
     });
   };
 
+  const handleChangeStatus = (order: Order, newStatus: OrderStatus) => {
+    Alert.alert(
+      "Change Order Status",
+      `Change order #${order.id} from "${ORDER_STATUS_CONFIG[order.status].label}" to "${ORDER_STATUS_CONFIG[newStatus].label}"?`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Change",
+          onPress: () => updateOrderStatus(order.id, newStatus),
+        },
+      ]
+    );
+  };
+
+  const getAvailableStatusChanges = (currentStatus: OrderStatus): OrderStatus[] => {
+    switch (currentStatus) {
+      case "pending":
+        return ["confirmed", "cancelled"];
+      case "confirmed":
+        return ["preparing", "cancelled"];
+      case "preparing":
+        return ["ready", "cancelled"];
+      case "ready":
+        return ["completed", "cancelled"];
+      case "completed":
+        return ["pending"];
+      case "cancelled":
+        return ["pending"];
+      default:
+        return [];
+    }
+  };
+
   const renderOrderCard = ({ item }: { item: Order }) => {
     const statusConfig = ORDER_STATUS_CONFIG[item.status];
     const Icon = statusConfig.icon;
     const orderDate = new Date(item.createdAt);
+    const availableStatuses = getAvailableStatusChanges(item.status);
 
     return (
       <View style={styles.orderCard}>
@@ -252,6 +286,29 @@ export default function AdminScreen() {
             <Text style={styles.actionButtonText}>Email</Text>
           </TouchableOpacity>
         </View>
+
+        {availableStatuses.length > 0 && (
+          <View style={styles.statusChangeContainer}>
+            <Text style={styles.statusChangeLabel}>Change Status:</Text>
+            <View style={styles.statusChangeButtons}>
+              {availableStatuses.map((status) => {
+                const config = ORDER_STATUS_CONFIG[status];
+                const StatusIcon = config.icon;
+                return (
+                  <TouchableOpacity
+                    key={status}
+                    style={[styles.statusChangeButton, { backgroundColor: config.color }]}
+                    onPress={() => handleChangeStatus(item, status)}
+                  >
+                    <StatusIcon size={16} color="#fff" />
+                    <Text style={styles.statusChangeButtonText}>{config.label}</Text>
+                    <ChevronRight size={16} color="#fff" />
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </View>
+        )}
       </View>
     );
   };
@@ -860,6 +917,36 @@ const styles = StyleSheet.create({
   },
   loginButtonText: {
     fontSize: 16,
+    fontWeight: "600" as const,
+    color: "#fff",
+  },
+  statusChangeContainer: {
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: Colors.light.border,
+  },
+  statusChangeLabel: {
+    fontSize: 12,
+    fontWeight: "600" as const,
+    color: Colors.light.textSecondary,
+    marginBottom: 8,
+  },
+  statusChangeButtons: {
+    flexDirection: "row" as const,
+    flexWrap: "wrap" as const,
+    gap: 8,
+  },
+  statusChangeButton: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  statusChangeButtonText: {
+    fontSize: 13,
     fontWeight: "600" as const,
     color: "#fff",
   },
