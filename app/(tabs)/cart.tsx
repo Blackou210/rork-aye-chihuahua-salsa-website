@@ -32,11 +32,6 @@ export default function CartScreen() {
   const [isCashAppLoading, setIsCashAppLoading] = useState(false);
 
   const handleCheckout = async () => {
-    if (!agreedToWarning) {
-      Alert.alert("Confirmation Required", "Please confirm you understand the storage warning");
-      return;
-    }
-
     if (!name.trim() || !email.trim() || !phone.trim()) {
       Alert.alert("Missing Information", "Please fill in all required fields");
       return;
@@ -47,67 +42,87 @@ export default function CartScreen() {
       return;
     }
 
+    if (!agreedToWarning) {
+      Alert.alert("Confirmation Required", "Please confirm you understand the storage warning");
+      return;
+    }
+
     setIsPlacingOrder(true);
     
     try {
       const order = await placeOrder(name.trim(), email.trim(), phone.trim(), notes.trim());
     
-    try {
-      const itemsList = cart.map(item => 
-        `${item.name} (${item.size}) - Quantity: ${item.quantity} - ${(item.price * item.quantity).toFixed(2)}`
-      ).join('\n');
-
-      const orderSubtotal = getCartSubtotal();
-      const orderTax = getCartTax();
-      const orderTip = getCartTip();
-      const orderTotal = getCartTotal();
-      const cashAppPaymentLink = `https://cash.app/$aychihuahuasalsa/${orderTotal.toFixed(2)}`;
+      const amount = cartTotal.toFixed(2);
+      const cashAppUrl = `https://cash.app/$aychihuahuasalsa/${amount}`;
       
-      const emailBody = `New Order #${order.id}\n\n` +
-        `Customer: ${name.trim()}\n` +
-        `Phone: ${phone.trim()}\n` +
-        `Email: ${email.trim()}\n\n` +
-        `Items:\n${itemsList}\n\n` +
-        `Subtotal: ${orderSubtotal.toFixed(2)}\n` +
-        `Tax (New Braunfels 8.25%): ${orderTax.toFixed(2)}\n` +
-        (tipPercentage > 0 ? `Tip (${tipPercentage}%): ${orderTip.toFixed(2)}\n` : '') +
-        `Total: ${orderTotal.toFixed(2)}\n\n` +
-        `━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `💵 COMPLETE YOUR PAYMENT\n` +
-        `━━━━━━━━━━━━━━━━━━━━━━\n\n` +
-        `Click the link below to pay ${orderTotal.toFixed(2)} with Cash App:\n` +
-        `${cashAppPaymentLink}\n\n` +
-        `Or send ${orderTotal.toFixed(2)} to: $aychihuahuasalsa\n\n` +
-        (notes.trim() ? `Notes: ${notes.trim()}\n\n` : '') +
-        `Thank you for your business!\n` +
-        `We sincerely appreciate your order and your support for ¡Ay, Chihuahua! Salsa.\n\n` +
-        `A member of our team will be reaching out shortly to provide a verbal confirmation of your order details and delivery preferences.\n\n` +
-        `If we do not reach out to you within 24hr please call (210)396-0722\n\n` +
-        `Please note: Local delivery is currently available only within or near the New Braunfels and San Antonio, Texas area.`;
+      try {
+        const itemsList = cart.map(item => 
+          `${item.name} (${item.size}) - Quantity: ${item.quantity} - ${(item.price * item.quantity).toFixed(2)}`
+        ).join('\n');
 
-      const mailtoUrl = `mailto:orders@aychihuahuasalsa.com?subject=${encodeURIComponent(`New Order #${order.id}`)}&body=${encodeURIComponent(emailBody)}`;
+        const orderSubtotal = getCartSubtotal();
+        const orderTax = getCartTax();
+        const orderTip = getCartTip();
+        const orderTotal = getCartTotal();
+        const cashAppPaymentLink = `https://cash.app/$aychihuahuasalsa/${orderTotal.toFixed(2)}`;
+        
+        const emailBody = `New Order #${order.id}\n\n` +
+          `Customer: ${name.trim()}\n` +
+          `Phone: ${phone.trim()}\n` +
+          `Email: ${email.trim()}\n\n` +
+          `Items:\n${itemsList}\n\n` +
+          `Subtotal: ${orderSubtotal.toFixed(2)}\n` +
+          `Tax (New Braunfels 8.25%): ${orderTax.toFixed(2)}\n` +
+          (tipPercentage > 0 ? `Tip (${tipPercentage}%): ${orderTip.toFixed(2)}\n` : '') +
+          `Total: ${orderTotal.toFixed(2)}\n\n` +
+          `━━━━━━━━━━━━━━━━━━━━━━\n` +
+          `💵 COMPLETE YOUR PAYMENT\n` +
+          `━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+          `Click the link below to pay ${orderTotal.toFixed(2)} with Cash App:\n` +
+          `${cashAppPaymentLink}\n\n` +
+          `Or send ${orderTotal.toFixed(2)} to: $aychihuahuasalsa\n\n` +
+          (notes.trim() ? `Notes: ${notes.trim()}\n\n` : '') +
+          `Thank you for your business!\n` +
+          `We sincerely appreciate your order and your support for ¡Ay, Chihuahua! Salsa.\n\n` +
+          `A member of our team will be reaching out shortly to provide a verbal confirmation of your order details and delivery preferences.\n\n` +
+          `If we do not reach out to you within 24hr please call (210)396-0722\n\n` +
+          `Please note: Local delivery is currently available only within or near the New Braunfels and San Antonio, Texas area.`;
+
+        const mailtoUrl = `mailto:orders@aychihuahuasalsa.com?subject=${encodeURIComponent(`New Order #${order.id}`)}&body=${encodeURIComponent(emailBody)}`;
+        
+        await Linking.openURL(mailtoUrl);
+      } catch (error) {
+        console.log("Could not open email client:", error);
+      }
       
-      await Linking.openURL(mailtoUrl);
-    } catch (error) {
-      console.log("Could not open email client:", error);
-    }
-    
-    setShowCheckout(false);
-    setName("");
-    setEmail("");
-    setPhone("");
-    setNotes("");
-    setAgreedToWarning(false);
+      setShowCheckout(false);
+      setName("");
+      setEmail("");
+      setPhone("");
+      setNotes("");
+      setAgreedToWarning(false);
+      setIsPlacingOrder(false);
 
       Alert.alert(
         "Order Placed!",
-        `Your order #${order.id} has been placed successfully. Please send the email to process your order. We will be contacting you shortly.`,
-        [{ text: "OK" }]
+        `Your order #${order.id} has been placed successfully. Now complete your payment via Cash App.`,
+        [
+          { text: "OK", onPress: async () => {
+            try {
+              await Linking.openURL(cashAppUrl);
+            } catch (error) {
+              console.error("Could not open Cash App:", error);
+              Alert.alert(
+                "Payment Link",
+                `Please send ${amount} to $aychihuahuasalsa on Cash App to complete your order.`
+              );
+            }
+          }}
+        ]
       );
     } catch (error) {
       console.error("Error placing order:", error);
       Alert.alert("Error", "There was a problem placing your order. Please try again.");
-    } finally {
       setIsPlacingOrder(false);
     }
   };
@@ -381,19 +396,19 @@ export default function CartScreen() {
                     <View style={styles.stepNumber}>
                       <Text style={styles.stepNumberText}>1</Text>
                     </View>
-                    <Text style={styles.stepText}>Send ${cartTotal.toFixed(2)} via Cash App to $aychihuahuasalsa</Text>
+                    <Text style={styles.stepText}>Confirm the refrigeration warning below</Text>
                   </View>
                   <View style={styles.instructionStep}>
                     <View style={styles.stepNumber}>
                       <Text style={styles.stepNumberText}>2</Text>
                     </View>
-                    <Text style={styles.stepText}>Confirm the refrigeration warning below</Text>
+                    <Text style={styles.stepText}>Click "Place Order" to start your order</Text>
                   </View>
                   <View style={styles.instructionStep}>
                     <View style={styles.stepNumber}>
                       <Text style={styles.stepNumberText}>3</Text>
                     </View>
-                    <Text style={styles.stepText}>Click "Place Order" to complete your order</Text>
+                    <Text style={styles.stepText}>Send ${cartTotal.toFixed(2)} via Cash App to $aychihuahuasalsa</Text>
                   </View>
                 </View>
 
@@ -411,92 +426,14 @@ export default function CartScreen() {
                 </TouchableOpacity>
 
                 <TouchableOpacity 
-                  style={[styles.placeOrderButton, (!agreedToWarning || isPlacingOrder) && styles.placeOrderButtonDisabled]} 
+                  style={[styles.placeOrderButton, (!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder) && styles.placeOrderButtonDisabled]} 
                   onPress={handleCheckout}
-                  disabled={!agreedToWarning || isPlacingOrder}
+                  disabled={!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder}
                 >
-                  <Text style={[styles.placeOrderButtonText, (!agreedToWarning || isPlacingOrder) && styles.placeOrderButtonTextDisabled]}>
+                  <Text style={[styles.placeOrderButtonText, (!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder) && styles.placeOrderButtonTextDisabled]}>
                     {isPlacingOrder ? "Placing Order..." : "Place Order"}
                   </Text>
                 </TouchableOpacity>
-
-                <View style={styles.paymentSection}>
-                  <Text style={styles.paymentLabel}>first place order next purchase with Cash App</Text>
-                  <TouchableOpacity 
-                    style={[styles.cashAppButton, isCashAppLoading && styles.cashAppButtonLoading]}
-                    onPress={async () => {
-                      if (!agreedToWarning) {
-                        Alert.alert("Confirmation Required", "Please confirm you understand the storage warning");
-                        return;
-                      }
-
-                      if (!name.trim() || !email.trim() || !phone.trim()) {
-                        Alert.alert("Missing Information", "Please fill in all required fields before using Cash App");
-                        return;
-                      }
-
-                      if (!email.includes("@")) {
-                        Alert.alert("Invalid Email", "Please enter a valid email address");
-                        return;
-                      }
-
-                      setIsCashAppLoading(true);
-                      console.log("Starting Cash App payment flow...");
-
-                      try {
-                        const amount = cartTotal.toFixed(2);
-                        console.log("Creating order for amount:", amount);
-                        
-                        const order = await placeOrder(name.trim(), email.trim(), phone.trim(), notes.trim());
-                        console.log("Order placed successfully:", order.id);
-                        
-                        const cashAppUrl = `https://cash.app/$aychihuahuasalsa/${amount}`;
-                        console.log("Opening Cash App URL:", cashAppUrl);
-                        
-                        const canOpen = await Linking.canOpenURL(cashAppUrl);
-                        console.log("Can open Cash App URL:", canOpen);
-                        
-                        await Linking.openURL(cashAppUrl);
-                        console.log("Successfully opened Cash App");
-                        
-                        setIsCashAppLoading(false);
-                        setShowCheckout(false);
-                        setName("");
-                        setEmail("");
-                        setPhone("");
-                        setNotes("");
-                        setAgreedToWarning(false);
-                        
-                        setTimeout(() => {
-                          Alert.alert(
-                            "Order Placed!",
-                            `Your order #${order.id} has been placed successfully. Please complete the payment of ${amount} in Cash App to finalize your order.`,
-                            [{ text: "OK" }]
-                          );
-                        }, 500);
-                      } catch (error) {
-                        console.error("Cash App payment flow error:", error);
-                        setIsCashAppLoading(false);
-                        Alert.alert(
-                          "Error", 
-                          "Could not open Cash App. Please ensure Cash App is installed or complete the order using the Place Order button."
-                        );
-                      }
-                    }}
-                    disabled={isCashAppLoading || !agreedToWarning}
-                  >
-                    <View style={styles.cashAppIcon}>
-                      <Text style={styles.cashAppIconText}>$</Text>
-                    </View>
-                    <View style={styles.cashAppContent}>
-                      <Text style={styles.cashAppTitle}>
-                        {isCashAppLoading ? "Opening Cash App..." : `Pay ${cartTotal.toFixed(2)} with Cash App`}
-                      </Text>
-                      <Text style={styles.cashAppHandle}>$aychihuahuasalsa</Text>
-                    </View>
-                  </TouchableOpacity>
-                  <Text style={styles.paymentNote}>Opens Cash App with ${cartTotal.toFixed(2)} pre-filled</Text>
-                </View>
               </View>
             </ScrollView>
           </View>
