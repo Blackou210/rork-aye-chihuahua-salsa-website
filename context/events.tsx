@@ -35,6 +35,57 @@ export const [EventsProvider, useEvents] = createContextHook(() => {
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    let isActive = true;
+
+    const loadEvents = async () => {
+      console.log("Loading events from storage");
+      try {
+        const stored = await AsyncStorage.getItem(STORAGE_KEY);
+        if (!stored) {
+          console.log("Storage empty, initializing with no events");
+          if (isActive) {
+            setEvents([]);
+          }
+          await AsyncStorage.setItem(STORAGE_KEY, EMPTY_EVENTS_JSON);
+          return;
+        }
+
+        const parsed = JSON.parse(stored) as unknown;
+        const sanitized = sanitizeEvents(parsed);
+
+        if (!Array.isArray(parsed)) {
+          console.log("Stored events were not an array, resetting storage");
+          await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(sanitized));
+        } else if (sanitized.length !== parsed.length) {
+          console.log("Removed invalid or default events:", parsed.length - sanitized.length);
+          await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(sanitized));
+        }
+
+        if (isActive) {
+          setEvents(sanitized);
+          console.log("Events in memory:", sanitized.length);
+        }
+      } catch (error) {
+        console.error("Failed to load events:", error);
+        await AsyncStorage.removeItem(STORAGE_KEY);
+        if (isActive) {
+          setEvents([]);
+        }
+      } finally {
+        if (isActive) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    void loadEvents();
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
+
   const persistEvents = useCallback(async (eventsToPersist: Event[]) => {
     try {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(eventsToPersist));
@@ -44,43 +95,6 @@ export const [EventsProvider, useEvents] = createContextHook(() => {
       throw error;
     }
   }, []);
-
-  const loadEvents = useCallback(async () => {
-    console.log("Loading events from storage");
-    try {
-      const stored = await AsyncStorage.getItem(STORAGE_KEY);
-      if (!stored) {
-        console.log("Storage empty, initializing with no events");
-        setEvents([]);
-        await AsyncStorage.setItem(STORAGE_KEY, EMPTY_EVENTS_JSON);
-        return;
-      }
-
-      const parsed = JSON.parse(stored) as unknown;
-      const sanitized = sanitizeEvents(parsed);
-
-      if (!Array.isArray(parsed)) {
-        console.log("Stored events were not an array, resetting storage");
-        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(sanitized));
-      } else if (sanitized.length !== parsed.length) {
-        console.log("Removed invalid or default events:", parsed.length - sanitized.length);
-        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(sanitized));
-      }
-
-      setEvents(sanitized);
-      console.log("Events in memory:", sanitized.length);
-    } catch (error) {
-      console.error("Failed to load events:", error);
-      await AsyncStorage.removeItem(STORAGE_KEY);
-      setEvents([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    void loadEvents();
-  }, [loadEvents]);
 
   const addEvent = useCallback((event: Omit<Event, "id">) => {
     return new Promise<void>((resolve, reject) => {
