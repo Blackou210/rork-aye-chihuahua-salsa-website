@@ -21,17 +21,25 @@ export default function HomeScreen() {
   const [shakeAnimation] = useState(new Animated.Value(0));
   const cartItemCount = getCartItemCount();
 
-  console.log('Events loaded:', events.length);
-  console.log('Events:', events);
+  console.log('\n=== HOME SCREEN EVENTS DEBUG ===');
+  console.log('Total events loaded:', events.length);
+  console.log('IsLoading:', isLoading);
+  console.log('Events:', JSON.stringify(events, null, 2));
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+  console.log('Today date for comparison:', today.toISOString());
   
   const upcomingEvents = events
     .filter(event => {
+      console.log(`Checking event "${event.title}" with date: ${event.date}`);
       const [year, month, day] = event.date.split('-').map(Number);
+      console.log(`Parsed: year=${year}, month=${month}, day=${day}`);
       const eventDate = new Date(year, month - 1, day, 12, 0, 0);
-      return eventDate >= today;
+      console.log(`Event date object: ${eventDate.toISOString()}`);
+      const isUpcoming = eventDate >= today;
+      console.log(`Is upcoming: ${isUpcoming}`);
+      return isUpcoming;
     })
     .sort((a, b) => {
       const [aYear, aMonth, aDay] = a.date.split('-').map(Number);
@@ -42,7 +50,9 @@ export default function HomeScreen() {
     })
     .slice(0, 3);
 
-  console.log('Upcoming events:', upcomingEvents.length);
+  console.log('Upcoming events count:', upcomingEvents.length);
+  console.log('Upcoming events:', JSON.stringify(upcomingEvents, null, 2));
+  console.log('=== END EVENTS DEBUG ===\n');
 
   const handleHeaderTap = () => {
     const now = Date.now();
