@@ -2,7 +2,7 @@ import Colors from "@/constants/colors";
 import { Event } from "@/constants/events";
 import { useEvents } from "@/context/events";
 import { useCart } from "@/context/cart";
-import { Order } from "@/types/order";
+import { Order, OrderStatus } from "@/types/order";
 import { Plus, Edit, Trash2, X, Save, Mail, MessageCircle, Clock, Check, PackageCheck, Lock, Phone, ChevronRight } from "lucide-react-native";
 import React, { useState } from "react";
 import { useFocusEffect } from "expo-router";
