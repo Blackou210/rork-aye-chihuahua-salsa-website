@@ -5,7 +5,7 @@ import { Product, SalsaSize } from "@/types/order";
 import { Image } from "expo-image";
 import { ShoppingCart, MapPin, Clock, Facebook, Instagram, Navigation } from "lucide-react-native";
 import React, { useState } from "react";
-import { ImageBackground, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View, Linking, Pressable } from "react-native";
+import { ImageBackground, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View, Linking, Pressable, Animated } from "react-native";
 import { router } from "expo-router";
 import { useEvents } from "@/context/events";
 
@@ -18,6 +18,7 @@ export default function HomeScreen() {
   const [selectedSize, setSelectedSize] = useState<SalsaSize>("4oz");
   const [tapCount, setTapCount] = useState(0);
   const [lastTapTime, setLastTapTime] = useState(0);
+  const [shakeAnimation] = useState(new Animated.Value(0));
   const cartItemCount = getCartItemCount();
 
   console.log('Events loaded:', events.length);
@@ -39,9 +40,30 @@ export default function HomeScreen() {
 
   const handleHeaderTap = () => {
     const now = Date.now();
-    if (now - lastTapTime < 500) {
+    
+    Animated.sequence([
+      Animated.timing(shakeAnimation, {
+        toValue: 10,
+        duration: 50,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnimation, {
+        toValue: -10,
+        duration: 50,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnimation, {
+        toValue: 0,
+        duration: 50,
+        useNativeDriver: true,
+      }),
+    ]).start();
+    
+    if (now - lastTapTime < 600) {
       const newCount = tapCount + 1;
+      console.log('Tap count:', newCount);
       if (newCount >= 3) {
+        console.log('Admin access granted - 3 taps detected');
         router.push('/(tabs)/admin');
         setTapCount(0);
       } else {
@@ -96,9 +118,11 @@ export default function HomeScreen() {
     >
       <View style={styles.header}>
         <View style={{ width: 20 }} />
-        <Pressable onPress={handleHeaderTap}>
-          <Text style={styles.headerTitle}>¡Ay, Chihuahua! Salsa</Text>
-          <Text style={styles.headerSubtitle}>Best in Texas</Text>
+        <Pressable onPress={handleHeaderTap} style={styles.headerTouchable}>
+          <Animated.View style={{ transform: [{ translateX: shakeAnimation }] }}>
+            <Text style={styles.headerTitle}>¡Ay, Chihuahua! Salsa</Text>
+            <Text style={styles.headerSubtitle}>Best in Texas</Text>
+          </Animated.View>
         </Pressable>
         <TouchableOpacity 
           style={styles.cartBadgeContainer}
@@ -294,15 +318,20 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.light.border,
     gap: 12,
   },
+  headerTouchable: {
+    alignItems: "center" as const,
+  },
   headerTitle: {
     fontSize: 24,
     fontWeight: "700" as const,
     color: Colors.light.primary,
+    textAlign: "center" as const,
   },
   headerSubtitle: {
     fontSize: 14,
     color: Colors.light.textSecondary,
     marginTop: 2,
+    textAlign: "center" as const,
   },
   cartBadgeContainer: {
     position: "relative" as const,
