@@ -226,11 +226,13 @@ export default function AdminScreen() {
   };
 
   const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day, 12, 0, 0);
     return date.toLocaleDateString("en-US", { 
       month: "short", 
       day: "numeric",
-      year: "numeric"
+      year: "numeric",
+      timeZone: "UTC"
     });
   };
 

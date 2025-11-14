@@ -29,11 +29,17 @@ export default function HomeScreen() {
   
   const upcomingEvents = events
     .filter(event => {
-      const eventDate = new Date(event.date);
-      eventDate.setHours(0, 0, 0, 0);
+      const [year, month, day] = event.date.split('-').map(Number);
+      const eventDate = new Date(year, month - 1, day, 12, 0, 0);
       return eventDate >= today;
     })
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .sort((a, b) => {
+      const [aYear, aMonth, aDay] = a.date.split('-').map(Number);
+      const [bYear, bMonth, bDay] = b.date.split('-').map(Number);
+      const aDate = new Date(aYear, aMonth - 1, aDay);
+      const bDate = new Date(bYear, bMonth - 1, bDay);
+      return aDate.getTime() - bDate.getTime();
+    })
     .slice(0, 3);
 
   console.log('Upcoming events:', upcomingEvents.length);
@@ -154,14 +160,14 @@ export default function HomeScreen() {
           <View style={styles.eventsSection}>
             <Text style={styles.sectionTitle}>Find Us At</Text>
             {upcomingEvents.map((event) => {
-              const eventDate = new Date(event.date);
-              const month = eventDate.toLocaleDateString('en-US', { month: 'short' });
-              const day = eventDate.getDate();
+              const [year, month, day] = event.date.split('-').map(Number);
+              const eventDate = new Date(year, month - 1, day, 12, 0, 0);
+              const monthStr = eventDate.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' });
               
               return (
                 <View key={event.id} style={styles.eventCard}>
                   <View style={styles.eventDateBadge}>
-                    <Text style={styles.eventMonth}>{month}</Text>
+                    <Text style={styles.eventMonth}>{monthStr}</Text>
                     <Text style={styles.eventDay}>{day}</Text>
                   </View>
                   <View style={styles.eventDetails}>

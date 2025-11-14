@@ -41,19 +41,20 @@ export default function EventsScreen() {
 
   const formatDate = (dateString: string): string => {
     const [year, month, day] = dateString.split('-').map(Number);
-    const date = new Date(year, month - 1, day);
+    const date = new Date(year, month - 1, day, 12, 0, 0);
     const options: Intl.DateTimeFormatOptions = { 
       weekday: "long", 
       month: "long", 
       day: "numeric",
-      year: "numeric"
+      year: "numeric",
+      timeZone: "UTC"
     };
     return date.toLocaleDateString("en-US", options);
   };
 
   const isUpcoming = (dateString: string): boolean => {
     const [year, month, day] = dateString.split('-').map(Number);
-    const eventDate = new Date(year, month - 1, day);
+    const eventDate = new Date(year, month - 1, day, 12, 0, 0);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return eventDate >= today;
