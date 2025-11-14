@@ -305,40 +305,6 @@ export default function CartScreen() {
             <TouchableOpacity style={styles.checkoutButton} onPress={() => setShowCheckout(true)}>
               <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
             </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={styles.cashAppQuickButton}
-              onPress={async () => {
-                try {
-                  const amount = cartTotal.toFixed(2);
-                  const cashAppUrl = `https://cash.app/$aychihuahuasalsa/${amount}`;
-                  
-                  const canOpen = await Linking.canOpenURL(cashAppUrl);
-                  if (canOpen) {
-                    await Linking.openURL(cashAppUrl);
-                  } else {
-                    Alert.alert(
-                      "Cash App Not Available",
-                      "Please install Cash App or use the Proceed to Checkout button to place your order."
-                    );
-                  }
-                } catch (error) {
-                  console.error("Error opening Cash App:", error);
-                  Alert.alert(
-                    "Error",
-                    "Could not open Cash App. Please use the Proceed to Checkout button."
-                  );
-                }
-              }}
-            >
-              <View style={styles.cashAppQuickIcon}>
-                <Text style={styles.cashAppQuickIconText}>$</Text>
-              </View>
-              <View style={styles.cashAppQuickContent}>
-                <Text style={styles.cashAppQuickTitle}>Pay ${cartTotal.toFixed(2)} with Cash App</Text>
-                <Text style={styles.cashAppQuickSubtitle}>$aychihuahuasalsa</Text>
-              </View>
-            </TouchableOpacity>
           </View>
         </>
       )}
@@ -1045,46 +1011,7 @@ const styles = StyleSheet.create({
     textAlign: "center" as const,
     lineHeight: 16,
   },
-  cashAppQuickButton: {
-    flexDirection: "row" as const,
-    alignItems: "center" as const,
-    backgroundColor: "#00D64F",
-    borderRadius: 12,
-    padding: 14,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-    elevation: 4,
-  },
-  cashAppQuickIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 10,
-    backgroundColor: "#fff",
-    justifyContent: "center" as const,
-    alignItems: "center" as const,
-    marginRight: 12,
-  },
-  cashAppQuickIconText: {
-    fontSize: 26,
-    fontWeight: "700" as const,
-    color: "#00D64F",
-  },
-  cashAppQuickContent: {
-    flex: 1,
-  },
-  cashAppQuickTitle: {
-    fontSize: 16,
-    fontWeight: "700" as const,
-    color: "#fff",
-    marginBottom: 2,
-  },
-  cashAppQuickSubtitle: {
-    fontSize: 13,
-    color: "rgba(255, 255, 255, 0.9)",
-    fontWeight: "600" as const,
-  },
+
   orderInstructions: {
     backgroundColor: Colors.light.background,
     borderRadius: 12,
