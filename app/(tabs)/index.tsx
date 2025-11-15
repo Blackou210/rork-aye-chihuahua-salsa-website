@@ -3,58 +3,21 @@ import { PRODUCTS } from "@/constants/products";
 import { useCart } from "@/context/cart";
 import { Product, SalsaSize } from "@/types/order";
 import { Image } from "expo-image";
-import { ShoppingCart, MapPin, Clock, Facebook, Instagram, Navigation } from "lucide-react-native";
+import { ShoppingCart, Facebook, Instagram } from "lucide-react-native";
 import React, { useState } from "react";
 import { ImageBackground, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View, Linking, Pressable, Animated } from "react-native";
 import { router } from "expo-router";
-import { useEvents } from "@/context/events";
 
 const SIZES: SalsaSize[] = ["4oz", "8oz", "12oz", "1gal"];
 
 export default function HomeScreen() {
   const { addToCart, getCartItemCount } = useCart();
-  const { events, isLoading } = useEvents();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<SalsaSize>("4oz");
   const [tapCount, setTapCount] = useState(0);
   const [lastTapTime, setLastTapTime] = useState(0);
   const [shakeAnimation] = useState(new Animated.Value(0));
   const cartItemCount = getCartItemCount();
-
-  console.log('\n=== HOME SCREEN EVENTS DEBUG ===');
-  console.log('Total events loaded:', events.length);
-  console.log('IsLoading:', isLoading);
-  console.log('Events:', JSON.stringify(events, null, 2));
-
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const todayDateString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-  console.log('Today date for comparison:', todayDateString);
-  
-  const upcomingEvents = events
-    .filter(event => {
-      console.log(`Checking event "${event.title}" with date: ${event.date}`);
-      console.log(`Display on home: ${event.displayOnHome}`);
-      const isUpcoming = event.date >= todayDateString;
-      const shouldDisplay = event.displayOnHome && isUpcoming;
-      console.log(`Is upcoming: ${isUpcoming} (${event.date} >= ${todayDateString})`);
-      console.log(`Should display: ${shouldDisplay}`);
-      return shouldDisplay;
-    })
-    .sort((a, b) => {
-      return a.date.localeCompare(b.date);
-    })
-    .slice(0, 3);
-
-  console.log('Upcoming events count:', upcomingEvents.length);
-  console.log('Upcoming events:', JSON.stringify(upcomingEvents, null, 2));
-  console.log('=== END EVENTS DEBUG ===\n');
-
-  console.log('\n🚨 DISPLAY LOGIC CHECK:');
-  console.log('isLoading:', isLoading);
-  console.log('upcomingEvents.length:', upcomingEvents.length);
-  console.log('Should show events:', !isLoading && upcomingEvents.length > 0);
-  console.log('🚨 END DISPLAY CHECK\n');
 
   const handleHeaderTap = () => {
     const now = Date.now();
@@ -167,53 +130,6 @@ export default function HomeScreen() {
             {renderProductCard({ item })}
           </View>
         ))}
-
-        {events.length > 0 && (
-          <View style={styles.eventsSection}>
-            <Text style={styles.sectionTitle}>Find Us At</Text>
-            {upcomingEvents.length === 0 && (
-              <View style={styles.noEventsContainer}>
-                <Text style={styles.noEventsText}>No upcoming events at this time</Text>
-                <Text style={styles.noEventsSubtext}>Check back soon for our next market dates!</Text>
-              </View>
-            )}
-            {upcomingEvents.map((event) => {
-              const [year, month, day] = event.date.split('-').map(Number);
-              const eventDate = new Date(year, month - 1, day, 12, 0, 0);
-              const monthStr = eventDate.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' });
-              
-              return (
-                <View key={event.id} style={styles.eventCard}>
-                  <View style={styles.eventDateBadge}>
-                    <Text style={styles.eventMonth}>{monthStr}</Text>
-                    <Text style={styles.eventDay}>{day}</Text>
-                  </View>
-                  <View style={styles.eventDetails}>
-                    <Text style={styles.eventTitle}>{event.title}</Text>
-                    <View style={styles.eventInfoRow}>
-                      <MapPin size={14} color={Colors.light.textSecondary} />
-                      <Text style={styles.eventInfoText}>{event.location}</Text>
-                    </View>
-                    <View style={styles.eventInfoRow}>
-                      <Clock size={14} color={Colors.light.textSecondary} />
-                      <Text style={styles.eventInfoText}>{event.startTime} - {event.endTime}</Text>
-                    </View>
-                  </View>
-                  <TouchableOpacity 
-                    style={styles.mapButton}
-                    onPress={() => {
-                      const encodedAddress = encodeURIComponent(event.address);
-                      Linking.openURL(`https://maps.google.com/?q=${encodedAddress}`);
-                    }}
-                    activeOpacity={0.7}
-                  >
-                    <Navigation size={20} color={Colors.light.primary} />
-                  </TouchableOpacity>
-                </View>
-              );
-            })}
-          </View>
-        )}
 
         <View style={styles.socialSection}>
           <Text style={styles.sectionTitle}>Follow Us</Text>
@@ -382,77 +298,12 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 16,
   },
-  eventsSection: {
-    marginTop: 8,
-  },
   sectionTitle: {
     fontSize: 20,
     fontWeight: "700" as const,
     color: Colors.light.text,
     marginBottom: 16,
     paddingHorizontal: 4,
-  },
-  eventCard: {
-    backgroundColor: Colors.light.cardBg,
-    borderRadius: 16,
-    marginBottom: 12,
-    padding: 16,
-    flexDirection: "row" as const,
-    alignItems: "center" as const,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  eventDateBadge: {
-    width: 60,
-    height: 60,
-    borderRadius: 12,
-    backgroundColor: Colors.light.primary,
-    justifyContent: "center" as const,
-    alignItems: "center" as const,
-    marginRight: 16,
-  },
-  eventMonth: {
-    fontSize: 12,
-    fontWeight: "600" as const,
-    color: "#fff",
-    textTransform: "uppercase" as const,
-  },
-  eventDay: {
-    fontSize: 24,
-    fontWeight: "700" as const,
-    color: "#fff",
-  },
-  eventDetails: {
-    flex: 1,
-    justifyContent: "center" as const,
-    gap: 4,
-    marginRight: 12,
-  },
-  mapButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: Colors.light.primary + "20",
-    justifyContent: "center" as const,
-    alignItems: "center" as const,
-  },
-  eventTitle: {
-    fontSize: 16,
-    fontWeight: "700" as const,
-    color: Colors.light.text,
-    marginBottom: 4,
-  },
-  eventInfoRow: {
-    flexDirection: "row" as const,
-    alignItems: "center" as const,
-    gap: 6,
-  },
-  eventInfoText: {
-    fontSize: 13,
-    color: Colors.light.textSecondary,
   },
   productCard: {
     backgroundColor: Colors.light.cardBg,
@@ -630,21 +481,5 @@ const styles = StyleSheet.create({
     color: Colors.light.primary,
     fontSize: 10,
     fontWeight: "700" as const,
-  },
-  noEventsContainer: {
-    padding: 24,
-    alignItems: "center" as const,
-  },
-  noEventsText: {
-    fontSize: 16,
-    fontWeight: "600" as const,
-    color: Colors.light.text,
-    textAlign: "center" as const,
-    marginBottom: 8,
-  },
-  noEventsSubtext: {
-    fontSize: 14,
-    color: Colors.light.textSecondary,
-    textAlign: "center" as const,
   },
 });

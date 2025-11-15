@@ -1,5 +1,4 @@
 import { CartProvider } from "@/context/cart";
-import { EventsProvider } from "@/context/events";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import Head from "expo-router/head";
@@ -64,13 +63,11 @@ export default function RootLayout() {
         />
       </Head>
       <QueryClientProvider client={queryClient}>
-        <EventsProvider>
-          <CartProvider>
-            <GestureHandlerRootView style={styles.container}>
-              <RootLayoutNav />
-            </GestureHandlerRootView>
-          </CartProvider>
-        </EventsProvider>
+        <CartProvider>
+          <GestureHandlerRootView style={styles.container}>
+            <RootLayoutNav />
+          </GestureHandlerRootView>
+        </CartProvider>
       </QueryClientProvider>
     </>
   );
