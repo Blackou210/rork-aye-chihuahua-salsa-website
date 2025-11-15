@@ -1,7 +1,7 @@
 import createContextHook from "@nkzw/create-context-hook";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Event } from "../constants/events";
+import { Event, EVENTS } from "../constants/events";
 
 const STORAGE_KEY = "ayechihuahua_events";
 const HAS_INITIALIZED_KEY = "ayechihuahua_events_initialized";
@@ -55,13 +55,14 @@ export const [EventsProvider, useEvents] = createContextHook(() => {
       console.log("Loading events from storage");
       try {
         const stored = await AsyncStorage.getItem(STORAGE_KEY);
+        const hasInitialized = await AsyncStorage.getItem(HAS_INITIALIZED_KEY);
         
-        if (!stored) {
-          console.log("Storage empty, initializing with empty array");
+        if (!stored || !hasInitialized) {
+          console.log("Storage empty, initializing with default events");
           if (isActive) {
-            setEvents([]);
+            setEvents(EVENTS);
           }
-          await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+          await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(EVENTS));
           await AsyncStorage.setItem(HAS_INITIALIZED_KEY, "true");
           return;
         }
