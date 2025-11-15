@@ -140,13 +140,15 @@ export const [EventsProvider, useEvents] = createContextHook(() => {
   const updateEvent = useCallback((id: string, updatedEvent: Omit<Event, "id">) => {
     return new Promise<void>((resolve, reject) => {
       console.log("Updating event:", id);
+      console.log("Updated data:", updatedEvent);
       setEvents((currentEvents) => {
         const updatedEvents = currentEvents.map((event) =>
-          event.id === id ? { ...updatedEvent, id } : event
+          event.id === id ? { ...updatedEvent, id, displayOnHome: updatedEvent.displayOnHome ?? true } : event
         );
+        console.log("Updated events array:", updatedEvents);
         persistEvents(updatedEvents)
           .then(() => {
-            console.log("Event updated:", id);
+            console.log("Event updated successfully:", id);
             resolve();
           })
           .catch((error) => {
