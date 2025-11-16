@@ -30,6 +30,7 @@ export default function CartScreen() {
   const [agreedToWarning, setAgreedToWarning] = useState(false);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [isCashAppLoading, setIsCashAppLoading] = useState(false);
+  const [isPayPalLoading, setIsPayPalLoading] = useState(false);
 
   const handleCheckout = async () => {
     if (!name.trim() || !email.trim() || !phone.trim()) {
@@ -435,6 +436,47 @@ export default function CartScreen() {
                   
                   <Text style={styles.paymentNote}>
                     After you tap 'Pay with Cash App', please complete the payment and include your <Text style={{ fontWeight: '700' as const }}>name and order details</Text> in the Cash App note. We will confirm your order by text.
+                  </Text>
+
+                  <TouchableOpacity 
+                    style={[styles.paypalButton, isPayPalLoading && styles.paypalButtonLoading]}
+                    onPress={async () => {
+                      if (!name.trim() || !email.trim() || !phone.trim()) {
+                        Alert.alert("Missing Information", "Please fill in all required fields before proceeding to payment");
+                        return;
+                      }
+                      if (!agreedToWarning) {
+                        Alert.alert("Confirmation Required", "Please confirm you understand the storage warning before proceeding to payment");
+                        return;
+                      }
+                      
+                      setIsPayPalLoading(true);
+                      try {
+                        const paypalUrl = `https://www.paypal.me/aychihuahuasalsa/${cartTotal.toFixed(2)}`;
+                        await Linking.openURL(paypalUrl);
+                      } catch (error) {
+                        console.error("Could not open PayPal:", error);
+                        Alert.alert(
+                          "Payment Link",
+                          `Please visit paypal.me/aychihuahuasalsa and send ${cartTotal.toFixed(2)} to complete your order.`
+                        );
+                      } finally {
+                        setIsPayPalLoading(false);
+                      }
+                    }}
+                    disabled={!name.trim() || !email.trim() || !phone.trim() || !agreedToWarning || isPayPalLoading}
+                  >
+                    <View style={styles.paypalIcon}>
+                      <Text style={styles.paypalIconText}>P</Text>
+                    </View>
+                    <View style={styles.paypalContent}>
+                      <Text style={styles.paypalTitle}>Pay with PayPal</Text>
+                      <Text style={styles.paypalHandle}>paypal.me/aychihuahuasalsa • ${cartTotal.toFixed(2)}</Text>
+                    </View>
+                  </TouchableOpacity>
+
+                  <Text style={styles.paymentNote}>
+                    After you tap 'Pay with PayPal', complete the payment. We will confirm your order by text.
                   </Text>
                 </View>
 
@@ -996,6 +1038,49 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     paddingHorizontal: 8,
     marginBottom: 16,
+  },
+  paypalButton: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    backgroundColor: "#0070BA",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  paypalButtonLoading: {
+    opacity: 0.5,
+  },
+  paypalIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    backgroundColor: "#fff",
+    justifyContent: "center" as const,
+    alignItems: "center" as const,
+    marginRight: 12,
+  },
+  paypalIconText: {
+    fontSize: 28,
+    fontWeight: "700" as const,
+    color: "#0070BA",
+  },
+  paypalContent: {
+    flex: 1,
+  },
+  paypalTitle: {
+    fontSize: 16,
+    fontWeight: "700" as const,
+    color: "#fff",
+    marginBottom: 2,
+  },
+  paypalHandle: {
+    fontSize: 14,
+    color: "rgba(255, 255, 255, 0.9)",
   },
 
   orderInstructions: {
