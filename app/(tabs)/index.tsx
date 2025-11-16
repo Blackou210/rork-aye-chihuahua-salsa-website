@@ -62,8 +62,11 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <View style={{ width: 20 }} />
         <View style={styles.headerTouchable}>
-          <Text style={styles.headerTitle}>¡Ay, Chihuahua! Salsa</Text>
-          <Text style={styles.headerSubtitle}>Best in Texas</Text>
+          <Image
+            source={{ uri: "https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/eren432m7wn926dp6qvps" }}
+            style={styles.logoImage}
+            contentFit="contain"
+          />
         </View>
         <TouchableOpacity 
           style={styles.cartBadgeContainer}
@@ -220,18 +223,11 @@ const styles = StyleSheet.create({
   },
   headerTouchable: {
     alignItems: "center" as const,
+    flex: 1,
   },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: "700" as const,
-    color: Colors.light.primary,
-    textAlign: "center" as const,
-  },
-  headerSubtitle: {
-    fontSize: 14,
-    color: Colors.light.textSecondary,
-    marginTop: 2,
-    textAlign: "center" as const,
+  logoImage: {
+    width: 120,
+    height: 60,
   },
   cartBadgeContainer: {
     position: "relative" as const,
