@@ -1,19 +1,10 @@
-import { Tabs, useRouter, useSegments } from "expo-router";
+import { Tabs } from "expo-router";
 import { Home, ShoppingCart, ChefHat } from "lucide-react-native";
 import React from "react";
 
 import Colors from "@/constants/colors";
 
 export default function TabLayout() {
-  const segments = useSegments();
-  const router = useRouter();
-
-  React.useEffect(() => {
-    if (segments[0] === '(tabs)' && !segments[1]) {
-      router.replace('/splash');
-    }
-  }, []);
-
   return (
     <Tabs
       screenOptions={{
