@@ -62,7 +62,7 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <View style={{ width: 20 }} />
         <View style={styles.headerTouchable}>
-          <Text style={styles.headerTitle}>¡Ay, Chihuahua! Salsa</Text>
+          <Text style={styles.headerTitle}>ROJO LOCA</Text>
           <Text style={styles.headerSubtitle}>Best in Texas</Text>
         </View>
         <TouchableOpacity 
