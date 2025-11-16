@@ -391,27 +391,69 @@ export default function CartScreen() {
                   />
                 </View>
 
+                <View style={styles.paymentSection}>
+                  <Text style={styles.paymentLabel}>Payment Method</Text>
+                  
+                  <TouchableOpacity 
+                    style={[styles.cashAppButton, isCashAppLoading && styles.cashAppButtonLoading]}
+                    onPress={async () => {
+                      if (!name.trim() || !email.trim() || !phone.trim()) {
+                        Alert.alert("Missing Information", "Please fill in all required fields before proceeding to payment");
+                        return;
+                      }
+                      if (!agreedToWarning) {
+                        Alert.alert("Confirmation Required", "Please confirm you understand the storage warning before proceeding to payment");
+                        return;
+                      }
+                      
+                      setIsCashAppLoading(true);
+                      try {
+                        const cashAppUrl = `https://cash.app/$aychihuahuasalsa/${cartTotal.toFixed(2)}`;
+                        await Linking.openURL(cashAppUrl);
+                      } catch (error) {
+                        console.error("Could not open Cash App:", error);
+                        Alert.alert(
+                          "Payment Link",
+                          `Please send ${cartTotal.toFixed(2)} to $aychihuahuasalsa on Cash App to complete your order.`
+                        );
+                      } finally {
+                        setIsCashAppLoading(false);
+                      }
+                    }}
+                    disabled={!name.trim() || !email.trim() || !phone.trim() || !agreedToWarning || isCashAppLoading}
+                  >
+                    <View style={styles.cashAppIcon}>
+                      <Text style={styles.cashAppIconText}>$</Text>
+                    </View>
+                    <View style={styles.cashAppContent}>
+                      <Text style={styles.cashAppTitle}>Pay with Cash App</Text>
+                      <Text style={styles.cashAppHandle}>$aychihuahuasalsa • ${cartTotal.toFixed(2)}</Text>
+                    </View>
+                  </TouchableOpacity>
+                  
+                  <Text style={styles.paymentNote}>
+                    After you tap 'Pay with Cash App', please complete the payment and include your <Text style={{ fontWeight: '700' as const }}>name and order details</Text> in the Cash App note. We will confirm your order by text.
+                  </Text>
+                </View>
+
                 <View style={styles.orderInstructions}>
                   <View style={styles.instructionStep}>
                     <View style={styles.stepNumber}>
                       <Text style={styles.stepNumberText}>1</Text>
                     </View>
-                    <Text style={styles.stepText}>Confirm the refrigeration warning below</Text>
+                    <Text style={styles.stepText}>Fill in your contact information above</Text>
                   </View>
                   <View style={styles.instructionStep}>
                     <View style={styles.stepNumber}>
                       <Text style={styles.stepNumberText}>2</Text>
                     </View>
-                    <Text style={styles.stepText}>Click "Place Order" to start your order</Text>
+                    <Text style={styles.stepText}>Tap "Pay with Cash App" to complete payment</Text>
                   </View>
                   <View style={styles.instructionStep}>
                     <View style={styles.stepNumber}>
                       <Text style={styles.stepNumberText}>3</Text>
                     </View>
-                    <View style={styles.stepTextContainer}>
-                      <Text style={styles.stepText}>Send ${cartTotal.toFixed(2)} via Cash App to </Text>
-                      <Text style={styles.emailText}>{email || 'your@email.com'}</Text>
-                    </View>
+                    <Text style={styles.stepText}>Click "Place Order" to finalize your order</Text>
                   </View>
                 </View>
 
@@ -908,7 +950,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#00D64F",
     borderRadius: 12,
     padding: 16,
-    marginBottom: 8,
+    marginBottom: 12,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -916,7 +958,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   cashAppButtonLoading: {
-    opacity: 0.7,
+    opacity: 0.5,
   },
   cashAppIcon: {
     width: 48,
@@ -949,7 +991,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.light.textSecondary,
     textAlign: "center" as const,
-    lineHeight: 16,
+    lineHeight: 18,
+    paddingHorizontal: 8,
+    marginBottom: 16,
   },
 
   orderInstructions: {
