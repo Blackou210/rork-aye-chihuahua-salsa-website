@@ -23,7 +23,7 @@ export const [CartProvider, useCart] = createContextHook(() => {
         AsyncStorage.getItem(ORDER_COUNTER_KEY),
       ]);
       
-      if (cartData) {
+      if (cartData && cartData !== "undefined" && cartData !== "null") {
         try {
           const parsed = JSON.parse(cartData);
           if (Array.isArray(parsed)) {
@@ -40,7 +40,7 @@ export const [CartProvider, useCart] = createContextHook(() => {
         }
       }
       
-      if (ordersData) {
+      if (ordersData && ordersData !== "undefined" && ordersData !== "null") {
         try {
           const parsed = JSON.parse(ordersData);
           if (Array.isArray(parsed)) {
@@ -57,7 +57,7 @@ export const [CartProvider, useCart] = createContextHook(() => {
         }
       }
       
-      if (counterData) {
+      if (counterData && counterData !== "undefined" && counterData !== "null") {
         try {
           const parsed = JSON.parse(counterData);
           if (typeof parsed === 'number') {
@@ -77,7 +77,11 @@ export const [CartProvider, useCart] = createContextHook(() => {
       setIsLoaded(true);
     } catch (error) {
       console.error("Failed to load cart data:", error);
-      await AsyncStorage.multiRemove([CART_KEY, ORDERS_KEY, ORDER_COUNTER_KEY]);
+      try {
+        await AsyncStorage.multiRemove([CART_KEY, ORDERS_KEY, ORDER_COUNTER_KEY]);
+      } catch (clearError) {
+        console.error("Failed to clear storage:", clearError);
+      }
       setCart([]);
       setOrders([]);
       setOrderCounter(0);
