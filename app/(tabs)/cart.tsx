@@ -394,6 +394,27 @@ export default function CartScreen() {
                   />
                 </View>
 
+                <View style={styles.checkoutSummary}>
+                  <View style={styles.checkoutSummaryRow}>
+                    <Text style={styles.checkoutSummaryLabel}>Subtotal</Text>
+                    <Text style={styles.checkoutSummaryValue}>${cartSubtotal.toFixed(2)}</Text>
+                  </View>
+                  <View style={styles.checkoutSummaryRow}>
+                    <Text style={styles.checkoutSummaryLabel}>Tax (8.25%)</Text>
+                    <Text style={styles.checkoutSummaryValue}>${cartTax.toFixed(2)}</Text>
+                  </View>
+                  {tipPercentage > 0 && (
+                    <View style={styles.checkoutSummaryRow}>
+                      <Text style={styles.checkoutSummaryLabel}>Tip ({tipPercentage}%)</Text>
+                      <Text style={styles.checkoutSummaryValue}>${cartTip.toFixed(2)}</Text>
+                    </View>
+                  )}
+                  <View style={styles.checkoutGrandTotal}>
+                    <Text style={styles.checkoutGrandTotalLabel}>Grand Total</Text>
+                    <Text style={styles.checkoutGrandTotalAmount}>${cartTotal.toFixed(2)}</Text>
+                  </View>
+                </View>
+
                 <View style={styles.paymentSection}>
                   <Text style={styles.paymentLabel}>Payment Method</Text>
                   
@@ -1122,6 +1143,49 @@ const styles = StyleSheet.create({
     fontWeight: "700" as const,
     color: Colors.light.primary,
     marginTop: 4,
+  },
+  checkoutSummary: {
+    backgroundColor: Colors.light.background,
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 20,
+    borderWidth: 2,
+    borderColor: Colors.light.border,
+  },
+  checkoutSummaryRow: {
+    flexDirection: "row" as const,
+    justifyContent: "space-between" as const,
+    alignItems: "center" as const,
+    marginBottom: 12,
+  },
+  checkoutSummaryLabel: {
+    fontSize: 15,
+    color: Colors.light.textSecondary,
+    fontWeight: "500" as const,
+  },
+  checkoutSummaryValue: {
+    fontSize: 15,
+    color: Colors.light.text,
+    fontWeight: "600" as const,
+  },
+  checkoutGrandTotal: {
+    flexDirection: "row" as const,
+    justifyContent: "space-between" as const,
+    alignItems: "center" as const,
+    marginTop: 12,
+    paddingTop: 16,
+    borderTopWidth: 2,
+    borderTopColor: Colors.light.primary,
+  },
+  checkoutGrandTotalLabel: {
+    fontSize: 20,
+    fontWeight: "700" as const,
+    color: Colors.light.text,
+  },
+  checkoutGrandTotalAmount: {
+    fontSize: 32,
+    fontWeight: "800" as const,
+    color: Colors.light.primary,
   },
   itemNumber: {
     width: 32,
