@@ -1,7 +1,6 @@
 import { CartProvider } from "@/context/cart";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
-import Head from "expo-router/head";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
@@ -55,21 +54,13 @@ export default function RootLayout() {
 
 
   return (
-    <>
-      <Head>
-        <link
-          rel="icon"
-          href="https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/wnehy6v4cdwr4ups76uua"
-        />
-      </Head>
-      <QueryClientProvider client={queryClient}>
-        <CartProvider>
-          <GestureHandlerRootView style={styles.container}>
-            <RootLayoutNav />
-          </GestureHandlerRootView>
-        </CartProvider>
-      </QueryClientProvider>
-    </>
+    <QueryClientProvider client={queryClient}>
+      <CartProvider>
+        <GestureHandlerRootView style={styles.container}>
+          <RootLayoutNav />
+        </GestureHandlerRootView>
+      </CartProvider>
+    </QueryClientProvider>
   );
 }
 
