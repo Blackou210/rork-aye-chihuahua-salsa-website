@@ -110,7 +110,12 @@ export default function CartScreen() {
     <View style={styles.cartItem}>
       <TouchableOpacity
         style={styles.deleteButtonTop}
-        onPress={() => removeFromCart(item.id, item.size)}
+        onPress={() => {
+          console.log(`Removing item: ${item.id}, size: ${item.size}`);
+          removeFromCart(item.id, item.size);
+        }}
+        activeOpacity={0.6}
+        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       >
         <X size={16} color="#fff" strokeWidth={3} />
       </TouchableOpacity>
