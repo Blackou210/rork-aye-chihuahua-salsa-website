@@ -5,7 +5,7 @@ import { Product, SalsaSize } from "@/types/order";
 import { Image } from "expo-image";
 import { ShoppingCart, Facebook, Instagram } from "lucide-react-native";
 import React, { useState } from "react";
-import { ImageBackground, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View, Linking, Pressable, Animated } from "react-native";
+import { ImageBackground, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View, Linking } from "react-native";
 import { router } from "expo-router";
 
 const SIZES: SalsaSize[] = ["4oz", "8oz", "12oz", "1gal"];
@@ -14,47 +14,9 @@ export default function HomeScreen() {
   const { addToCart, getCartItemCount } = useCart();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<SalsaSize>("4oz");
-  const [tapCount, setTapCount] = useState(0);
-  const [lastTapTime, setLastTapTime] = useState(0);
-  const [shakeAnimation] = useState(new Animated.Value(0));
   const cartItemCount = getCartItemCount();
 
-  const handleHeaderTap = () => {
-    const now = Date.now();
-    
-    Animated.sequence([
-      Animated.timing(shakeAnimation, {
-        toValue: 10,
-        duration: 50,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: -10,
-        duration: 50,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: 0,
-        duration: 50,
-        useNativeDriver: true,
-      }),
-    ]).start();
-    
-    if (now - lastTapTime < 600) {
-      const newCount = tapCount + 1;
-      console.log('Tap count:', newCount);
-      if (newCount >= 3) {
-        console.log('Admin access granted - 3 taps detected');
-        router.push('/(tabs)/admin');
-        setTapCount(0);
-      } else {
-        setTapCount(newCount);
-      }
-    } else {
-      setTapCount(1);
-    }
-    setLastTapTime(now);
-  };
+
 
   const handleAddToCart = () => {
     if (selectedProduct) {
@@ -99,12 +61,10 @@ export default function HomeScreen() {
     >
       <View style={styles.header}>
         <View style={{ width: 20 }} />
-        <Pressable onPress={handleHeaderTap} style={styles.headerTouchable}>
-          <Animated.View style={{ transform: [{ translateX: shakeAnimation }] }}>
-            <Text style={styles.headerTitle}>¡Ay, Chihuahua! Salsa</Text>
-            <Text style={styles.headerSubtitle}>Best in Texas</Text>
-          </Animated.View>
-        </Pressable>
+        <View style={styles.headerTouchable}>
+          <Text style={styles.headerTitle}>¡Ay, Chihuahua! Salsa</Text>
+          <Text style={styles.headerSubtitle}>Best in Texas</Text>
+        </View>
         <TouchableOpacity 
           style={styles.cartBadgeContainer}
           onPress={() => router.push('/(tabs)/cart')}
