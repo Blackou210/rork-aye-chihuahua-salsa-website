@@ -74,7 +74,9 @@ export default function CartScreen() {
           `Subtotal: ${orderSubtotal.toFixed(2)}\n` +
           `Tax (New Braunfels 8.25%): ${orderTax.toFixed(2)}\n` +
           (tipPercentage > 0 ? `Tip (${tipPercentage}%): ${orderTip.toFixed(2)}\n` : '') +
-          `Total: ${orderTotal.toFixed(2)}\n\n` +
+          `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+          `   💰 TOTAL: ${orderTotal.toFixed(2)}\n` +
+          `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
           `━━━━━━━━━━━━━━━━━━━━━━\n` +
           `💵 COMPLETE YOUR PAYMENT\n` +
           `━━━━━━━━━━━━━━━━━━━━━━\n\n` +
