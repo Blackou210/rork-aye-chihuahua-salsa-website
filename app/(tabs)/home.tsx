@@ -291,6 +291,7 @@ const styles = StyleSheet.create({
     fontWeight: "700" as const,
     color: Colors.light.text,
     marginBottom: 4,
+    lineHeight: 22,
   },
   productDescription: {
     fontSize: 14,
@@ -326,6 +327,7 @@ const styles = StyleSheet.create({
     fontWeight: "700" as const,
     color: Colors.light.text,
     marginBottom: 8,
+    lineHeight: 30,
   },
   modalDescription: {
     fontSize: 16,
