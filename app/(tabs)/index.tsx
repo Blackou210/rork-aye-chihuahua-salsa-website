@@ -48,7 +48,7 @@ export default function HomeScreen() {
         <Text style={styles.productDescription} numberOfLines={2}>
           {item.description}
         </Text>
-        <Text style={styles.productPrice}>ORDER NOW</Text>
+        <Text style={styles.productPrice}>ORDER HERE</Text>
       </View>
     </TouchableOpacity>
   );
@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 16,
     fontWeight: "600" as const,
-    color: Colors.light.primary,
+    color: Colors.light.redAccent,
   },
   modalOverlay: {
     flex: 1,

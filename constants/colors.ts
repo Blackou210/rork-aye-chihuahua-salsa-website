@@ -1,12 +1,13 @@
-const primary = "#E63946";
-const secondary = "#F77F00";
-const background = "#FFF8F0";
-const cardBg = "#FFFFFF";
-const textPrimary = "#2D3142";
-const textSecondary = "#6B7280";
-const success = "#06D6A0";
-const warning = "#F77F00";
-const border = "#E5E7EB";
+const primary = "#D4AF37";
+const secondary = "#C5A028";
+const background = "#000000";
+const cardBg = "#1A1A1A";
+const textPrimary = "#FFFFFF";
+const textSecondary = "#B8B8B8";
+const success = "#D4AF37";
+const warning = "#D4AF37";
+const border = "#333333";
+const redAccent = "#E63946";
 
 export default {
   light: {
@@ -20,7 +21,8 @@ export default {
     warning,
     border,
     tint: primary,
-    tabIconDefault: "#9CA3AF",
+    tabIconDefault: "#666666",
     tabIconSelected: primary,
+    redAccent,
   },
 };
