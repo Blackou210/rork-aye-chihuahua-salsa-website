@@ -51,9 +51,6 @@ export default function CartScreen() {
     
     try {
       const order = await placeOrder(name.trim(), email.trim(), phone.trim(), notes.trim());
-    
-      const amount = cartTotal.toFixed(2);
-      const cashAppUrl = `https://cash.app/$aychihuahuasalsa/${amount}`;
       
       try {
         const itemsList = cart.map(item => 
@@ -64,7 +61,6 @@ export default function CartScreen() {
         const orderTax = getCartTax();
         const orderTip = getCartTip();
         const orderTotal = getCartTotal();
-        const cashAppPaymentLink = `https://cash.app/$aychihuahuasalsa/${orderTotal.toFixed(2)}`;
         
         const emailBody = `New Order #${order.id}\n\n` +
           `Customer: ${name.trim()}\n` +
@@ -77,16 +73,9 @@ export default function CartScreen() {
           `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
           `   💰 TOTAL: ${orderTotal.toFixed(2)}\n` +
           `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
-          `━━━━━━━━━━━━━━━━━━━━━━\n` +
-          `💵 COMPLETE YOUR PAYMENT\n` +
-          `━━━━━━━━━━━━━━━━━━━━━━\n\n` +
-          `Click the link below to pay ${orderTotal.toFixed(2)} with Cash App:\n` +
-          `${cashAppPaymentLink}\n\n` +
-          `Or send ${orderTotal.toFixed(2)} to: $aychihuahuasalsa\n\n` +
           (notes.trim() ? `Notes: ${notes.trim()}\n\n` : '') +
-          `Thank you for your business!\n` +
-          `We sincerely appreciate your order and your support for ¡Ay, Chihuahua! Salsa.\n\n` +
-          `A member of our team will be reaching out shortly to provide a verbal confirmation of your order details and delivery preferences.\n\n` +
+          `Thank you for your order!\n` +
+          `We will contact you shortly to confirm your order and arrange payment.\n\n` +
           `If we do not reach out to you within 24hr please call (210)396-0722\n\n` +
           `Please note: Local delivery is currently available only within or near the New Braunfels and San Antonio, Texas area.`;
 
@@ -107,20 +96,8 @@ export default function CartScreen() {
 
       Alert.alert(
         "Order Placed!",
-        `Your order #${order.id} has been placed successfully. Now complete your payment via Cash App.`,
-        [
-          { text: "OK", onPress: async () => {
-            try {
-              await Linking.openURL(cashAppUrl);
-            } catch (error) {
-              console.error("Could not open Cash App:", error);
-              Alert.alert(
-                "Payment Link",
-                `Please send ${amount} to $aychihuahuasalsa on Cash App to complete your order.`
-              );
-            }
-          }}
-        ]
+        `Your order #${order.id} has been placed successfully! We'll contact you shortly to confirm your order and arrange payment. Thank you!`,
+        [{ text: "OK" }]
       );
     } catch (error) {
       console.error("Error placing order:", error);
@@ -414,53 +391,6 @@ export default function CartScreen() {
                   </View>
                 </View>
 
-                <View style={styles.paymentSection}>
-                  <Text style={styles.paymentLabel}>Payment Method</Text>
-                  
-                  <TouchableOpacity 
-                    style={[styles.cashAppButton, isCashAppLoading && styles.cashAppButtonLoading]}
-                    onPress={async () => {
-                      if (!name.trim() || !email.trim() || !phone.trim()) {
-                        Alert.alert("Missing Information", "Please fill in all required fields before proceeding to payment");
-                        return;
-                      }
-                      if (!agreedToWarning) {
-                        Alert.alert("Confirmation Required", "Please confirm you understand the storage warning before proceeding to payment");
-                        return;
-                      }
-                      
-                      setIsCashAppLoading(true);
-                      try {
-                        const cashAppUrl = `https://cash.app/$aychihuahuasalsa/${cartTotal.toFixed(2)}`;
-                        await Linking.openURL(cashAppUrl);
-                      } catch (error) {
-                        console.error("Could not open Cash App:", error);
-                        Alert.alert(
-                          "Payment Link",
-                          `Please send ${cartTotal.toFixed(2)} to $aychihuahuasalsa on Cash App to complete your order.`
-                        );
-                      } finally {
-                        setIsCashAppLoading(false);
-                      }
-                    }}
-                    disabled={!name.trim() || !email.trim() || !phone.trim() || !agreedToWarning || isCashAppLoading}
-                  >
-                    <View style={styles.cashAppIcon}>
-                      <Text style={styles.cashAppIconText}>$</Text>
-                    </View>
-                    <View style={styles.cashAppContent}>
-                      <Text style={styles.cashAppTitle}>Pay with Cash App</Text>
-                      <Text style={styles.cashAppHandle}>$aychihuahuasalsa • ${cartTotal.toFixed(2)}</Text>
-                    </View>
-                  </TouchableOpacity>
-                  
-                  <Text style={styles.paymentNote}>
-                    After you tap 'Pay with Cash App', please complete the payment and include your <Text style={{ fontWeight: '700' as const }}>name and order details</Text> in the Cash App note. We will confirm your order by text.
-                  </Text>
-
-
-                </View>
-
                 <View style={styles.orderInstructions}>
                   <View style={styles.instructionStep}>
                     <View style={styles.stepNumber}>
@@ -472,13 +402,13 @@ export default function CartScreen() {
                     <View style={styles.stepNumber}>
                       <Text style={styles.stepNumberText}>2</Text>
                     </View>
-                    <Text style={styles.stepText}>Tap "Pay with Cash App" to complete payment</Text>
+                    <Text style={styles.stepText}>Review your order summary</Text>
                   </View>
                   <View style={styles.instructionStep}>
                     <View style={styles.stepNumber}>
                       <Text style={styles.stepNumberText}>3</Text>
                     </View>
-                    <Text style={styles.stepText}>Click "Place Order" to finalize your order</Text>
+                    <Text style={styles.stepText}>Click "Place Order" - we'll contact you to arrange payment</Text>
                   </View>
                 </View>
 
