@@ -2,7 +2,7 @@ import Colors from "@/constants/colors";
 import { useCart } from "@/context/cart";
 import { CartItem as CartItemType } from "@/types/order";
 import { Image } from "expo-image";
-import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react-native";
+import { Minus, Plus, ShoppingBag, X } from "lucide-react-native";
 import React, { useRef, useState } from "react";
 import {
   Alert,
@@ -108,6 +108,12 @@ export default function CartScreen() {
 
   const renderCartItem = ({ item, index }: { item: CartItemType; index: number }) => (
     <View style={styles.cartItem}>
+      <TouchableOpacity
+        style={styles.deleteButtonTop}
+        onPress={() => removeFromCart(item.id, item.size)}
+      >
+        <X size={16} color="#fff" strokeWidth={3} />
+      </TouchableOpacity>
       <View style={styles.itemNumber}>
         <Text style={styles.itemNumberText}>{index + 1}</Text>
       </View>
@@ -133,12 +139,6 @@ export default function CartScreen() {
             <Plus size={16} color={Colors.light.text} />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={() => removeFromCart(item.id, item.size)}
-        >
-          <Trash2 size={18} color="#EF4444" />
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -513,8 +513,22 @@ const styles = StyleSheet.create({
     minWidth: 24,
     textAlign: "center" as const,
   },
-  deleteButton: {
-    padding: 8,
+  deleteButtonTop: {
+    position: "absolute" as const,
+    top: 8,
+    right: 8,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: "#EF4444",
+    justifyContent: "center" as const,
+    alignItems: "center" as const,
+    zIndex: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   footer: {
     padding: 16,
