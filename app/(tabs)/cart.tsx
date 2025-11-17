@@ -32,6 +32,12 @@ export default function CartScreen() {
   const [isCashAppLoading, setIsCashAppLoading] = useState(false);
 
   const handleCheckout = async () => {
+    console.log("handleCheckout called");
+    console.log("name:", name);
+    console.log("email:", email);
+    console.log("phone:", phone);
+    console.log("agreedToWarning:", agreedToWarning);
+    
     if (!name.trim() || !email.trim() || !phone.trim()) {
       Alert.alert("Missing Information", "Please fill in all required fields");
       return;
@@ -47,10 +53,13 @@ export default function CartScreen() {
       return;
     }
 
+    console.log("All validation passed, placing order...");
     setIsPlacingOrder(true);
     
     try {
+      console.log("Calling placeOrder...");
       const order = await placeOrder(name.trim(), email.trim(), phone.trim(), notes.trim());
+      console.log("Order placed:", order);
       
       try {
         const itemsList = cart.map(item => 
@@ -81,9 +90,17 @@ export default function CartScreen() {
 
         const mailtoUrl = `mailto:orders@aychihuahuasalsa.com?subject=${encodeURIComponent(`New Order #${order.id}`)}&body=${encodeURIComponent(emailBody)}`;
         
-        await Linking.openURL(mailtoUrl);
+        console.log("Opening email client...");
+        const canOpen = await Linking.canOpenURL(mailtoUrl);
+        console.log("Can open mailto URL:", canOpen);
+        
+        if (canOpen) {
+          await Linking.openURL(mailtoUrl);
+        } else {
+          console.log("Cannot open email client, but order was still placed");
+        }
       } catch (error) {
-        console.log("Could not open email client:", error);
+        console.error("Could not open email client:", error);
       }
       
       setShowCheckout(false);
