@@ -85,11 +85,13 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
       >
         <Text style={styles.sectionTitle}>Our Products</Text>
-        {PRODUCTS.map((item) => (
-          <View key={item.id}>
-            {renderProductCard({ item })}
-          </View>
-        ))}
+        <View style={styles.productsGrid}>
+          {PRODUCTS.map((item) => (
+            <View key={item.id} style={styles.productCardWrapper}>
+              {renderProductCard({ item })}
+            </View>
+          ))}
+        </View>
 
         <View style={styles.socialSection}>
           <Text style={styles.sectionTitle}>Follow Us</Text>
@@ -265,42 +267,47 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     paddingHorizontal: 4,
   },
+  productsGrid: {
+    flexDirection: "row" as const,
+    flexWrap: "wrap" as const,
+    gap: 12,
+    marginBottom: 16,
+  },
+  productCardWrapper: {
+    width: "48%" as const,
+  },
   productCard: {
     backgroundColor: Colors.light.cardBg,
     borderRadius: 16,
-    marginBottom: 16,
     overflow: "hidden" as const,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 3,
-    flexDirection: "row" as const,
   },
   productCardImage: {
-    width: 120,
-    height: 120,
+    width: "100%",
+    height: 140,
   },
   productInfo: {
-    flex: 1,
-    padding: 16,
-    justifyContent: "center" as const,
+    padding: 12,
   },
   productName: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "700" as const,
     color: Colors.light.text,
     marginBottom: 4,
-    lineHeight: 22,
-  },
-  productDescription: {
-    fontSize: 14,
-    color: Colors.light.textSecondary,
-    marginBottom: 8,
     lineHeight: 20,
   },
+  productDescription: {
+    fontSize: 12,
+    color: Colors.light.textSecondary,
+    marginBottom: 8,
+    lineHeight: 16,
+  },
   productPrice: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "600" as const,
     color: Colors.light.redAccent,
   },
