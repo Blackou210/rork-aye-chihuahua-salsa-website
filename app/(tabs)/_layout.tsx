@@ -44,7 +44,24 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <ChefHat color={color} />,
         }}
       />
-
+      <Tabs.Screen
+        name="index"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="admin"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="events"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }
