@@ -41,7 +41,7 @@ const RECIPES: Recipe[] = [
     id: "2",
     name: "ROJA LOCA Wings",
     description: "Crispy buffalo wings with a crazy red sauce glaze",
-    image: "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=800&q=80",
     ingredients: [
       "Chicken wings (2 lbs)",
       "ROJA LOCA Salsa (8oz)",
