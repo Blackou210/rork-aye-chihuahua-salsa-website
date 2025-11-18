@@ -20,7 +20,7 @@ const RECIPES: Recipe[] = [
     id: "1",
     name: "VERDE BRAVA Guacamole",
     description: "Quick and easy elevated guacamole with a brave green kick",
-    image: "https://images.unsplash.com/photo-1623961990059-e5c0f211d49c?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=800&q=80",
     ingredients: [
       "Avocados (3 ripe)",
       "VERDE BRAVA Salsa (4oz)",
