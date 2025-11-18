@@ -185,7 +185,7 @@ const RECIPES: Recipe[] = [
     description: "Traditional Mexican red hominy soup with crazy heat",
     image: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800&q=80",
     ingredients: [
-      "Pork shoulder (2 lbs, cubed)",
+      "Chicken (2 lbs, cubed)",
       "ROJA LOCA Salsa (12oz)",
       "White hominy (2 cans, 29oz each)",
       "Chicken broth (6 cups)",
@@ -198,10 +198,10 @@ const RECIPES: Recipe[] = [
       "Radishes, cabbage, lime for serving"
     ],
     instructions: [
-      "Brown pork in a large pot",
+      "Brown chicken in a large pot",
       "Add onion and garlic, sauté 3 minutes",
       "Pour in broth, bay leaves, oregano, and cumin",
-      "Simmer 1.5 hours until pork is tender",
+      "Simmer 1.5 hours until chicken is tender",
       "Blend rehydrated chiles with 1 cup broth",
       "Add chile mixture and ROJA LOCA salsa to pot",
       "Stir in hominy and simmer 20 minutes",
