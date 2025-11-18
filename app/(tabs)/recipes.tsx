@@ -63,7 +63,7 @@ const RECIPES: Recipe[] = [
     id: "3",
     name: "VERDE BRAVA Quesadilla",
     description: "Simple cheesy quesadilla with green salsa kick",
-    image: "https://images.unsplash.com/photo-1618040996337-56904b7850b9?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=800&q=80",
     ingredients: [
       "Flour tortillas (2 large)",
       "VERDE BRAVA Salsa (4oz)",
