@@ -243,7 +243,7 @@ const RECIPES: Recipe[] = [
     id: "10",
     name: "ROJA LOCA Stuffed Peppers",
     description: "Bell peppers filled with spicy red salsa rice",
-    image: "https://images.unsplash.com/photo-1601001815894-4bb6c81416d7?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=800&q=80",
     ingredients: [
       "Bell peppers (6, tops removed)",
       "ROJA LOCA Salsa (8oz)",
