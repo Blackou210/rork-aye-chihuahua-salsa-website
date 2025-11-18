@@ -401,7 +401,7 @@ const RECIPES: Recipe[] = [
     id: "16",
     name: "ROJA LOCA Albondigas Soup",
     description: "Mexican meatball soup in crazy red salsa broth",
-    image: "https://images.unsplash.com/photo-1604909052743-94e838986d24?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800&q=80",
     ingredients: [
       "Ground beef (1 lb)",
       "Cooked rice (1/2 cup)",
