@@ -18,11 +18,147 @@ interface Recipe {
 const RECIPES: Recipe[] = [
   {
     id: "1",
-    name: "Verde Bravo Enchiladas Verdes",
-    description: "Classic chicken enchiladas smothered in tangy VERDE BRAVO salsa",
+    name: "VERDE BRAVA Guacamole",
+    description: "Quick and easy elevated guacamole with a brave green kick",
+    image: "https://images.unsplash.com/photo-1623961990059-e5c0f211d49c?w=800&q=80",
+    ingredients: [
+      "Avocados (3 ripe)",
+      "VERDE BRAVA Salsa (4oz)",
+      "Lime juice (1 tbsp)",
+      "Salt to taste",
+      "Tortilla chips for serving"
+    ],
+    instructions: [
+      "Mash avocados in a bowl",
+      "Fold in VERDE BRAVA salsa",
+      "Add lime juice and salt",
+      "Mix well and serve with chips"
+    ],
+    prepTime: "5 mins",
+    servings: "4"
+  },
+  {
+    id: "2",
+    name: "ROJA LOCA Wings",
+    description: "Crispy buffalo wings with a crazy red sauce glaze",
+    image: "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=800&q=80",
+    ingredients: [
+      "Chicken wings (2 lbs)",
+      "ROJA LOCA Salsa (8oz)",
+      "Butter (3 tbsp, melted)",
+      "Garlic powder (1 tsp)",
+      "Salt and pepper to taste",
+      "Ranch or blue cheese for dipping"
+    ],
+    instructions: [
+      "Bake wings at 425°F for 40-45 minutes until crispy",
+      "Mix ROJA LOCA salsa with melted butter and garlic powder",
+      "Toss wings in the sauce mixture",
+      "Serve hot with ranch or blue cheese dressing"
+    ],
+    prepTime: "50 mins",
+    servings: "4"
+  },
+  {
+    id: "3",
+    name: "VERDE BRAVA Quesadilla",
+    description: "Simple cheesy quesadilla with green salsa kick",
     image: "https://images.unsplash.com/photo-1618040996337-56904b7850b9?w=800&q=80",
     ingredients: [
-      "VERDE BRAVO Salsa (8oz)",
+      "Flour tortillas (2 large)",
+      "VERDE BRAVA Salsa (4oz)",
+      "Mexican cheese blend (2 cups)",
+      "Butter for cooking",
+      "Sour cream for serving"
+    ],
+    instructions: [
+      "Spread VERDE BRAVA salsa on one tortilla",
+      "Top with cheese and place another tortilla on top",
+      "Cook in buttered skillet 2-3 minutes per side until golden",
+      "Cut into wedges and serve with sour cream"
+    ],
+    prepTime: "10 mins",
+    servings: "2"
+  },
+  {
+    id: "4",
+    name: "ROJA LOCA Nachos Supreme",
+    description: "Loaded nachos with crazy red salsa heat",
+    image: "https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?w=800&q=80",
+    ingredients: [
+      "Tortilla chips (1 large bag)",
+      "ROJA LOCA Salsa (8oz)",
+      "Ground beef (1 lb, cooked)",
+      "Nacho cheese (2 cups)",
+      "Jalapeños (sliced)",
+      "Sour cream",
+      "Green onions (chopped)"
+    ],
+    instructions: [
+      "Layer chips on a large platter",
+      "Top with cooked ground beef",
+      "Drizzle with nacho cheese and ROJA LOCA salsa",
+      "Add jalapeños, sour cream, and green onions",
+      "Serve immediately"
+    ],
+    prepTime: "15 mins",
+    servings: "4-6"
+  },
+  {
+    id: "5",
+    name: "VERDE BRAVA Fish Tacos",
+    description: "Fresh grilled fish with zesty green salsa",
+    image: "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=800&q=80",
+    ingredients: [
+      "White fish fillets (1.5 lbs)",
+      "VERDE BRAVA Salsa (8oz)",
+      "Corn tortillas (8)",
+      "Red cabbage (2 cups, shredded)",
+      "Lime (2)",
+      "Cilantro",
+      "Avocado (2, sliced)"
+    ],
+    instructions: [
+      "Marinate fish in half the VERDE BRAVA salsa for 20 minutes",
+      "Grill fish 4-5 minutes per side",
+      "Break into chunks",
+      "Fill warm tortillas with fish, cabbage, and remaining salsa",
+      "Top with avocado, cilantro, and lime"
+    ],
+    prepTime: "35 mins",
+    servings: "4"
+  },
+  {
+    id: "6",
+    name: "ROJA LOCA Loaded Fries",
+    description: "Crispy fries topped with spicy red salsa goodness",
+    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=800&q=80",
+    ingredients: [
+      "French fries (frozen bag or homemade)",
+      "ROJA LOCA Salsa (6oz)",
+      "Shredded cheese (2 cups)",
+      "Ground beef (1/2 lb, cooked)",
+      "Sour cream",
+      "Green onions",
+      "Jalapeños"
+    ],
+    instructions: [
+      "Cook fries until crispy",
+      "Layer on a baking sheet and top with cheese",
+      "Broil until cheese melts",
+      "Add cooked ground beef and drizzle with ROJA LOCA salsa",
+      "Top with sour cream, green onions, and jalapeños"
+    ],
+    prepTime: "25 mins",
+    servings: "3-4"
+  },
+  {
+    id: "7",
+    name: "VERDE BRAVA Enchiladas Verdes",
+    description: "Classic chicken enchiladas smothered in tangy green salsa",
+    image: "https://images.unsplash.com/photo-1618040996337-56904b7850b9?w=800&q=80",
+    ingredients: [
+      "VERDE BRAVA Salsa (12oz)",
       "Shredded chicken (3 cups)",
       "Corn tortillas (12)",
       "Mexican cheese blend (2 cups)",
@@ -33,209 +169,264 @@ const RECIPES: Recipe[] = [
     ],
     instructions: [
       "Preheat oven to 375°F",
-      "Mix shredded chicken with half of the VERDE BRAVO salsa",
-      "Warm tortillas to make them pliable",
-      "Fill each tortilla with chicken mixture and roll tightly",
-      "Place seam-side down in a baking dish",
-      "Pour remaining VERDE BRAVO salsa over enchiladas",
-      "Sprinkle generously with cheese",
-      "Bake for 20-25 minutes until bubbly",
-      "Top with sour cream, cilantro, and diced onions",
-      "Drizzle with Mexican crema before serving"
+      "Mix chicken with half the VERDE BRAVA salsa",
+      "Warm tortillas and fill with chicken mixture",
+      "Roll tightly and place in baking dish",
+      "Pour remaining salsa over enchiladas",
+      "Top with cheese and bake 20-25 minutes",
+      "Garnish with sour cream, cilantro, and crema"
     ],
     prepTime: "45 mins",
     servings: "4-6"
   },
   {
-    id: "2",
-    name: "Verde Bravo Grilled Fish Tacos",
-    description: "Fresh grilled fish topped with zesty VERDE BRAVO salsa",
-    image: "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=800&q=80",
-    ingredients: [
-      "White fish fillets (1.5 lbs, like mahi-mahi or tilapia)",
-      "VERDE BRAVO Salsa (8oz)",
-      "Corn tortillas (8-10)",
-      "Red cabbage (2 cups, shredded)",
-      "Lime (2, juiced)",
-      "Cilantro (1/2 cup, chopped)",
-      "Avocado (2, sliced)",
-      "Olive oil (2 tbsp)",
-      "Cumin (1 tsp)",
-      "Salt and pepper to taste"
-    ],
-    instructions: [
-      "Marinate fish in 4oz VERDE BRAVO salsa for 30 minutes",
-      "Season fish with cumin, salt, and pepper",
-      "Brush grill with olive oil and heat to medium-high",
-      "Grill fish 4-5 minutes per side until cooked through",
-      "Break fish into chunks",
-      "Mix cabbage with lime juice and cilantro",
-      "Warm tortillas on the grill",
-      "Layer tortillas with cabbage slaw and fish",
-      "Top generously with remaining VERDE BRAVO salsa",
-      "Add avocado slices and serve with lime wedges"
-    ],
-    prepTime: "50 mins",
-    servings: "4"
-  },
-  {
-    id: "3",
-    name: "Verde Bravo Huevos Rancheros",
-    description: "Traditional Mexican breakfast with VERDE BRAVO kick",
-    image: "https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=800&q=80",
-    ingredients: [
-      "VERDE BRAVO Salsa (8oz)",
-      "Eggs (4)",
-      "Corn tortillas (4)",
-      "Refried beans (1 can)",
-      "Queso fresco (1/2 cup, crumbled)",
-      "Avocado (1, sliced)",
-      "Cilantro for garnish",
-      "Olive oil for frying",
-      "Salt and pepper to taste"
-    ],
-    instructions: [
-      "Warm refried beans in a small pot",
-      "Heat olive oil in a skillet over medium heat",
-      "Fry tortillas briefly until slightly crispy",
-      "Spread warm refried beans on each tortilla",
-      "Fry eggs sunny-side up or over-easy",
-      "Place one egg on each tortilla",
-      "Generously spoon VERDE BRAVO salsa over eggs",
-      "Top with crumbled queso fresco",
-      "Add avocado slices and fresh cilantro",
-      "Serve immediately with extra salsa on the side"
-    ],
-    prepTime: "20 mins",
-    servings: "2-4"
-  },
-  {
-    id: "4",
-    name: "Verde Bravo Chilaquiles",
-    description: "Crispy tortilla chips bathed in tangy green salsa",
-    image: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=800&q=80",
-    ingredients: [
-      "VERDE BRAVO Salsa (12oz)",
-      "Tortilla chips (6 cups)",
-      "Rotisserie chicken (2 cups, shredded) - optional",
-      "Mexican crema (1/2 cup)",
-      "Queso fresco (3/4 cup, crumbled)",
-      "Red onion (1/4 cup, thinly sliced)",
-      "Fresh cilantro (1/2 cup)",
-      "Fried eggs (2-4) - optional",
-      "Lime wedges for serving"
-    ],
-    instructions: [
-      "Heat VERDE BRAVO salsa in a large skillet over medium heat",
-      "Add tortilla chips and toss to coat evenly",
-      "Cook for 2-3 minutes until chips soften slightly but still have texture",
-      "If using chicken, fold it in at this stage",
-      "Transfer to serving plates",
-      "Drizzle generously with Mexican crema",
-      "Sprinkle with queso fresco and red onion",
-      "Top with fresh cilantro",
-      "Add fried eggs if desired",
-      "Serve immediately with lime wedges"
-    ],
-    prepTime: "15 mins",
-    servings: "4"
-  },
-  {
-    id: "5",
-    name: "Verde Bravo Pozole Verde",
-    description: "Traditional Mexican hominy soup with VERDE BRAVO twist",
+    id: "8",
+    name: "ROJA LOCA Pozole Rojo",
+    description: "Traditional Mexican red hominy soup with crazy heat",
     image: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800&q=80",
     ingredients: [
       "Pork shoulder (2 lbs, cubed)",
-      "VERDE BRAVO Salsa (12oz)",
-      "White hominy (2 cans, 29oz each, drained)",
-      "Chicken broth (4 cups)",
-      "Garlic (4 cloves, minced)",
+      "ROJA LOCA Salsa (12oz)",
+      "White hominy (2 cans, 29oz each)",
+      "Chicken broth (6 cups)",
+      "Garlic (5 cloves, minced)",
       "Onion (1 large, diced)",
+      "Dried ancho chiles (3, rehydrated)",
       "Oregano (2 tsp)",
       "Cumin (1 tsp)",
       "Bay leaves (2)",
-      "Radishes (sliced, for serving)",
-      "Cabbage (shredded, for serving)",
-      "Lime wedges",
-      "Tostadas for serving"
+      "Radishes, cabbage, lime for serving"
     ],
     instructions: [
-      "Season pork with salt and pepper",
-      "Brown pork cubes in a large pot over medium-high heat",
-      "Add onion and garlic, sauté until fragrant",
-      "Pour in chicken broth and bring to a boil",
-      "Add bay leaves, oregano, and cumin",
-      "Reduce heat and simmer for 1.5 hours until pork is tender",
-      "Stir in VERDE BRAVO salsa and hominy",
-      "Simmer for another 20 minutes",
-      "Remove bay leaves before serving",
-      "Serve in bowls with radishes, cabbage, lime, and tostadas"
+      "Brown pork in a large pot",
+      "Add onion and garlic, sauté 3 minutes",
+      "Pour in broth, bay leaves, oregano, and cumin",
+      "Simmer 1.5 hours until pork is tender",
+      "Blend rehydrated chiles with 1 cup broth",
+      "Add chile mixture and ROJA LOCA salsa to pot",
+      "Stir in hominy and simmer 20 minutes",
+      "Remove bay leaves and serve with toppings"
     ],
     prepTime: "2 hrs 15 mins",
     servings: "6-8"
   },
   {
-    id: "6",
-    name: "Verde Bravo Guacamole",
-    description: "Elevated guacamole with a brave green kick",
-    image: "https://images.unsplash.com/photo-1623961990059-e5c0f211d49c?w=800&q=80",
+    id: "9",
+    name: "VERDE BRAVA Tortilla Soup",
+    description: "Hearty Mexican soup with brave green salsa base",
+    image: "https://images.unsplash.com/photo-1613844237701-8f3664fc2eff?w=800&q=80",
     ingredients: [
-      "Avocados (4 ripe)",
-      "VERDE BRAVO Salsa (4oz)",
-      "Red onion (1/4 cup, finely diced)",
-      "Tomato (1 medium, diced)",
-      "Fresh cilantro (1/4 cup, chopped)",
-      "Lime juice (2 tbsp)",
-      "Salt to taste",
-      "Tortilla chips for serving"
+      "VERDE BRAVA Salsa (8oz)",
+      "Chicken breast (2 lbs)",
+      "Chicken broth (6 cups)",
+      "Diced tomatoes (1 can)",
+      "Black beans (1 can)",
+      "Corn (1 cup)",
+      "Garlic (3 cloves, minced)",
+      "Cumin (1 tsp)",
+      "Tortilla strips",
+      "Avocado, cheese, cilantro for topping"
     ],
     instructions: [
-      "Cut avocados in half and remove pits",
-      "Scoop avocado flesh into a bowl",
-      "Mash avocados to desired consistency",
-      "Fold in VERDE BRAVO salsa",
-      "Add red onion, tomato, and cilantro",
-      "Squeeze in fresh lime juice",
-      "Season with salt to taste",
-      "Mix gently to combine",
-      "Serve immediately with tortilla chips",
-      "Garnish with extra cilantro and a drizzle of salsa"
+      "Boil chicken in broth for 20 minutes, then shred",
+      "In same pot, add garlic and sauté briefly",
+      "Add VERDE BRAVA salsa, tomatoes, beans, corn, and cumin",
+      "Return shredded chicken to pot",
+      "Simmer 15 minutes",
+      "Serve in bowls topped with crispy tortilla strips",
+      "Add avocado, cheese, and cilantro"
     ],
-    prepTime: "10 mins",
+    prepTime: "45 mins",
+    servings: "6"
+  },
+  {
+    id: "10",
+    name: "ROJA LOCA Stuffed Peppers",
+    description: "Bell peppers filled with spicy red salsa rice",
+    image: "https://images.unsplash.com/photo-1601001815894-4bb6c81416d7?w=800&q=80",
+    ingredients: [
+      "Bell peppers (6, tops removed)",
+      "ROJA LOCA Salsa (8oz)",
+      "Ground beef (1 lb, cooked)",
+      "Cooked rice (2 cups)",
+      "Black beans (1 can)",
+      "Corn (1 cup)",
+      "Mexican cheese (2 cups)",
+      "Cumin (1 tsp)",
+      "Garlic powder (1 tsp)"
+    ],
+    instructions: [
+      "Preheat oven to 375°F",
+      "Mix cooked beef, rice, beans, corn, half the cheese, and ROJA LOCA salsa",
+      "Add cumin and garlic powder",
+      "Stuff peppers with mixture",
+      "Place in baking dish with 1/2 cup water",
+      "Cover with foil and bake 30 minutes",
+      "Remove foil, top with remaining cheese, bake 10 more minutes"
+    ],
+    prepTime: "55 mins",
+    servings: "6"
+  },
+  {
+    id: "11",
+    name: "VERDE BRAVA Deviled Eggs",
+    description: "Classic deviled eggs with a brave green twist",
+    image: "https://images.unsplash.com/photo-1635274343801-7dd429a420b4?w=800&q=80",
+    ingredients: [
+      "Hard boiled eggs (12)",
+      "VERDE BRAVA Salsa (3oz)",
+      "Mayonnaise (1/4 cup)",
+      "Dijon mustard (1 tsp)",
+      "Paprika for garnish",
+      "Cilantro for garnish"
+    ],
+    instructions: [
+      "Slice eggs in half and remove yolks",
+      "Mash yolks with mayo, mustard, and VERDE BRAVA salsa",
+      "Spoon or pipe mixture back into egg whites",
+      "Garnish with paprika and cilantro"
+    ],
+    prepTime: "20 mins",
+    servings: "6"
+  },
+  {
+    id: "12",
+    name: "ROJA LOCA Chicken Fajitas",
+    description: "Sizzling chicken fajitas with crazy red salsa marinade",
+    image: "https://images.unsplash.com/photo-1599974789516-16f8db7e8f7c?w=800&q=80",
+    ingredients: [
+      "Chicken breast (2 lbs, sliced)",
+      "ROJA LOCA Salsa (8oz)",
+      "Bell peppers (3, sliced)",
+      "Onion (1 large, sliced)",
+      "Olive oil (2 tbsp)",
+      "Lime juice (2 tbsp)",
+      "Cumin (1 tsp)",
+      "Flour tortillas",
+      "Sour cream, guacamole for serving"
+    ],
+    instructions: [
+      "Marinate chicken in ROJA LOCA salsa, lime juice, and cumin for 30 minutes",
+      "Heat oil in large skillet over high heat",
+      "Cook chicken 5-7 minutes until done, remove",
+      "Sauté peppers and onions until tender",
+      "Return chicken to pan and toss everything",
+      "Serve with warm tortillas and toppings"
+    ],
+    prepTime: "45 mins",
+    servings: "4"
+  },
+  {
+    id: "13",
+    name: "VERDE BRAVA Elote (Mexican Street Corn)",
+    description: "Grilled corn slathered with green salsa mayo",
+    image: "https://images.unsplash.com/photo-1557296387-5358ad7997bb?w=800&q=80",
+    ingredients: [
+      "Corn on the cob (6 ears)",
+      "VERDE BRAVA Salsa (4oz)",
+      "Mayonnaise (1/2 cup)",
+      "Cotija cheese (1/2 cup, crumbled)",
+      "Lime (2)",
+      "Chili powder",
+      "Cilantro"
+    ],
+    instructions: [
+      "Grill corn until charred all around",
+      "Mix mayo with VERDE BRAVA salsa",
+      "Slather corn with green salsa mayo",
+      "Sprinkle with cotija cheese and chili powder",
+      "Squeeze lime over top and garnish with cilantro"
+    ],
+    prepTime: "20 mins",
+    servings: "6"
+  },
+  {
+    id: "14",
+    name: "ROJA LOCA Shakshuka",
+    description: "Middle Eastern eggs poached in crazy red salsa",
+    image: "https://images.unsplash.com/photo-1587126716739-1b6d5c075f62?w=800&q=80",
+    ingredients: [
+      "ROJA LOCA Salsa (12oz)",
+      "Eggs (6)",
+      "Diced tomatoes (1 can)",
+      "Onion (1, diced)",
+      "Bell pepper (1, diced)",
+      "Garlic (3 cloves, minced)",
+      "Cumin (1 tsp)",
+      "Paprika (1 tsp)",
+      "Feta cheese (crumbled)",
+      "Fresh parsley",
+      "Crusty bread for serving"
+    ],
+    instructions: [
+      "Sauté onion, pepper, and garlic in olive oil",
+      "Add diced tomatoes, ROJA LOCA salsa, cumin, and paprika",
+      "Simmer 10 minutes until thickened",
+      "Create 6 wells in the sauce",
+      "Crack an egg into each well",
+      "Cover and cook until eggs are set (6-8 minutes)",
+      "Top with feta and parsley, serve with bread"
+    ],
+    prepTime: "30 mins",
+    servings: "3-4"
+  },
+  {
+    id: "15",
+    name: "VERDE BRAVA Ceviche",
+    description: "Fresh seafood marinated in brave green salsa",
+    image: "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=800&q=80",
+    ingredients: [
+      "Raw shrimp or white fish (1 lb, diced)",
+      "VERDE BRAVA Salsa (6oz)",
+      "Lime juice (1 cup)",
+      "Tomato (1, diced)",
+      "Red onion (1/2, diced)",
+      "Cucumber (1, diced)",
+      "Avocado (1, diced)",
+      "Cilantro (1/2 cup)",
+      "Tostadas for serving"
+    ],
+    instructions: [
+      "Marinate seafood in lime juice 30-45 minutes until opaque",
+      "Drain excess lime juice",
+      "Mix in VERDE BRAVA salsa, tomato, onion, and cucumber",
+      "Refrigerate 30 minutes",
+      "Before serving, fold in avocado and cilantro",
+      "Serve cold with tostadas"
+    ],
+    prepTime: "1 hr 30 mins",
     servings: "4-6"
   },
   {
-    id: "7",
-    name: "Verde Bravo Carnitas Bowl",
-    description: "Loaded bowl with crispy pork and VERDE BRAVO salsa",
-    image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80",
+    id: "16",
+    name: "ROJA LOCA Albondigas Soup",
+    description: "Mexican meatball soup in crazy red salsa broth",
+    image: "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800&q=80",
     ingredients: [
-      "Pork shoulder carnitas (2 lbs)",
-      "VERDE BRAVO Salsa (8oz)",
-      "Cilantro lime rice (3 cups, cooked)",
-      "Black beans (1 can, drained)",
-      "Corn (1 cup, roasted)",
-      "Pico de gallo (1 cup)",
-      "Shredded cheese (1 cup)",
-      "Sour cream (1/2 cup)",
-      "Fresh cilantro",
-      "Lime wedges"
+      "Ground beef (1 lb)",
+      "Cooked rice (1/2 cup)",
+      "Egg (1)",
+      "ROJA LOCA Salsa (10oz)",
+      "Beef broth (6 cups)",
+      "Diced tomatoes (1 can)",
+      "Carrots (2, diced)",
+      "Potatoes (2, diced)",
+      "Zucchini (1, diced)",
+      "Garlic (3 cloves, minced)",
+      "Cumin (1 tsp)",
+      "Oregano (1 tsp)",
+      "Fresh cilantro"
     ],
     instructions: [
-      "Prepare or warm pre-cooked carnitas",
-      "Crisp the carnitas in a hot skillet",
-      "Warm cilantro lime rice",
-      "Heat black beans with spices",
-      "Assemble bowls with rice as the base",
-      "Add carnitas, black beans, and roasted corn",
-      "Top with generous portions of VERDE BRAVO salsa",
-      "Add pico de gallo and shredded cheese",
-      "Finish with sour cream and fresh cilantro",
-      "Serve with lime wedges on the side"
+      "Mix beef, rice, egg, and 2oz ROJA LOCA salsa, form into meatballs",
+      "In large pot, combine broth, remaining salsa, tomatoes, and spices",
+      "Bring to boil, add vegetables",
+      "Gently drop in meatballs",
+      "Reduce heat and simmer 25-30 minutes",
+      "Garnish with fresh cilantro before serving"
     ],
-    prepTime: "25 mins",
-    servings: "4"
+    prepTime: "50 mins",
+    servings: "6"
   }
 ];
 
@@ -255,7 +446,7 @@ export default function RecipesScreen() {
           <ChefHat size={32} color={Colors.light.primary} />
           <Text style={styles.headerTitle}>Recipe Ideas</Text>
           <Text style={styles.headerSubtitle}>
-            Delicious ways to enjoy our salsa
+            Delicious ways to enjoy our salsas
           </Text>
         </View>
 
