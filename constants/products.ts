@@ -7,7 +7,7 @@ export const PRODUCTS: Product[] = [
     id: "1",
     name: "ROJA LOCA",
     description: "The sauce that bites back! Premium handcrafted salsa with bold flavor",
-    image: "https://rork.app/pa/4x3iuxp19b3m8jwboe8y1/attachment_1737230473",
+    image: "https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/81koieovumyn6le1sgfh1",
     prices: {
       "4oz": 5.00,
       "8oz": 8.00,
