@@ -101,7 +101,7 @@ export default function HomeScreen() {
               onPress={() => Linking.openURL('https://www.facebook.com/share/17dannTDbg/?mibextid=wwXIfr')}
               activeOpacity={0.7}
             >
-              <Facebook size={28} color="#fff" fill="#fff" />
+              <Facebook size={32} color="#fff" fill="#fff" />
               <Text style={styles.socialText}>Facebook</Text>
             </TouchableOpacity>
 
@@ -110,19 +110,8 @@ export default function HomeScreen() {
               onPress={() => Linking.openURL('https://www.instagram.com/aychihuahuasalsa210')}
               activeOpacity={0.7}
             >
-              <Instagram size={28} color="#fff" fill="#fff" />
+              <Instagram size={32} color="#fff" fill="#fff" />
               <Text style={styles.socialText}>Instagram</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={styles.socialButton}
-              onPress={() => Linking.openURL('https://tiktok.com')}
-              activeOpacity={0.7}
-            >
-              <View style={styles.tiktokIcon}>
-                <Text style={styles.tiktokIconText}>TikTok</Text>
-              </View>
-              <Text style={styles.socialText}>TikTok</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -416,14 +405,14 @@ const styles = StyleSheet.create({
   },
   socialContainer: {
     flexDirection: "row" as const,
-    gap: 12,
-    justifyContent: "space-between" as const,
+    gap: 16,
   },
   socialButton: {
     flex: 1,
     backgroundColor: Colors.light.primary,
     borderRadius: 16,
-    padding: 20,
+    paddingVertical: 24,
+    paddingHorizontal: 16,
     alignItems: "center" as const,
     justifyContent: "center" as const,
     shadowColor: "#000",
@@ -434,21 +423,8 @@ const styles = StyleSheet.create({
   },
   socialText: {
     color: "#fff",
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "600" as const,
-    marginTop: 8,
-  },
-  tiktokIcon: {
-    width: 28,
-    height: 28,
-    backgroundColor: "#fff",
-    borderRadius: 6,
-    alignItems: "center" as const,
-    justifyContent: "center" as const,
-  },
-  tiktokIconText: {
-    color: Colors.light.primary,
-    fontSize: 10,
-    fontWeight: "700" as const,
+    marginTop: 10,
   },
 });
