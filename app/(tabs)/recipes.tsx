@@ -1,5 +1,4 @@
 import Colors from "@/constants/colors";
-import { Image } from "expo-image";
 import { ChefHat } from "lucide-react-native";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View, ImageBackground } from "react-native";
@@ -452,11 +451,6 @@ export default function RecipesScreen() {
 
         {RECIPES.map((recipe) => (
           <View key={recipe.id} style={styles.recipeCard}>
-            <Image
-              source={{ uri: recipe.image }}
-              style={styles.recipeImage}
-              contentFit="cover"
-            />
             <View style={styles.recipeContent}>
               <Text style={styles.recipeName}>{recipe.name}</Text>
               <Text style={styles.recipeDescription}>{recipe.description}</Text>
@@ -537,10 +531,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 3,
-  },
-  recipeImage: {
-    width: "100%",
-    height: 200,
   },
   recipeContent: {
     padding: 16,
