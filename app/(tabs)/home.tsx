@@ -107,7 +107,7 @@ export default function HomeScreen() {
 
             <TouchableOpacity 
               style={styles.socialButton}
-              onPress={() => Linking.openURL('https://instagram.com')}
+              onPress={() => Linking.openURL('https://www.instagram.com/aychihuahuasalsa210')}
               activeOpacity={0.7}
             >
               <Instagram size={28} color="#fff" fill="#fff" />
