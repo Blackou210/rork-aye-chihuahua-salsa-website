@@ -18,7 +18,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: "2",
-    name: "VERDE BRAVO",
+    name: "VERDE BRAVA",
     description: "Bold green salsa with a brave kick! Handcrafted with fresh ingredients",
     image: "https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/ybamd7y3dg3musrchpfcu",
     prices: {
