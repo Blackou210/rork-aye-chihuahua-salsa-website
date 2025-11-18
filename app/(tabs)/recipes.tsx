@@ -374,7 +374,7 @@ const RECIPES: Recipe[] = [
     id: "15",
     name: "VERDE BRAVA Ceviche",
     description: "Fresh seafood marinated in brave green salsa",
-    image: "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=800&q=80",
     ingredients: [
       "Raw shrimp or white fish (1 lb, diced)",
       "VERDE BRAVA Salsa (6oz)",
