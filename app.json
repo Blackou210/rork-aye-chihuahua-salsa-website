@@ -56,7 +56,8 @@
     ],
 
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "baseUrl": "/rork-aye-chihuahua-salsa-website"
     }
   }
 }
