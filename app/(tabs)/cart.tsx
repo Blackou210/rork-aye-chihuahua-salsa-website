@@ -426,6 +426,94 @@ export default function CartScreen() {
               <Text style={styles.summaryValue}>${cartTax.toFixed(2)}</Text>
             </View>
             
+            <View style={styles.tipSection}>
+              <Text style={styles.tipLabel}>Add a tip</Text>
+              <View style={styles.tipOptions}>
+                {TIP_OPTIONS.map((tip) => (
+                  <TouchableOpacity
+                    key={tip}
+                    style={[
+                      styles.tipButton,
+                      tipPercentage === tip && styles.tipButtonActive,
+                    ]}
+                    onPress={() => setTipPercentage(tip)}
+                  >
+                    <Text
+                      style={[
+                        styles.tipButtonText,
+                        tipPercentage === tip && styles.tipButtonTextActive,
+                      ]}
+                    >
+                      {tip}%
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+                <TouchableOpacity
+                  style={[
+                    styles.tipButton,
+                    tipPercentage === 0 && styles.tipButtonActive,
+                  ]}
+                  onPress={() => setTipPercentage(0)}
+                >
+                  <Text
+                    style={[
+                      styles.tipButtonText,
+                      tipPercentage === 0 && styles.tipButtonTextActive,
+                    ]}
+                  >
+                    None
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              
+              <View style={styles.customTipContainer}>
+                <View style={styles.customTipHeader}>
+                  <Text style={styles.customTipLabel}>Custom Tip: {isCustomTipActive ? customTip : tipPercentage}%</Text>
+                  <Text style={styles.customTipAmount}>
+                    ${(getCartSubtotal() * ((isCustomTipActive ? customTip : tipPercentage) / 100)).toFixed(2)}
+                  </Text>
+                </View>
+                <View style={styles.sliderContainer}>
+                  <Text style={styles.sliderLabel}>0%</Text>
+                  <View 
+                    style={styles.sliderTrack}
+                    onStartShouldSetResponder={() => true}
+                    onResponderMove={(e) => {
+                      const locationX = e.nativeEvent.locationX;
+                      const percentage = Math.max(0, Math.min(30, Math.round((locationX / sliderWidth.current) * 30)));
+                      setCustomTip(percentage);
+                      setIsCustomTipActive(true);
+                      setTipPercentage(percentage);
+                    }}
+                    onResponderRelease={(e) => {
+                      const locationX = e.nativeEvent.locationX;
+                      const percentage = Math.max(0, Math.min(30, Math.round((locationX / sliderWidth.current) * 30)));
+                      setCustomTip(percentage);
+                      setIsCustomTipActive(true);
+                      setTipPercentage(percentage);
+                    }}
+                    onLayout={(e) => {
+                      sliderWidth.current = e.nativeEvent.layout.width;
+                    }}
+                  >
+                    <View style={styles.sliderFill} />
+                    <View 
+                      style={[
+                        styles.sliderFillActive,
+                        { width: `${((isCustomTipActive ? customTip : tipPercentage) / 30) * 100}%` }
+                      ]} 
+                    />
+                    <View 
+                      style={[
+                        styles.sliderThumb,
+                        { left: `${((isCustomTipActive ? customTip : tipPercentage) / 30) * 100}%` }
+                      ]} 
+                    />
+                  </View>
+                  <Text style={styles.sliderLabel}>30%</Text>
+                </View>
+              </View>
+            </View>
 
             <View style={styles.totalContainer}>
               <Text style={styles.totalLabel}>Total</Text>
