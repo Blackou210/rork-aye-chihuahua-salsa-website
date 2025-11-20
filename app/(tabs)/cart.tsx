@@ -11,6 +11,7 @@ import {
   Linking,
   Modal,
   PanResponder,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -19,6 +20,7 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
+import { WebView } from "react-native-webview";
 
 function CartItemRow({ item, index, removeFromCart, updateQuantity }: {
   item: CartItemType;
@@ -131,6 +133,7 @@ export default function CartScreen() {
   const [agreedToWarning, setAgreedToWarning] = useState(false);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [isCashAppLoading, setIsCashAppLoading] = useState(false);
+  const [showPayPalModal, setShowPayPalModal] = useState(false);
 
   const handleCheckout = async () => {
     console.log("handleCheckout called");
@@ -515,17 +518,263 @@ export default function CartScreen() {
                   </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity 
-                  style={[styles.placeOrderButton, (!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder) && styles.placeOrderButtonDisabled]} 
-                  onPress={handleCheckout}
-                  disabled={!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder}
-                >
-                  <Text style={[styles.placeOrderButtonText, (!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder) && styles.placeOrderButtonTextDisabled]}>
-                    {isPlacingOrder ? "Placing Order..." : "Place Order"}
-                  </Text>
-                </TouchableOpacity>
+                <View style={styles.paymentButtonsContainer}>
+                  <TouchableOpacity 
+                    style={[styles.paypalButton, (!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder) && styles.paypalButtonDisabled]} 
+                    onPress={() => {
+                      if (!name.trim() || !email.trim() || !phone.trim()) {
+                        Alert.alert("Missing Information", "Please fill in all required fields");
+                        return;
+                      }
+                      if (!email.includes("@")) {
+                        Alert.alert("Invalid Email", "Please enter a valid email address");
+                        return;
+                      }
+                      if (!agreedToWarning) {
+                        Alert.alert("Confirmation Required", "Please confirm you understand the storage warning");
+                        return;
+                      }
+                      setShowPayPalModal(true);
+                    }}
+                    disabled={!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder}
+                  >
+                    <Text style={[styles.paypalButtonText, (!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder) && styles.paypalButtonTextDisabled]}>
+                      Pay with PayPal
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity 
+                    style={[styles.placeOrderButton, (!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder) && styles.placeOrderButtonDisabled]} 
+                    onPress={handleCheckout}
+                    disabled={!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder}
+                  >
+                    <Text style={[styles.placeOrderButtonText, (!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder) && styles.placeOrderButtonTextDisabled]}>
+                      {isPlacingOrder ? "Placing Order..." : "Place Order (Pay Later)"}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        visible={showPayPalModal}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setShowPayPalModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.paypalModalContent}>
+            <View style={styles.paypalModalHeader}>
+              <Text style={styles.modalTitle}>PayPal Checkout</Text>
+              <TouchableOpacity onPress={() => setShowPayPalModal(false)}>
+                <Text style={styles.closeButton}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            <WebView
+              source={{
+                html: `
+                  <!DOCTYPE html>
+                  <html>
+                  <head>
+                    <meta name="viewport" content="width=device-width, initial-scale=1">
+                    <script src="https://www.paypal.com/sdk/js?client-id=ASRb-19Dl8YmFwKRbIR0P2qQ4-_VBfUavytIdj-qdQU5RAh0cT7fgjPsjxvJjniLnYZ227OLQl01AYCV&currency=USD"></script>
+                    <style>
+                      body { 
+                        margin: 0; 
+                        padding: 20px; 
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                        background: #f5f5f5;
+                      }
+                      #paypal-button-container { 
+                        max-width: 500px; 
+                        margin: 0 auto;
+                      }
+                      .order-summary {
+                        background: white;
+                        padding: 20px;
+                        border-radius: 12px;
+                        margin-bottom: 20px;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                      }
+                      .order-summary h3 {
+                        margin: 0 0 15px 0;
+                        color: #333;
+                      }
+                      .summary-row {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 8px;
+                        color: #666;
+                      }
+                      .summary-row.total {
+                        font-size: 18px;
+                        font-weight: bold;
+                        color: #333;
+                        padding-top: 12px;
+                        border-top: 2px solid #eee;
+                        margin-top: 12px;
+                      }
+                    </style>
+                  </head>
+                  <body>
+                    <div class="order-summary">
+                      <h3>Order Summary</h3>
+                      <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span>${cartSubtotal.toFixed(2)}</span>
+                      </div>
+                      <div class="summary-row">
+                        <span>Tax (8.25%):</span>
+                        <span>${cartTax.toFixed(2)}</span>
+                      </div>
+                      ${tipPercentage > 0 ? `
+                      <div class="summary-row">
+                        <span>Tip (${tipPercentage}%):</span>
+                        <span>${cartTip.toFixed(2)}</span>
+                      </div>
+                      ` : ''}
+                      <div class="summary-row total">
+                        <span>Total:</span>
+                        <span>${cartTotal.toFixed(2)}</span>
+                      </div>
+                    </div>
+                    <div id="paypal-button-container"></div>
+                    <script>
+                      paypal.Buttons({
+                        style: {
+                          layout: 'vertical',
+                          color: 'gold',
+                          shape: 'rect',
+                          label: 'paypal'
+                        },
+                        createOrder: function(data, actions) {
+                          return actions.order.create({
+                            purchase_units: [{
+                              amount: {
+                                value: '${cartTotal.toFixed(2)}',
+                                currency_code: 'USD',
+                                breakdown: {
+                                  item_total: { value: '${cartSubtotal.toFixed(2)}', currency_code: 'USD' },
+                                  tax_total: { value: '${(cartTax + cartTip).toFixed(2)}', currency_code: 'USD' }
+                                }
+                              },
+                              items: ${JSON.stringify(cart.map(item => ({
+                                name: `${item.name} (${item.size})`,
+                                unit_amount: { value: item.price.toFixed(2), currency_code: 'USD' },
+                                quantity: item.quantity.toString()
+                              })))}
+                            }]
+                          });
+                        },
+                        onApprove: function(data, actions) {
+                          return actions.order.capture().then(function(details) {
+                            window.ReactNativeWebView.postMessage(JSON.stringify({
+                              type: 'PAYMENT_SUCCESS',
+                              orderID: data.orderID,
+                              payerName: details.payer.name.given_name + ' ' + details.payer.name.surname,
+                              payerEmail: details.payer.email_address
+                            }));
+                          });
+                        },
+                        onError: function(err) {
+                          window.ReactNativeWebView.postMessage(JSON.stringify({
+                            type: 'PAYMENT_ERROR',
+                            error: err.toString()
+                          }));
+                        },
+                        onCancel: function(data) {
+                          window.ReactNativeWebView.postMessage(JSON.stringify({
+                            type: 'PAYMENT_CANCELLED'
+                          }));
+                        }
+                      }).render('#paypal-button-container');
+                    </script>
+                  </body>
+                  </html>
+                `,
+              }}
+              onMessage={async (event) => {
+                try {
+                  const data = JSON.parse(event.nativeEvent.data);
+                  console.log("PayPal message received:", data);
+                  
+                  if (data.type === 'PAYMENT_SUCCESS') {
+                    setShowPayPalModal(false);
+                    setIsPlacingOrder(true);
+                    
+                    try {
+                      const order = await placeOrder(name.trim(), email.trim(), phone.trim(), `PayPal Order ID: ${data.orderID}\n${notes.trim()}`);
+                      
+                      try {
+                        const itemsList = cart.map(item => 
+                          `${item.name} (${item.size}) - Quantity: ${item.quantity} - ${(item.price * item.quantity).toFixed(2)}`
+                        ).join('\n');
+
+                        const emailBody = `New PAID Order #${order.id}\n\n` +
+                          `Payment Status: PAID via PayPal\n` +
+                          `PayPal Order ID: ${data.orderID}\n\n` +
+                          `Customer: ${name.trim()}\n` +
+                          `Phone: ${phone.trim()}\n` +
+                          `Email: ${email.trim()}\n\n` +
+                          `Items:\n${itemsList}\n\n` +
+                          `Subtotal: ${cartSubtotal.toFixed(2)}\n` +
+                          `Tax (New Braunfels 8.25%): ${cartTax.toFixed(2)}\n` +
+                          (tipPercentage > 0 ? `Tip (${tipPercentage}%): ${cartTip.toFixed(2)}\n` : '') +
+                          `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                          `   💰 TOTAL PAID: ${cartTotal.toFixed(2)}\n` +
+                          `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+                          (notes.trim() ? `Notes: ${notes.trim()}\n\n` : '') +
+                          `Thank you for your payment!\n` +
+                          `We will prepare your order and contact you for delivery details.\n\n` +
+                          `Please note: Local delivery is currently available only within or near the New Braunfels and San Antonio, Texas area.`;
+
+                        const mailtoUrl = `mailto:orders@aychihuahuasalsa.com?subject=${encodeURIComponent(`PAID Order #${order.id}`)}&body=${encodeURIComponent(emailBody)}`;
+                        
+                        const canOpen = await Linking.canOpenURL(mailtoUrl);
+                        if (canOpen) {
+                          await Linking.openURL(mailtoUrl);
+                        }
+                      } catch (error) {
+                        console.error("Could not open email client:", error);
+                      }
+                      
+                      setShowCheckout(false);
+                      setName("");
+                      setEmail("");
+                      setPhone("");
+                      setNotes("");
+                      setAgreedToWarning(false);
+                      setIsPlacingOrder(false);
+
+                      Alert.alert(
+                        "Payment Successful!",
+                        `Your payment has been processed successfully! Order #${order.id} has been placed. We'll contact you shortly for delivery details. Thank you!`,
+                        [{ text: "OK" }]
+                      );
+                    } catch (error) {
+                      console.error("Error placing order:", error);
+                      Alert.alert("Error", "Payment was successful but there was a problem saving your order. Please contact us.");
+                      setIsPlacingOrder(false);
+                    }
+                  } else if (data.type === 'PAYMENT_ERROR') {
+                    setShowPayPalModal(false);
+                    Alert.alert("Payment Error", "There was an error processing your payment. Please try again.");
+                  } else if (data.type === 'PAYMENT_CANCELLED') {
+                    setShowPayPalModal(false);
+                  }
+                } catch (error) {
+                  console.error("Error processing PayPal message:", error);
+                }
+              }}
+              javaScriptEnabled={true}
+              domStorageEnabled={true}
+              startInLoadingState={true}
+              scalesPageToFit={true}
+              style={styles.webview}
+            />
           </View>
         </View>
       </Modal>
@@ -1173,5 +1422,49 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700" as const,
     color: "#fff",
+  },
+  paymentButtonsContainer: {
+    gap: 12,
+  },
+  paypalButton: {
+    backgroundColor: "#0070BA",
+    padding: 16,
+    borderRadius: 12,
+    alignItems: "center" as const,
+  },
+  paypalButtonDisabled: {
+    backgroundColor: Colors.light.border,
+    opacity: 0.6,
+  },
+  paypalButtonText: {
+    fontSize: 16,
+    fontWeight: "600" as const,
+    color: "#fff",
+  },
+  paypalButtonTextDisabled: {
+    color: Colors.light.textSecondary,
+  },
+  paypalModalContent: {
+    backgroundColor: Colors.light.cardBg,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    height: "90%",
+    maxWidth: 700,
+    width: "100%",
+    alignSelf: "center" as const,
+    overflow: "hidden" as const,
+  },
+  paypalModalHeader: {
+    flexDirection: "row" as const,
+    justifyContent: "space-between" as const,
+    alignItems: "center" as const,
+    padding: 24,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.light.border,
+  },
+  webview: {
+    flex: 1,
+    backgroundColor: "#f5f5f5",
   },
 });
