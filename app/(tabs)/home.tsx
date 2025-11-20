@@ -112,8 +112,9 @@ export default function HomeScreen() {
               onPress={() => Linking.openURL('https://www.facebook.com/share/17dannTDbg/?mibextid=wwXIfr')}
               activeOpacity={0.7}
             >
-              <Text style={styles.pepperIcon}>🌶️</Text>
-              <Facebook size={24} color="#fff" fill="#fff" style={{ position: "absolute" as const }} />
+              <View style={styles.iconCircle}>
+                <Facebook size={28} color="#1877F2" />
+              </View>
               <Text style={styles.socialText}>Facebook</Text>
             </TouchableOpacity>
 
@@ -122,11 +123,9 @@ export default function HomeScreen() {
               onPress={() => Linking.openURL('https://www.instagram.com/aychihuahuasalsa210')}
               activeOpacity={0.7}
             >
-              <View style={styles.greenTomatoContainer}>
-                <View style={styles.greenTomatoHighlight} />
-                <View style={styles.greenTomato} />
+              <View style={styles.iconCircle}>
+                <Instagram size={28} color="#E4405F" />
               </View>
-              <Instagram size={24} color="#fff" fill="#fff" style={{ position: "absolute" as const }} />
               <Text style={styles.socialText}>Instagram</Text>
             </TouchableOpacity>
           </View>
@@ -446,52 +445,34 @@ const styles = StyleSheet.create({
   },
   socialButton: {
     flex: 1,
-    backgroundColor: "transparent",
-    borderRadius: 20,
+    backgroundColor: Colors.light.cardBg,
+    borderRadius: 16,
     paddingVertical: 16,
     paddingHorizontal: 16,
     alignItems: "center" as const,
     justifyContent: "center" as const,
-    position: "relative" as const,
+    borderWidth: 1,
+    borderColor: Colors.light.border,
   },
-  pepperIcon: {
-    fontSize: 80,
-    lineHeight: 80,
-  },
-  socialText: {
-    color: "#fff",
-    fontSize: 15,
-    fontWeight: "700" as const,
-    marginTop: 12,
-    letterSpacing: 0.5,
-  },
-  greenTomatoContainer: {
-    width: 80,
-    height: 80,
+  iconCircle: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "#fff",
     justifyContent: "center" as const,
     alignItems: "center" as const,
-  },
-  greenTomatoHighlight: {
-    position: "absolute" as const,
-    width: 20,
-    height: 15,
-    borderRadius: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.4)",
-    top: 18,
-    left: 35,
-  },
-  greenTomato: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "#77ab59",
     shadowColor: "#000",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 4,
-    borderWidth: 2,
-    borderColor: "#659c47",
+    elevation: 3,
+  },
+  socialText: {
+    color: Colors.light.text,
+    fontSize: 14,
+    fontWeight: "600" as const,
+    marginTop: 12,
+    letterSpacing: 0.3,
   },
   locationBanner: {
     flexDirection: "row" as const,
