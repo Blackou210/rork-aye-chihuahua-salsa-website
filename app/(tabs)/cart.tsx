@@ -1,14 +1,16 @@
 import Colors from "@/constants/colors";
 import { useCart } from "@/context/cart";
-import { CartItem as CartItemType } from "@/types/order";
+import { CartItem as CartItemType, SalsaSize } from "@/types/order";
 import { Image } from "expo-image";
-import { Minus, Plus, ShoppingBag, X } from "lucide-react-native";
+import { Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react-native";
 import React, { useRef, useState } from "react";
 import {
   Alert,
+  Animated,
   FlatList,
   Linking,
   Modal,
+  PanResponder,
   ScrollView,
   StyleSheet,
   Text,
@@ -16,6 +18,104 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+
+function CartItemRow({ item, index, removeFromCart, updateQuantity }: {
+  item: CartItemType;
+  index: number;
+  removeFromCart: (id: string, size: SalsaSize) => void;
+  updateQuantity: (id: string, size: SalsaSize, quantity: number) => void;
+}) {
+  const translateX = useRef(new Animated.Value(0)).current;
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: (_, gestureState) => {
+        return Math.abs(gestureState.dx) > 5;
+      },
+      onPanResponderMove: (_, gestureState) => {
+        if (gestureState.dx < 0) {
+          translateX.setValue(Math.max(-100, gestureState.dx));
+        }
+      },
+      onPanResponderRelease: (_, gestureState) => {
+        if (gestureState.dx < -50) {
+          Animated.spring(translateX, {
+            toValue: -100,
+            useNativeDriver: true,
+          }).start();
+        } else {
+          Animated.spring(translateX, {
+            toValue: 0,
+            useNativeDriver: true,
+          }).start();
+        }
+      },
+    })
+  ).current;
+
+  const handleDelete = () => {
+    Alert.alert(
+      "Remove Item",
+      `Remove ${item.name} (${item.size}) from cart?`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Remove",
+          style: "destructive",
+          onPress: () => removeFromCart(item.id, item.size),
+        },
+      ]
+    );
+  };
+
+  return (
+    <View style={styles.cartItemWrapper}>
+      <View style={styles.deleteBackground}>
+        <Trash2 size={32} color="#fff" />
+      </View>
+      <Animated.View
+        style={[
+          styles.cartItem,
+          { transform: [{ translateX }] },
+        ]}
+        {...panResponder.panHandlers}
+      >
+        <View style={styles.itemNumber}>
+          <Text style={styles.itemNumberText}>{index + 1}</Text>
+        </View>
+        <Image source={{ uri: item.image }} style={styles.itemImage} contentFit="cover" />
+        <View style={styles.itemInfo}>
+          <Text style={styles.itemName}>{item.name}</Text>
+          <Text style={styles.itemSize}>{item.size}</Text>
+          <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
+          <View style={styles.quantityControl}>
+            <TouchableOpacity
+              style={styles.quantityButton}
+              onPress={() => updateQuantity(item.id, item.size, item.quantity - 1)}
+            >
+              <Minus size={16} color={Colors.light.text} />
+            </TouchableOpacity>
+            <Text style={styles.quantityText}>{item.quantity}</Text>
+            <TouchableOpacity
+              style={styles.quantityButton}
+              onPress={() => updateQuantity(item.id, item.size, item.quantity + 1)}
+            >
+              <Plus size={16} color={Colors.light.text} />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={handleDelete}
+          activeOpacity={0.7}
+        >
+          <X size={24} color="#fff" strokeWidth={3} />
+        </TouchableOpacity>
+      </Animated.View>
+    </View>
+  );
+}
 
 export default function CartScreen() {
   const { cart, removeFromCart, updateQuantity, getCartSubtotal, getCartTax, getCartTip, getCartTotal, placeOrder, tipPercentage, setTipPercentage } = useCart();
@@ -124,39 +224,12 @@ export default function CartScreen() {
   };
 
   const renderCartItem = ({ item, index }: { item: CartItemType; index: number }) => (
-    <View style={styles.cartItem}>
-      <View style={styles.itemNumber}>
-        <Text style={styles.itemNumberText}>{index + 1}</Text>
-      </View>
-      <Image source={{ uri: item.image }} style={styles.itemImage} contentFit="cover" />
-      <View style={styles.itemInfo}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.itemSize}>{item.size}</Text>
-        <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
-        <View style={styles.quantityControl}>
-          <TouchableOpacity
-            style={styles.quantityButton}
-            onPress={() => updateQuantity(item.id, item.size, item.quantity - 1)}
-          >
-            <Minus size={16} color={Colors.light.text} />
-          </TouchableOpacity>
-          <Text style={styles.quantityText}>{item.quantity}</Text>
-          <TouchableOpacity
-            style={styles.quantityButton}
-            onPress={() => updateQuantity(item.id, item.size, item.quantity + 1)}
-          >
-            <Plus size={16} color={Colors.light.text} />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={() => removeFromCart(item.id, item.size)}
-        activeOpacity={0.7}
-      >
-        <X size={24} color="#fff" strokeWidth={3} />
-      </TouchableOpacity>
-    </View>
+    <CartItemRow
+      item={item}
+      index={index}
+      removeFromCart={removeFromCart}
+      updateQuantity={updateQuantity}
+    />
   );
 
   const cartSubtotal = getCartSubtotal();
@@ -467,12 +540,28 @@ const styles = StyleSheet.create({
   cartList: {
     padding: 16,
   },
+  cartItemWrapper: {
+    marginBottom: 12,
+    position: "relative" as const,
+    overflow: "hidden" as const,
+    borderRadius: 16,
+  },
+  deleteBackground: {
+    position: "absolute" as const,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    width: 100,
+    backgroundColor: "#EF4444",
+    justifyContent: "center" as const,
+    alignItems: "center" as const,
+    borderRadius: 16,
+  },
   cartItem: {
     flexDirection: "row" as const,
     backgroundColor: Colors.light.cardBg,
     borderRadius: 16,
     padding: 12,
-    marginBottom: 12,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
