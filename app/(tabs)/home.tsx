@@ -112,7 +112,8 @@ export default function HomeScreen() {
               onPress={() => Linking.openURL('https://www.facebook.com/share/17dannTDbg/?mibextid=wwXIfr')}
               activeOpacity={0.7}
             >
-              <Facebook size={32} color="#fff" fill="#fff" />
+              <Text style={styles.pepperIcon}>🌶️</Text>
+              <Facebook size={24} color="#fff" fill="#fff" style={{ position: "absolute" as const }} />
               <Text style={styles.socialText}>Facebook</Text>
             </TouchableOpacity>
 
@@ -121,7 +122,8 @@ export default function HomeScreen() {
               onPress={() => Linking.openURL('https://www.instagram.com/aychihuahuasalsa210')}
               activeOpacity={0.7}
             >
-              <Instagram size={32} color="#fff" fill="#fff" />
+              <Text style={styles.pepperIcon}>🫑</Text>
+              <Instagram size={24} color="#fff" fill="#fff" style={{ position: "absolute" as const }} />
               <Text style={styles.socialText}>Instagram</Text>
             </TouchableOpacity>
           </View>
@@ -441,17 +443,17 @@ const styles = StyleSheet.create({
   },
   socialButton: {
     flex: 1,
-    backgroundColor: Colors.light.primary,
+    backgroundColor: "transparent",
     borderRadius: 20,
-    paddingVertical: 28,
+    paddingVertical: 16,
     paddingHorizontal: 16,
     alignItems: "center" as const,
     justifyContent: "center" as const,
-    shadowColor: Colors.light.primary,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 12,
-    elevation: 8,
+    position: "relative" as const,
+  },
+  pepperIcon: {
+    fontSize: 80,
+    lineHeight: 80,
   },
   socialText: {
     color: "#fff",
