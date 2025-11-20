@@ -47,6 +47,10 @@ export default function AboutScreen() {
           </Text>
 
           <Text style={styles.paragraph}>
+            I&apos;d also like to thank my grandmothers Amanda and Lois for holding the family down and doing everything it takes when times got hot.
+          </Text>
+
+          <Text style={styles.paragraph}>
             To our customers: thank you for welcoming my salsa into your homes and helping a small Texas dream grow bigger every day.
           </Text>
 
