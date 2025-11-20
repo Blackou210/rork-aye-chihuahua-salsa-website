@@ -421,6 +421,41 @@ export default function CartScreen() {
               <Text style={styles.summaryValue}>${cartTax.toFixed(2)}</Text>
             </View>
 
+            <View style={styles.tipSection}>
+              <Text style={styles.tipLabel}>Add a Tip</Text>
+              <View style={styles.tipOptions}>
+                <TouchableOpacity
+                  style={[styles.tipButton, tipPercentage === 0 && styles.tipButtonActive]}
+                  onPress={() => setTipPercentage(0)}
+                >
+                  <Text style={[styles.tipButtonText, tipPercentage === 0 && styles.tipButtonTextActive]}>No Tip</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.tipButton, tipPercentage === 10 && styles.tipButtonActive]}
+                  onPress={() => setTipPercentage(10)}
+                >
+                  <Text style={[styles.tipButtonText, tipPercentage === 10 && styles.tipButtonTextActive]}>10%</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.tipButton, tipPercentage === 15 && styles.tipButtonActive]}
+                  onPress={() => setTipPercentage(15)}
+                >
+                  <Text style={[styles.tipButtonText, tipPercentage === 15 && styles.tipButtonTextActive]}>15%</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.tipButton, tipPercentage === 20 && styles.tipButtonActive]}
+                  onPress={() => setTipPercentage(20)}
+                >
+                  <Text style={[styles.tipButtonText, tipPercentage === 20 && styles.tipButtonTextActive]}>20%</Text>
+                </TouchableOpacity>
+              </View>
+              {tipPercentage > 0 && (
+                <View style={styles.tipAmount}>
+                  <Text style={styles.tipAmountText}>+${cartTip.toFixed(2)}</Text>
+                </View>
+              )}
+            </View>
+
             <View style={styles.totalContainer}>
               <Text style={styles.totalLabel}>Total</Text>
               <Text style={styles.totalAmount}>${cartTotal.toFixed(2)}</Text>
