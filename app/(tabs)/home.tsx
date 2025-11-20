@@ -6,17 +6,26 @@ import { Image } from "expo-image";
 import { ShoppingCart, Facebook, Instagram } from "lucide-react-native";
 import React, { useState } from "react";
 import { ImageBackground, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View, Linking, useWindowDimensions } from "react-native";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 
 const SIZES: SalsaSize[] = ["4oz", "8oz", "12oz", "1gal"];
 
 export default function HomeScreen() {
-  const { addToCart, getCartItemCount } = useCart();
+  const { addToCart, getCartItemCount, clearCart, cart } = useCart();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<SalsaSize>("4oz");
   const cartItemCount = getCartItemCount();
   const { width } = useWindowDimensions();
   const isDesktop = width >= 768;
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (cart.length > 0) {
+        console.log("Home screen focused with items in cart, clearing cart...");
+        clearCart();
+      }
+    }, [cart.length, clearCart])
+  );
 
 
 
