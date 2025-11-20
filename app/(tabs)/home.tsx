@@ -122,9 +122,9 @@ export default function HomeScreen() {
               onPress={() => Linking.openURL('https://www.instagram.com/aychihuahuasalsa210')}
               activeOpacity={0.7}
             >
-              <View style={styles.tomatilloContainer}>
-                <View style={styles.tomatilloHusk} />
-                <View style={styles.tomatillo} />
+              <View style={styles.greenTomatoContainer}>
+                <View style={styles.greenTomatoHighlight} />
+                <View style={styles.greenTomato} />
               </View>
               <Instagram size={24} color="#fff" fill="#fff" style={{ position: "absolute" as const }} />
               <Text style={styles.socialText}>Instagram</Text>
@@ -465,35 +465,33 @@ const styles = StyleSheet.create({
     marginTop: 12,
     letterSpacing: 0.5,
   },
-  tomatilloContainer: {
+  greenTomatoContainer: {
     width: 80,
     height: 80,
     justifyContent: "center" as const,
     alignItems: "center" as const,
   },
-  tomatilloHusk: {
+  greenTomatoHighlight: {
     position: "absolute" as const,
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    backgroundColor: "#c8d5a0",
-    borderWidth: 3,
-    borderColor: "#b0be88",
-    borderStyle: "dashed" as const,
-    opacity: 0.7,
+    width: 20,
+    height: 15,
+    borderRadius: 10,
+    backgroundColor: "rgba(255, 255, 255, 0.4)",
+    top: 18,
+    left: 35,
   },
-  tomatillo: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: "#7ba23f",
+  greenTomato: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#77ab59",
     shadowColor: "#000",
     shadowOffset: { width: 2, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 4,
-    borderWidth: 1,
-    borderColor: "#6b9235",
+    borderWidth: 2,
+    borderColor: "#659c47",
   },
   locationBanner: {
     flexDirection: "row" as const,
