@@ -639,7 +639,7 @@ export default function CartScreen() {
                     <View style={styles.stepNumber}>
                       <Text style={styles.stepNumberText}>3</Text>
                     </View>
-                    <Text style={styles.stepText}>Click "Place Order" - we'll contact you to arrange payment</Text>
+                    <Text style={styles.stepText}>Click Place Order - we&apos;ll contact you to arrange payment</Text>
                   </View>
                 </View>
 
@@ -677,7 +677,87 @@ export default function CartScreen() {
                     disabled={!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder}
                   >
                     <Text style={[styles.paypalButtonText, (!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder) && styles.paypalButtonTextDisabled]}>
-                      Pay with PayPal
+                      💳 Pay with PayPal
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity 
+                    style={[styles.cashAppButton, (!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder) && styles.cashAppButtonDisabled]} 
+                    onPress={async () => {
+                      if (!name.trim() || !email.trim() || !phone.trim()) {
+                        Alert.alert("Missing Information", "Please fill in all required fields");
+                        return;
+                      }
+                      if (!email.includes("@")) {
+                        Alert.alert("Invalid Email", "Please enter a valid email address");
+                        return;
+                      }
+                      if (!agreedToWarning) {
+                        Alert.alert("Confirmation Required", "Please confirm you understand the storage warning");
+                        return;
+                      }
+                      
+                      setIsCashAppLoading(true);
+                      try {
+                        const order = await placeOrder(name.trim(), email.trim(), phone.trim(), `Cash App Payment\n${notes.trim()}`);
+                        
+                        const itemsList = cart.map(item => 
+                          `${item.name} (${item.size}) x${item.quantity} - ${(item.price * item.quantity).toFixed(2)}`
+                        ).join('\n');
+
+                        const emailBody = `New Cash App Order #${order.id}\n\n` +
+                          `Payment Method: Cash App\n` +
+                          `Payment Status: PENDING\n\n` +
+                          `Customer: ${name.trim()}\n` +
+                          `Phone: ${phone.trim()}\n` +
+                          `Email: ${email.trim()}\n\n` +
+                          `Items:\n${itemsList}\n\n` +
+                          `Subtotal: ${cartSubtotal.toFixed(2)}\n` +
+                          `Tax (8.25%): ${cartTax.toFixed(2)}\n` +
+                          (tipPercentage > 0 ? `Tip (${tipPercentage}%): ${cartTip.toFixed(2)}\n` : '') +
+                          `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                          `   💰 TOTAL: ${cartTotal.toFixed(2)}\n` +
+                          `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+                          (notes.trim() ? `Notes: ${notes.trim()}\n\n` : '') +
+                          `Opening Cash App for payment...\n\n` +
+                          `Please note: Local delivery is currently available only within or near the New Braunfels and San Antonio, Texas area.`;
+
+                        const mailtoUrl = `mailto:orders@aychihuahuasalsa.com?subject=${encodeURIComponent(`Cash App Order #${order.id}`)}&body=${encodeURIComponent(emailBody)}`;
+                        
+                        const canOpen = await Linking.canOpenURL(mailtoUrl);
+                        if (canOpen) {
+                          await Linking.openURL(mailtoUrl);
+                        }
+                        
+                        const cashAppUrl = `https://cash.app/$ayechihuahuasalsa/${cartTotal.toFixed(2)}?note=${encodeURIComponent(`Order ${order.id} - ${name.trim()}`)}`;
+                        const canOpenCashApp = await Linking.canOpenURL(cashAppUrl);
+                        if (canOpenCashApp) {
+                          await Linking.openURL(cashAppUrl);
+                        }
+                        
+                        setShowCheckout(false);
+                        setName("");
+                        setEmail("");
+                        setPhone("");
+                        setNotes("");
+                        setAgreedToWarning(false);
+                        setIsCashAppLoading(false);
+
+                        Alert.alert(
+                          "Opening Cash App",
+                          `Your order #${order.id} has been placed! Cash App should open now to complete payment. Please send ${cartTotal.toFixed(2)} to $ayechihuahuasalsa. Thank you!`,
+                          [{ text: "OK" }]
+                        );
+                      } catch (error) {
+                        console.error("Error processing Cash App payment:", error);
+                        Alert.alert("Error", "There was a problem placing your order. Please try again.");
+                        setIsCashAppLoading(false);
+                      }
+                    }}
+                    disabled={!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder || isCashAppLoading}
+                  >
+                    <Text style={[styles.cashAppButtonText, (!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder || isCashAppLoading) && styles.cashAppButtonTextDisabled]}>
+                      {isCashAppLoading ? "Opening Cash App..." : "💵 Pay with Cash App"}
                     </Text>
                   </TouchableOpacity>
 
@@ -687,7 +767,7 @@ export default function CartScreen() {
                     disabled={!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder}
                   >
                     <Text style={[styles.placeOrderButtonText, (!agreedToWarning || !name.trim() || !email.trim() || !phone.trim() || isPlacingOrder) && styles.placeOrderButtonTextDisabled]}>
-                      {isPlacingOrder ? "Placing Order..." : "Place Order (Pay Later)"}
+                      {isPlacingOrder ? "Placing Order..." : "📧 Place Order (Pay Later)"}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -1479,67 +1559,6 @@ const styles = StyleSheet.create({
   placeOrderButtonTextDisabled: {
     color: Colors.light.textSecondary,
   },
-  paymentSection: {
-    marginBottom: 16,
-  },
-  paymentLabel: {
-    fontSize: 16,
-    fontWeight: "700" as const,
-    color: Colors.light.text,
-    marginBottom: 12,
-  },
-  cashAppButton: {
-    flexDirection: "row" as const,
-    alignItems: "center" as const,
-    backgroundColor: "#00D64F",
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  cashAppButtonLoading: {
-    opacity: 0.5,
-  },
-  cashAppIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    backgroundColor: "#fff",
-    justifyContent: "center" as const,
-    alignItems: "center" as const,
-    marginRight: 12,
-  },
-  cashAppIconText: {
-    fontSize: 28,
-    fontWeight: "700" as const,
-    color: "#00D64F",
-  },
-  cashAppContent: {
-    flex: 1,
-  },
-  cashAppTitle: {
-    fontSize: 16,
-    fontWeight: "700" as const,
-    color: "#fff",
-    marginBottom: 2,
-  },
-  cashAppHandle: {
-    fontSize: 14,
-    color: "rgba(255, 255, 255, 0.9)",
-  },
-  paymentNote: {
-    fontSize: 12,
-    color: Colors.light.textSecondary,
-    textAlign: "center" as const,
-    lineHeight: 18,
-    paddingHorizontal: 8,
-    marginBottom: 16,
-  },
-
 
   orderInstructions: {
     backgroundColor: Colors.light.background,
@@ -1657,6 +1676,24 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   paypalButtonTextDisabled: {
+    color: Colors.light.textSecondary,
+  },
+  cashAppButton: {
+    backgroundColor: "#00D64B",
+    padding: 16,
+    borderRadius: 12,
+    alignItems: "center" as const,
+  },
+  cashAppButtonDisabled: {
+    backgroundColor: Colors.light.border,
+    opacity: 0.6,
+  },
+  cashAppButtonText: {
+    fontSize: 16,
+    fontWeight: "600" as const,
+    color: "#fff",
+  },
+  cashAppButtonTextDisabled: {
     color: Colors.light.textSecondary,
   },
   paypalModalContent: {
