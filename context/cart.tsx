@@ -17,68 +17,100 @@ export const [CartProvider, useCart] = createContextHook(() => {
 
   const loadData = useCallback(async () => {
     try {
+      console.log("Loading cart data...");
       const [cartData, ordersData, counterData] = await Promise.all([
         AsyncStorage.getItem(CART_KEY),
         AsyncStorage.getItem(ORDERS_KEY),
         AsyncStorage.getItem(ORDER_COUNTER_KEY),
       ]);
       
-      if (cartData && cartData !== "undefined" && cartData !== "null") {
+      console.log("Cart data raw:", cartData ? cartData.substring(0, 50) : "null");
+      console.log("Orders data raw:", ordersData ? ordersData.substring(0, 50) : "null");
+      console.log("Counter data raw:", counterData);
+      
+      if (cartData && cartData !== "undefined" && cartData !== "null" && cartData.length > 0) {
         try {
-          const parsed = JSON.parse(cartData);
-          if (Array.isArray(parsed)) {
-            setCart(parsed);
+          if (cartData.startsWith('[') || cartData.startsWith('{')) {
+            const parsed = JSON.parse(cartData);
+            if (Array.isArray(parsed)) {
+              console.log("Cart loaded successfully:", parsed.length, "items");
+              setCart(parsed);
+            } else {
+              console.log("Invalid cart data format, clearing");
+              await AsyncStorage.removeItem(CART_KEY);
+              setCart([]);
+            }
           } else {
-            console.log("Invalid cart data, clearing");
+            console.log("Cart data doesn't look like JSON, clearing");
             await AsyncStorage.removeItem(CART_KEY);
             setCart([]);
           }
         } catch (e) {
-          console.error("Failed to parse cart data, clearing:", e);
+          console.error("Failed to parse cart data:", e, "\nData:", cartData.substring(0, 100));
           await AsyncStorage.removeItem(CART_KEY);
           setCart([]);
         }
+      } else {
+        console.log("No valid cart data found");
+        setCart([]);
       }
       
-      if (ordersData && ordersData !== "undefined" && ordersData !== "null") {
+      if (ordersData && ordersData !== "undefined" && ordersData !== "null" && ordersData.length > 0) {
         try {
-          const parsed = JSON.parse(ordersData);
-          if (Array.isArray(parsed)) {
-            setOrders(parsed);
+          if (ordersData.startsWith('[') || ordersData.startsWith('{')) {
+            const parsed = JSON.parse(ordersData);
+            if (Array.isArray(parsed)) {
+              console.log("Orders loaded successfully:", parsed.length, "orders");
+              setOrders(parsed);
+            } else {
+              console.log("Invalid orders data format, clearing");
+              await AsyncStorage.removeItem(ORDERS_KEY);
+              setOrders([]);
+            }
           } else {
-            console.log("Invalid orders data, clearing");
+            console.log("Orders data doesn't look like JSON, clearing");
             await AsyncStorage.removeItem(ORDERS_KEY);
             setOrders([]);
           }
         } catch (e) {
-          console.error("Failed to parse orders data, clearing:", e);
+          console.error("Failed to parse orders data:", e, "\nData:", ordersData.substring(0, 100));
           await AsyncStorage.removeItem(ORDERS_KEY);
           setOrders([]);
         }
+      } else {
+        console.log("No valid orders data found");
+        setOrders([]);
       }
       
-      if (counterData && counterData !== "undefined" && counterData !== "null") {
+      if (counterData && counterData !== "undefined" && counterData !== "null" && counterData.length > 0) {
         try {
           const parsed = JSON.parse(counterData);
           if (typeof parsed === 'number') {
+            console.log("Counter loaded successfully:", parsed);
             setOrderCounter(parsed);
           } else {
-            console.log("Invalid counter data, clearing");
+            console.log("Invalid counter data type, clearing");
             await AsyncStorage.removeItem(ORDER_COUNTER_KEY);
             setOrderCounter(0);
           }
         } catch (e) {
-          console.error("Failed to parse counter data, clearing:", e);
+          console.error("Failed to parse counter data:", e, "\nData:", counterData);
           await AsyncStorage.removeItem(ORDER_COUNTER_KEY);
           setOrderCounter(0);
         }
+      } else {
+        console.log("No valid counter data found");
+        setOrderCounter(0);
       }
       
+      console.log("Cart data loaded successfully");
       setIsLoaded(true);
     } catch (error) {
-      console.error("Failed to load cart data:", error);
+      console.error("Critical error loading cart data:", error);
       try {
+        console.log("Clearing all storage due to error");
         await AsyncStorage.multiRemove([CART_KEY, ORDERS_KEY, ORDER_COUNTER_KEY]);
+        console.log("Storage cleared successfully");
       } catch (clearError) {
         console.error("Failed to clear storage:", clearError);
       }
@@ -95,7 +127,11 @@ export const [CartProvider, useCart] = createContextHook(() => {
 
   const saveCart = useCallback(async (newCart: CartItem[]) => {
     try {
-      await AsyncStorage.setItem(CART_KEY, JSON.stringify(newCart));
+      console.log("Saving cart:", newCart.length, "items");
+      const serialized = JSON.stringify(newCart);
+      console.log("Cart serialized successfully, length:", serialized.length);
+      await AsyncStorage.setItem(CART_KEY, serialized);
+      console.log("Cart saved to storage");
       setCart(newCart);
     } catch (error) {
       console.error("Failed to save cart:", error);
@@ -104,7 +140,11 @@ export const [CartProvider, useCart] = createContextHook(() => {
 
   const saveOrders = useCallback(async (newOrders: Order[]) => {
     try {
-      await AsyncStorage.setItem(ORDERS_KEY, JSON.stringify(newOrders));
+      console.log("Saving orders:", newOrders.length, "orders");
+      const serialized = JSON.stringify(newOrders);
+      console.log("Orders serialized successfully, length:", serialized.length);
+      await AsyncStorage.setItem(ORDERS_KEY, serialized);
+      console.log("Orders saved to storage");
       setOrders(newOrders);
     } catch (error) {
       console.error("Failed to save orders:", error);
