@@ -57,25 +57,13 @@ function CartItemRow({ item, index, removeFromCart, updateQuantity }: {
 
   const handleDelete = () => {
     console.log("Delete button pressed for:", item.id, item.size);
-    Alert.alert(
-      "Remove Item",
-      `Remove ${item.name} (${item.size}) from cart?`,
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Remove",
-          style: "destructive",
-          onPress: () => {
-            console.log("Confirming removal of:", item.id, item.size);
-            removeFromCart(item.id, item.size);
-            Animated.spring(translateX, {
-              toValue: 0,
-              useNativeDriver: true,
-            }).start();
-          },
-        },
-      ]
-    );
+    console.log("Cart before delete:", JSON.stringify({ id: item.id, size: item.size }));
+    removeFromCart(item.id, item.size);
+    console.log("Delete completed for:", item.id, item.size);
+    Animated.spring(translateX, {
+      toValue: 0,
+      useNativeDriver: true,
+    }).start();
   };
 
   return (
@@ -118,9 +106,10 @@ function CartItemRow({ item, index, removeFromCart, updateQuantity }: {
           style={styles.deleteButton}
           onPress={handleDelete}
           activeOpacity={0.7}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+          testID={`delete-button-${item.id}-${item.size}`}
         >
-          <X size={24} color="#fff" strokeWidth={3} />
+          <X size={28} color="#fff" strokeWidth={4} />
         </TouchableOpacity>
       </Animated.View>
     </View>
