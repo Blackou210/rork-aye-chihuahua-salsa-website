@@ -3,7 +3,7 @@ import { PRODUCTS } from "@/constants/products";
 import { useCart } from "@/context/cart";
 import { Product, SalsaSize } from "@/types/order";
 import { Image } from "expo-image";
-import { ShoppingCart, Facebook, Instagram } from "lucide-react-native";
+import { ShoppingCart, Facebook, Instagram, MapPin } from "lucide-react-native";
 import React, { useState } from "react";
 import { ImageBackground, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View, Linking } from "react-native";
 import { router } from "expo-router";
@@ -87,6 +87,14 @@ export default function HomeScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
+        <View style={styles.locationBanner}>
+          <MapPin size={20} color={Colors.light.primary} />
+          <View style={styles.locationTextContainer}>
+            <Text style={styles.locationTitle}>Delivery Available</Text>
+            <Text style={styles.locationText}>New Braunfels, San Antonio & surrounding areas</Text>
+          </View>
+        </View>
+
         <Text style={styles.sectionTitle}>Our Products</Text>
         <View style={styles.productsGrid}>
           {PRODUCTS.map((item) => (
@@ -451,5 +459,36 @@ const styles = StyleSheet.create({
     fontWeight: "700" as const,
     marginTop: 12,
     letterSpacing: 0.5,
+  },
+  locationBanner: {
+    flexDirection: "row" as const,
+    alignItems: "center" as const,
+    backgroundColor: Colors.light.cardBg,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 24,
+    gap: 12,
+    borderWidth: 2,
+    borderColor: Colors.light.primary,
+    shadowColor: Colors.light.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  locationTextContainer: {
+    flex: 1,
+  },
+  locationTitle: {
+    fontSize: 16,
+    fontWeight: "700" as const,
+    color: Colors.light.primary,
+    marginBottom: 4,
+    letterSpacing: 0.3,
+  },
+  locationText: {
+    fontSize: 14,
+    color: Colors.light.text,
+    lineHeight: 20,
   },
 });
