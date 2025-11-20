@@ -133,8 +133,6 @@ export default function CartScreen() {
         <Text style={styles.itemName}>{item.name}</Text>
         <Text style={styles.itemSize}>{item.size}</Text>
         <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
-      </View>
-      <View style={styles.itemActions}>
         <View style={styles.quantityControl}>
           <TouchableOpacity
             style={styles.quantityButton}
@@ -150,14 +148,14 @@ export default function CartScreen() {
             <Plus size={16} color={Colors.light.text} />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={() => removeFromCart(item.id, item.size)}
-          activeOpacity={0.7}
-        >
-          <X size={20} color="#fff" strokeWidth={2.5} />
-        </TouchableOpacity>
       </View>
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={() => removeFromCart(item.id, item.size)}
+        activeOpacity={0.7}
+      >
+        <X size={20} color="#fff" strokeWidth={2.5} />
+      </TouchableOpacity>
     </View>
   );
 
@@ -490,6 +488,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 12,
     justifyContent: "center" as const,
+    gap: 8,
   },
   itemName: {
     fontSize: 16,
@@ -507,11 +506,7 @@ const styles = StyleSheet.create({
     fontWeight: "600" as const,
     color: Colors.light.primary,
   },
-  itemActions: {
-    justifyContent: "center" as const,
-    alignItems: "center" as const,
-    gap: 12,
-  },
+
   quantityControl: {
     flexDirection: "row" as const,
     alignItems: "center" as const,
@@ -533,9 +528,9 @@ const styles = StyleSheet.create({
     textAlign: "center" as const,
   },
   deleteButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: "#EF4444",
     justifyContent: "center" as const,
     alignItems: "center" as const,
@@ -544,6 +539,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 4,
+    marginLeft: 12,
   },
   footer: {
     padding: 16,
