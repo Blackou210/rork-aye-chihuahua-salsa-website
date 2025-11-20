@@ -262,9 +262,6 @@ export default function CartScreen() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [notes, setNotes] = useState("");
-  const [customTip, setCustomTip] = useState<number>(0);
-  const [isCustomTipActive, setIsCustomTipActive] = useState(false);
-  const sliderWidth = useRef<number>(250);
   const [agreedToWarning, setAgreedToWarning] = useState(false);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [isCashAppLoading, setIsCashAppLoading] = useState(false);
@@ -376,8 +373,6 @@ export default function CartScreen() {
   const cartTip = getCartTip();
   const cartTotal = getCartTotal();
 
-  const TIP_OPTIONS = [15, 18, 20] as const;
-
   return (
     <View style={styles.container}>
       {cart.length === 0 ? (
@@ -424,95 +419,6 @@ export default function CartScreen() {
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Tax (New Braunfels 8.25%)</Text>
               <Text style={styles.summaryValue}>${cartTax.toFixed(2)}</Text>
-            </View>
-            
-            <View style={styles.tipSection}>
-              <Text style={styles.tipLabel}>Add a tip</Text>
-              <View style={styles.tipOptions}>
-                {TIP_OPTIONS.map((tip) => (
-                  <TouchableOpacity
-                    key={tip}
-                    style={[
-                      styles.tipButton,
-                      tipPercentage === tip && styles.tipButtonActive,
-                    ]}
-                    onPress={() => setTipPercentage(tip)}
-                  >
-                    <Text
-                      style={[
-                        styles.tipButtonText,
-                        tipPercentage === tip && styles.tipButtonTextActive,
-                      ]}
-                    >
-                      {tip}%
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-                <TouchableOpacity
-                  style={[
-                    styles.tipButton,
-                    tipPercentage === 0 && styles.tipButtonActive,
-                  ]}
-                  onPress={() => setTipPercentage(0)}
-                >
-                  <Text
-                    style={[
-                      styles.tipButtonText,
-                      tipPercentage === 0 && styles.tipButtonTextActive,
-                    ]}
-                  >
-                    None
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              
-              <View style={styles.customTipContainer}>
-                <View style={styles.customTipHeader}>
-                  <Text style={styles.customTipLabel}>Custom Tip: {isCustomTipActive ? customTip : tipPercentage}%</Text>
-                  <Text style={styles.customTipAmount}>
-                    ${(getCartSubtotal() * ((isCustomTipActive ? customTip : tipPercentage) / 100)).toFixed(2)}
-                  </Text>
-                </View>
-                <View style={styles.sliderContainer}>
-                  <Text style={styles.sliderLabel}>0%</Text>
-                  <View 
-                    style={styles.sliderTrack}
-                    onStartShouldSetResponder={() => true}
-                    onResponderMove={(e) => {
-                      const locationX = e.nativeEvent.locationX;
-                      const percentage = Math.max(0, Math.min(30, Math.round((locationX / sliderWidth.current) * 30)));
-                      setCustomTip(percentage);
-                      setIsCustomTipActive(true);
-                      setTipPercentage(percentage);
-                    }}
-                    onResponderRelease={(e) => {
-                      const locationX = e.nativeEvent.locationX;
-                      const percentage = Math.max(0, Math.min(30, Math.round((locationX / sliderWidth.current) * 30)));
-                      setCustomTip(percentage);
-                      setIsCustomTipActive(true);
-                      setTipPercentage(percentage);
-                    }}
-                    onLayout={(e) => {
-                      sliderWidth.current = e.nativeEvent.layout.width;
-                    }}
-                  >
-                    <View style={styles.sliderFill} />
-                    <View 
-                      style={[
-                        styles.sliderFillActive,
-                        { width: `${((isCustomTipActive ? customTip : tipPercentage) / 30) * 100}%` }
-                      ]} 
-                    />
-                    <View 
-                      style={[
-                        styles.sliderThumb,
-                        { left: `${((isCustomTipActive ? customTip : tipPercentage) / 30) * 100}%` }
-                      ]} 
-                    />
-                  </View>
-                  <Text style={styles.sliderLabel}>30%</Text>
-                </View>
-              </View>
             </View>
 
             <View style={styles.totalContainer}>
@@ -1568,7 +1474,6 @@ const styles = StyleSheet.create({
   placeOrderButtonTextDisabled: {
     color: Colors.light.textSecondary,
   },
-
   orderInstructions: {
     backgroundColor: Colors.light.background,
     borderRadius: 12,
