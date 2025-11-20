@@ -25,7 +25,7 @@ export default function AboutScreen() {
 
         <View style={styles.contentCard}>
           <Text style={styles.paragraph}>
-            Ay Chihuahua Salsa is a story that starts in a small town in Laredo, Texas, with a kid named Robert Aldridge and the unforgettable taste of his mother&apos;s homemade salsa.
+            Ay Chihuahua Salsa is a story that starts in a small town in Laredo, Texas, with a kid named Robert and the unforgettable taste of his mother&apos;s homemade salsa.
           </Text>
 
           <Text style={styles.paragraph}>
