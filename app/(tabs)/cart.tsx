@@ -196,10 +196,7 @@ function CartItemRow({ item, index, removeFromCart, updateQuantity }: {
   ).current;
 
   const handleDelete = () => {
-    console.log("Delete button pressed for:", item.id, item.size);
-    console.log("Cart before delete:", JSON.stringify({ id: item.id, size: item.size }));
     removeFromCart(item.id, item.size);
-    console.log("Delete completed for:", item.id, item.size);
     Animated.spring(translateX, {
       toValue: 0,
       useNativeDriver: true,
@@ -245,11 +242,11 @@ function CartItemRow({ item, index, removeFromCart, updateQuantity }: {
         <TouchableOpacity
           style={styles.deleteButton}
           onPress={handleDelete}
-          activeOpacity={0.7}
-          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+          activeOpacity={0.8}
+          hitSlop={{ top: 25, bottom: 25, left: 25, right: 25 }}
           testID={`delete-button-${item.id}-${item.size}`}
         >
-          <X size={28} color="#fff" strokeWidth={4} />
+          <Trash2 size={24} color="#fff" strokeWidth={2.5} />
         </TouchableOpacity>
       </Animated.View>
     </View>
@@ -1109,12 +1106,12 @@ const styles = StyleSheet.create({
     flexDirection: "row" as const,
     backgroundColor: Colors.light.cardBg,
     borderRadius: 16,
-    padding: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
+    padding: 16,
+    shadowColor: Colors.light.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 5,
   },
   itemImage: {
     width: 80,
@@ -1165,17 +1162,17 @@ const styles = StyleSheet.create({
     textAlign: "center" as const,
   },
   deleteButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: "#EF4444",
     justifyContent: "center" as const,
     alignItems: "center" as const,
     shadowColor: "#EF4444",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.4,
-    shadowRadius: 8,
-    elevation: 6,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 12,
+    elevation: 8,
     marginLeft: 12,
     alignSelf: "center" as const,
   },
@@ -1281,15 +1278,21 @@ const styles = StyleSheet.create({
   },
   checkoutButton: {
     backgroundColor: Colors.light.primary,
-    padding: 16,
-    borderRadius: 12,
+    padding: 18,
+    borderRadius: 16,
     alignItems: "center" as const,
     marginBottom: 8,
+    shadowColor: Colors.light.primary,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 8,
   },
   checkoutButtonText: {
-    fontSize: 16,
-    fontWeight: "600" as const,
+    fontSize: 18,
+    fontWeight: "700" as const,
     color: "#fff",
+    letterSpacing: 0.5,
   },
   emptyState: {
     flex: 1,
@@ -1367,14 +1370,20 @@ const styles = StyleSheet.create({
 
   placeOrderButton: {
     backgroundColor: Colors.light.primary,
-    padding: 16,
-    borderRadius: 12,
+    padding: 18,
+    borderRadius: 16,
     alignItems: "center" as const,
+    shadowColor: Colors.light.primary,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 8,
   },
   placeOrderButtonText: {
-    fontSize: 16,
-    fontWeight: "600" as const,
+    fontSize: 17,
+    fontWeight: "700" as const,
     color: "#fff",
+    letterSpacing: 0.3,
   },
   tipSection: {
     marginTop: 16,
@@ -1662,36 +1671,48 @@ const styles = StyleSheet.create({
   },
   paypalButton: {
     backgroundColor: "#0070BA",
-    padding: 16,
-    borderRadius: 12,
+    padding: 18,
+    borderRadius: 16,
     alignItems: "center" as const,
+    shadowColor: "#0070BA",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 6,
   },
   paypalButtonDisabled: {
     backgroundColor: Colors.light.border,
     opacity: 0.6,
   },
   paypalButtonText: {
-    fontSize: 16,
-    fontWeight: "600" as const,
+    fontSize: 17,
+    fontWeight: "700" as const,
     color: "#fff",
+    letterSpacing: 0.3,
   },
   paypalButtonTextDisabled: {
     color: Colors.light.textSecondary,
   },
   cashAppButton: {
     backgroundColor: "#00D64B",
-    padding: 16,
-    borderRadius: 12,
+    padding: 18,
+    borderRadius: 16,
     alignItems: "center" as const,
+    shadowColor: "#00D64B",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 6,
   },
   cashAppButtonDisabled: {
     backgroundColor: Colors.light.border,
     opacity: 0.6,
   },
   cashAppButtonText: {
-    fontSize: 16,
-    fontWeight: "600" as const,
+    fontSize: 17,
+    fontWeight: "700" as const,
     color: "#fff",
+    letterSpacing: 0.3,
   },
   cashAppButtonTextDisabled: {
     color: Colors.light.textSecondary,
