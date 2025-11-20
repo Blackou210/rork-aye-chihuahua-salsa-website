@@ -122,11 +122,9 @@ export default function HomeScreen() {
               onPress={() => Linking.openURL('https://www.instagram.com/aychihuahuasalsa210')}
               activeOpacity={0.7}
             >
-              <View style={styles.serranoPepperContainer}>
-                <View style={styles.serranoPepper}>
-                  <View style={styles.serranoPepperStem} />
-                  <View style={styles.serranoPepperBody} />
-                </View>
+              <View style={styles.tomatilloContainer}>
+                <View style={styles.tomatilloHusk} />
+                <View style={styles.tomatillo} />
               </View>
               <Instagram size={24} color="#fff" fill="#fff" style={{ position: "absolute" as const }} />
               <Text style={styles.socialText}>Instagram</Text>
@@ -467,44 +465,35 @@ const styles = StyleSheet.create({
     marginTop: 12,
     letterSpacing: 0.5,
   },
-  serranoPepperContainer: {
+  tomatilloContainer: {
     width: 80,
     height: 80,
     justifyContent: "center" as const,
     alignItems: "center" as const,
   },
-  serranoPepper: {
-    position: "relative" as const,
-    width: 30,
+  tomatilloHusk: {
+    position: "absolute" as const,
+    width: 70,
     height: 70,
+    borderRadius: 35,
+    backgroundColor: "#c8d5a0",
+    borderWidth: 3,
+    borderColor: "#b0be88",
+    borderStyle: "dashed" as const,
+    opacity: 0.7,
   },
-  serranoPepperStem: {
-    position: "absolute" as const,
-    top: 0,
-    left: 10,
-    width: 10,
-    height: 12,
-    backgroundColor: "#2d5016",
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-  },
-  serranoPepperBody: {
-    position: "absolute" as const,
-    top: 10,
-    left: 0,
-    width: 30,
-    height: 60,
-    backgroundColor: "#4a7c2e",
-    borderRadius: 15,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+  tomatillo: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#7ba23f",
     shadowColor: "#000",
     shadowOffset: { width: 2, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 4,
+    borderWidth: 1,
+    borderColor: "#6b9235",
   },
   locationBanner: {
     flexDirection: "row" as const,
