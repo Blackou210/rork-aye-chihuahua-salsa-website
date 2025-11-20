@@ -122,7 +122,12 @@ export default function HomeScreen() {
               onPress={() => Linking.openURL('https://www.instagram.com/aychihuahuasalsa210')}
               activeOpacity={0.7}
             >
-              <Text style={styles.pepperIcon}>🫑</Text>
+              <View style={styles.serranoPepperContainer}>
+                <View style={styles.serranoPepper}>
+                  <View style={styles.serranoPepperStem} />
+                  <View style={styles.serranoPepperBody} />
+                </View>
+              </View>
               <Instagram size={24} color="#fff" fill="#fff" style={{ position: "absolute" as const }} />
               <Text style={styles.socialText}>Instagram</Text>
             </TouchableOpacity>
@@ -461,6 +466,45 @@ const styles = StyleSheet.create({
     fontWeight: "700" as const,
     marginTop: 12,
     letterSpacing: 0.5,
+  },
+  serranoPepperContainer: {
+    width: 80,
+    height: 80,
+    justifyContent: "center" as const,
+    alignItems: "center" as const,
+  },
+  serranoPepper: {
+    position: "relative" as const,
+    width: 30,
+    height: 70,
+  },
+  serranoPepperStem: {
+    position: "absolute" as const,
+    top: 0,
+    left: 10,
+    width: 10,
+    height: 12,
+    backgroundColor: "#2d5016",
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+  },
+  serranoPepperBody: {
+    position: "absolute" as const,
+    top: 10,
+    left: 0,
+    width: 30,
+    height: 60,
+    backgroundColor: "#4a7c2e",
+    borderRadius: 15,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
   },
   locationBanner: {
     flexDirection: "row" as const,
