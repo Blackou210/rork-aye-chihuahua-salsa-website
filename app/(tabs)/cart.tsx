@@ -152,9 +152,9 @@ export default function CartScreen() {
       <TouchableOpacity
         style={styles.deleteButton}
         onPress={() => removeFromCart(item.id, item.size)}
-        activeOpacity={0.7}
+        activeOpacity={0.6}
       >
-        <X size={20} color="#fff" strokeWidth={2.5} />
+        <X size={22} color="#fff" strokeWidth={3} />
       </TouchableOpacity>
     </View>
   );
@@ -528,17 +528,17 @@ const styles = StyleSheet.create({
     textAlign: "center" as const,
   },
   deleteButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 8,
+    width: 40,
+    height: 40,
+    borderRadius: 10,
     backgroundColor: "#EF4444",
     justifyContent: "center" as const,
     alignItems: "center" as const,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 4,
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 5,
     marginLeft: 8,
     alignSelf: "center" as const,
   },
