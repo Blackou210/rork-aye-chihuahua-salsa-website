@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 16,
-    paddingBottom: 32,
+    paddingBottom: 120,
     maxWidth: 800,
     width: "100%",
     alignSelf: "center" as const,
