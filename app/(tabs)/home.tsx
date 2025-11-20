@@ -5,7 +5,7 @@ import { Product, SalsaSize } from "@/types/order";
 import { Image } from "expo-image";
 import { ShoppingCart, Facebook, Instagram } from "lucide-react-native";
 import React, { useState } from "react";
-import { ImageBackground, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View, Linking } from "react-native";
+import { ImageBackground, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View, Linking, useWindowDimensions } from "react-native";
 import { router } from "expo-router";
 
 const SIZES: SalsaSize[] = ["4oz", "8oz", "12oz", "1gal"];
@@ -15,6 +15,8 @@ export default function HomeScreen() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<SalsaSize>("4oz");
   const cartItemCount = getCartItemCount();
+  const { width } = useWindowDimensions();
+  const isDesktop = width >= 768;
 
 
 
@@ -248,6 +250,9 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 16,
+    maxWidth: 1200,
+    width: "100%",
+    alignSelf: "center" as const,
   },
   sectionTitle: {
     fontSize: 20,
@@ -261,9 +266,11 @@ const styles = StyleSheet.create({
     flexWrap: "wrap" as const,
     gap: 12,
     marginBottom: 16,
+    justifyContent: "center" as const,
   },
   productCardWrapper: {
     width: "48%" as const,
+    maxWidth: 280,
   },
   productCard: {
     backgroundColor: Colors.light.cardBg,
@@ -310,6 +317,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     maxHeight: "90%",
+    maxWidth: 600,
+    width: "100%",
+    alignSelf: "center" as const,
   },
   modalImage: {
     width: "100%",

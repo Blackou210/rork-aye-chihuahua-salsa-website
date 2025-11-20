@@ -17,6 +17,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from "react-native";
 
 function CartItemRow({ item, index, removeFromCart, updateQuantity }: {
@@ -118,6 +119,8 @@ function CartItemRow({ item, index, removeFromCart, updateQuantity }: {
 }
 
 export default function CartScreen() {
+  const { width } = useWindowDimensions();
+  const isDesktop = width >= 768;
   const { cart, removeFromCart, updateQuantity, getCartSubtotal, getCartTax, getCartTip, getCartTotal, placeOrder, tipPercentage, setTipPercentage } = useCart();
   const [showCheckout, setShowCheckout] = useState(false);
   const [name, setName] = useState("");
@@ -539,6 +542,9 @@ const styles = StyleSheet.create({
   },
   cartList: {
     padding: 16,
+    maxWidth: 1000,
+    width: "100%",
+    alignSelf: "center" as const,
   },
   cartItemWrapper: {
     marginBottom: 12,
@@ -636,6 +642,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light.cardBg,
     borderTopWidth: 1,
     borderTopColor: Colors.light.border,
+    maxWidth: 1000,
+    width: "100%",
+    alignSelf: "center" as const,
   },
   cartSummary: {
     marginBottom: 16,
@@ -768,6 +777,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     maxHeight: "90%",
+    maxWidth: 700,
+    width: "100%",
+    alignSelf: "center" as const,
   },
   modalHeader: {
     flexDirection: "row" as const,
