@@ -1,7 +1,7 @@
 import Colors from "@/constants/colors";
 import { Heart } from "lucide-react-native";
 import React from "react";
-import { ImageBackground, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View, Linking } from "react-native";
 
 export default function AboutScreen() {
   return (
@@ -63,6 +63,13 @@ export default function AboutScreen() {
           <Text style={styles.signatureText}>
             From my family to yours — thank you for being part of my story.
           </Text>
+
+          <TouchableOpacity 
+            style={styles.donateButton}
+            onPress={() => Linking.openURL('https://www.paypal.com/donate')}
+          >
+            <Text style={styles.donateText}>Donate via PayPal</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </ImageBackground>
@@ -163,5 +170,18 @@ const styles = StyleSheet.create({
     textAlign: "center" as const,
     lineHeight: 28,
     marginTop: 8,
+  },
+  donateButton: {
+    backgroundColor: '#0070ba',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    marginTop: 24,
+    alignSelf: "center" as const,
+  },
+  donateText: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: "600" as const,
   },
 });
