@@ -56,6 +56,7 @@ function CartItemRow({ item, index, removeFromCart, updateQuantity }: {
   ).current;
 
   const handleDelete = () => {
+    console.log("Delete button pressed for:", item.id, item.size);
     Alert.alert(
       "Remove Item",
       `Remove ${item.name} (${item.size}) from cart?`,
@@ -64,7 +65,14 @@ function CartItemRow({ item, index, removeFromCart, updateQuantity }: {
         {
           text: "Remove",
           style: "destructive",
-          onPress: () => removeFromCart(item.id, item.size),
+          onPress: () => {
+            console.log("Confirming removal of:", item.id, item.size);
+            removeFromCart(item.id, item.size);
+            Animated.spring(translateX, {
+              toValue: 0,
+              useNativeDriver: true,
+            }).start();
+          },
         },
       ]
     );
@@ -110,6 +118,7 @@ function CartItemRow({ item, index, removeFromCart, updateQuantity }: {
           style={styles.deleteButton}
           onPress={handleDelete}
           activeOpacity={0.7}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           <X size={24} color="#fff" strokeWidth={3} />
         </TouchableOpacity>
