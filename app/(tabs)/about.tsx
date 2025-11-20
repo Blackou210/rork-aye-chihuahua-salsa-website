@@ -66,9 +66,9 @@ export default function AboutScreen() {
 
           <TouchableOpacity 
             style={styles.donateButton}
-            onPress={() => Linking.openURL('https://www.paypal.com/donate')}
+            onPress={() => Linking.openURL('https://cash.app/$YourCashtag')}
           >
-            <Text style={styles.donateText}>Donate via PayPal</Text>
+            <Text style={styles.donateText}>Donate via Cash App</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   donateButton: {
-    backgroundColor: '#0070ba',
+    backgroundColor: '#00d54b',
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 8,
