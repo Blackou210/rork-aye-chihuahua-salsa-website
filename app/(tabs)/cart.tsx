@@ -528,9 +528,9 @@ const styles = StyleSheet.create({
     textAlign: "center" as const,
   },
   deleteButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 36,
+    height: 36,
+    borderRadius: 8,
     backgroundColor: "#EF4444",
     justifyContent: "center" as const,
     alignItems: "center" as const,
@@ -539,7 +539,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 4,
-    marginLeft: 12,
+    marginLeft: 8,
+    alignSelf: "center" as const,
   },
   footer: {
     padding: 16,
