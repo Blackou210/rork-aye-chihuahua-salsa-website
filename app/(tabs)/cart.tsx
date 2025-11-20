@@ -125,17 +125,6 @@ export default function CartScreen() {
 
   const renderCartItem = ({ item, index }: { item: CartItemType; index: number }) => (
     <View style={styles.cartItem}>
-      <TouchableOpacity
-        style={styles.deleteButtonTop}
-        onPress={() => {
-          console.log(`Removing item: ${item.id}, size: ${item.size}`);
-          removeFromCart(item.id, item.size);
-        }}
-        activeOpacity={0.6}
-        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-      >
-        <X size={16} color="#fff" strokeWidth={3} />
-      </TouchableOpacity>
       <View style={styles.itemNumber}>
         <Text style={styles.itemNumberText}>{index + 1}</Text>
       </View>
@@ -161,6 +150,26 @@ export default function CartScreen() {
             <Plus size={16} color={Colors.light.text} />
           </TouchableOpacity>
         </View>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => {
+            Alert.alert(
+              "Remove Item",
+              `Remove ${item.name} (${item.size}) from cart?`,
+              [
+                { text: "Cancel", style: "cancel" },
+                {
+                  text: "Remove",
+                  style: "destructive",
+                  onPress: () => removeFromCart(item.id, item.size),
+                },
+              ]
+            );
+          }}
+          activeOpacity={0.7}
+        >
+          <X size={18} color="#fff" strokeWidth={2.5} />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -535,20 +544,17 @@ const styles = StyleSheet.create({
     minWidth: 24,
     textAlign: "center" as const,
   },
-  deleteButtonTop: {
-    position: "absolute" as const,
-    top: 8,
-    right: 8,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+  deleteButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     backgroundColor: "#EF4444",
     justifyContent: "center" as const,
     alignItems: "center" as const,
-    zIndex: 10,
+    marginTop: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 4,
   },
