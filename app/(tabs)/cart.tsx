@@ -152,23 +152,10 @@ export default function CartScreen() {
         </View>
         <TouchableOpacity
           style={styles.deleteButton}
-          onPress={() => {
-            Alert.alert(
-              "Remove Item",
-              `Remove ${item.name} (${item.size}) from cart?`,
-              [
-                { text: "Cancel", style: "cancel" },
-                {
-                  text: "Remove",
-                  style: "destructive",
-                  onPress: () => removeFromCart(item.id, item.size),
-                },
-              ]
-            );
-          }}
+          onPress={() => removeFromCart(item.id, item.size)}
           activeOpacity={0.7}
         >
-          <X size={18} color="#fff" strokeWidth={2.5} />
+          <X size={20} color="#fff" strokeWidth={2.5} />
         </TouchableOpacity>
       </View>
     </View>
@@ -521,8 +508,9 @@ const styles = StyleSheet.create({
     color: Colors.light.primary,
   },
   itemActions: {
-    justifyContent: "space-between" as const,
-    alignItems: "flex-end" as const,
+    justifyContent: "center" as const,
+    alignItems: "center" as const,
+    gap: 12,
   },
   quantityControl: {
     flexDirection: "row" as const,
@@ -545,13 +533,12 @@ const styles = StyleSheet.create({
     textAlign: "center" as const,
   },
   deleteButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: "#EF4444",
     justifyContent: "center" as const,
     alignItems: "center" as const,
-    marginTop: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
