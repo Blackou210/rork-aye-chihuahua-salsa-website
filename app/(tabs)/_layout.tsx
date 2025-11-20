@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { Home, ShoppingCart, ChefHat } from "lucide-react-native";
+import { Home, ShoppingCart, ChefHat, Heart } from "lucide-react-native";
 import React from "react";
 
 import Colors from "@/constants/colors";
@@ -42,6 +42,13 @@ export default function TabLayout() {
         options={{
           title: "Recipes",
           tabBarIcon: ({ color }) => <ChefHat color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="about"
+        options={{
+          title: "About",
+          tabBarIcon: ({ color }) => <Heart color={color} />,
         }}
       />
       <Tabs.Screen
