@@ -25,29 +25,29 @@ export default function AboutScreen() {
 
         <View style={styles.contentCard}>
           <Text style={styles.paragraph}>
-            Ay Chihuahua Salsa is a story that starts in a small town in Laredo, Texas, with a kid named Robert and the unforgettable taste of his mother&apos;s homemade salsa.
+            My story starts in a small border town in Laredo, Texas, where I grew up with the unforgettable taste of my mother&apos;s homemade salsa.
           </Text>
 
           <Text style={styles.paragraph}>
-            Growing up, Robert never imagined he&apos;d create a salsa brand of his own. But he always remembered the way his mom&apos;s salsa brought the family together. The smell of roasted chiles, garlic, and spices drifting through the house wasn&apos;t just food — it was love, tradition, and home. It was comfort during hard days and celebration during good ones. Her salsa was the first spark of what would eventually become Ay Chihuahua Salsa… even if he didn&apos;t know it at the time.
+            Growing up, I never imagined I&apos;d create a salsa brand of my own. But I always remembered the way my mom&apos;s salsa brought our family together. The smell of roasted chiles, garlic, and spices drifting through the house wasn&apos;t just food — it was love, tradition, and home. It was comfort during hard days and celebration during good ones. Her salsa was the first spark of what would eventually become Ay Chihuahua Salsa… even if I didn&apos;t know it at the time.
           </Text>
 
           <Text style={styles.paragraph}>
-            Years later, inspired by those memories, Robert tried making his own batch in New Braunfels. One batch turned into many. Family tasted it. Friends asked for more. Before long, what started in a home kitchen grew into something real — a Texas-made family business built from faith, gratitude, and tradition.
+            Years later, inspired by those memories, I started making my own batch here in New Braunfels. One batch turned into many. My family tasted it. Friends asked for more. Before long, what started in my kitchen grew into something real — a Texas-made family business built from faith, gratitude, and tradition.
           </Text>
 
-          <Text style={styles.sectionTitle}>Our Thanks</Text>
+          <Text style={styles.sectionTitle}>My Thanks</Text>
 
           <Text style={styles.paragraph}>
-            None of this would have happened without the people who believed in him.
-          </Text>
-
-          <Text style={styles.paragraph}>
-            Robert gives his deepest thanks to his family — Lauren, Ashleigh, and most of all, his mom, whose love, strength, and unforgettable salsa inspired everything Ay Chihuahua Salsa stands for. Her influence lives in every jar, every recipe, and every step of this journey.
+            None of this would have happened without the people who believed in me.
           </Text>
 
           <Text style={styles.paragraph}>
-            To our customers: thank you for welcoming our salsa into your homes and helping a small Texas dream grow bigger every day.
+            I give my deepest thanks to my family — Lauren, Ashleigh, and most of all, my mom, whose love, strength, and unforgettable salsa inspired everything Ay Chihuahua Salsa stands for. Her influence lives in every jar, every recipe, and every step of this journey.
+          </Text>
+
+          <Text style={styles.paragraph}>
+            To our customers: thank you for welcoming my salsa into your homes and helping a small Texas dream grow bigger every day.
           </Text>
 
           <Text style={styles.paragraph}>
@@ -57,11 +57,11 @@ export default function AboutScreen() {
           <View style={styles.divider} />
 
           <Text style={styles.closingText}>
-            Ay Chihuahua Salsa will always stay true to its roots — family-crafted, Texas-proud, and made with the same heart that started it all. From the border town memories of Laredo to the family business born in New Braunfels, our story is one of tradition, faith, and gratitude.
+            Ay Chihuahua Salsa will always stay true to its roots — family-crafted, Texas-proud, and made with the same heart that started it all. My life started at the border, and this business was born in New Braunfels — it&apos;s a story of tradition, faith, and gratitude.
           </Text>
 
           <Text style={styles.signatureText}>
-            From our family to yours — thank you for being part of our story.
+            From my family to yours — thank you for being part of my story.
           </Text>
         </View>
       </ScrollView>
