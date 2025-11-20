@@ -33,7 +33,7 @@ export default function AboutScreen() {
           </Text>
 
           <Text style={styles.paragraph}>
-            Years later, inspired by those memories, Robert tried making his own batch. One batch turned into many. Family tasted it. Friends asked for more. Before long, what started in a home kitchen grew into something real — a Texas-made family business built from faith, gratitude, and tradition.
+            Years later, inspired by those memories, Robert tried making his own batch in New Braunfels. One batch turned into many. Family tasted it. Friends asked for more. Before long, what started in a home kitchen grew into something real — a Texas-made family business built from faith, gratitude, and tradition.
           </Text>
 
           <Text style={styles.sectionTitle}>Our Thanks</Text>
@@ -57,7 +57,7 @@ export default function AboutScreen() {
           <View style={styles.divider} />
 
           <Text style={styles.closingText}>
-            Ay Chihuahua Salsa will always stay true to its roots — family-crafted, Texas-proud, and made with the same heart that started it all in a little kitchen in Laredo.
+            Ay Chihuahua Salsa will always stay true to its roots — family-crafted, Texas-proud, and made with the same heart that started it all. From the border town memories of Laredo to the family business born in New Braunfels, our story is one of tradition, faith, and gratitude.
           </Text>
 
           <Text style={styles.signatureText}>
