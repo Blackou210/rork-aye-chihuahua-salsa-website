@@ -22,6 +22,144 @@ import {
 } from "react-native";
 import { WebView } from "react-native-webview";
 
+function PayPalWebCheckout({ cartSubtotal, cartTax, cartTip, cartTotal, tipPercentage, cart, onSuccess, onError, onCancel }: {
+  cartSubtotal: number;
+  cartTax: number;
+  cartTip: number;
+  cartTotal: number;
+  tipPercentage: number;
+  cart: CartItemType[];
+  onSuccess: (data: any) => void;
+  onError: () => void;
+  onCancel: () => void;
+}) {
+  const containerRef = React.useRef<View>(null);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const loadPayPalScript = () => {
+      if (typeof window === 'undefined') return;
+
+      const existingScript = document.getElementById('paypal-sdk');
+      if (existingScript) {
+        existingScript.remove();
+      }
+
+      const script = document.createElement('script');
+      script.id = 'paypal-sdk';
+      script.src = 'https://www.paypal.com/sdk/js?client-id=ASRb-19Dl8YmFwKRbIR0P2qQ4-_VBfUavytIdj-qdQU5RAh0cT7fgjPsjxvJjniLnYZ227OLQl01AYCV&currency=USD';
+      script.async = true;
+      script.onload = () => {
+        setIsLoading(false);
+        renderPayPalButtons();
+      };
+      script.onerror = () => {
+        setIsLoading(false);
+        onError();
+      };
+      document.body.appendChild(script);
+    };
+
+    const renderPayPalButtons = () => {
+      if (typeof window === 'undefined' || !(window as any).paypal) return;
+
+      const container = document.getElementById('paypal-button-container-web');
+      if (!container) return;
+
+      container.innerHTML = '';
+
+      (window as any).paypal.Buttons({
+        style: {
+          layout: 'vertical',
+          color: 'gold',
+          shape: 'rect',
+          label: 'paypal'
+        },
+        createOrder: function(data: any, actions: any) {
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: cartTotal.toFixed(2),
+                currency_code: 'USD',
+                breakdown: {
+                  item_total: { value: cartSubtotal.toFixed(2), currency_code: 'USD' },
+                  tax_total: { value: (cartTax + cartTip).toFixed(2), currency_code: 'USD' }
+                }
+              },
+              items: cart.map(item => ({
+                name: `${item.name} (${item.size})`,
+                unit_amount: { value: item.price.toFixed(2), currency_code: 'USD' },
+                quantity: item.quantity.toString()
+              }))
+            }]
+          });
+        },
+        onApprove: function(data: any, actions: any) {
+          return actions.order.capture().then(function(details: any) {
+            onSuccess({
+              orderID: data.orderID,
+              payerName: details.payer.name.given_name + ' ' + details.payer.name.surname,
+              payerEmail: details.payer.email_address
+            });
+          });
+        },
+        onError: function(err: any) {
+          console.error('PayPal error:', err);
+          onError();
+        },
+        onCancel: function(data: any) {
+          onCancel();
+        }
+      }).render('#paypal-button-container-web');
+    };
+
+    loadPayPalScript();
+
+    return () => {
+      const script = document.getElementById('paypal-sdk');
+      if (script) {
+        script.remove();
+      }
+    };
+  }, [cartSubtotal, cartTax, cartTip, cartTotal, cart, onSuccess, onError, onCancel]);
+
+  return (
+    <ScrollView style={styles.webview} contentContainerStyle={{ padding: 20 }}>
+      <View style={styles.orderSummaryWeb}>
+        <Text style={styles.orderSummaryTitle}>Order Summary</Text>
+        <View style={styles.summaryRowWeb}>
+          <Text style={styles.summaryLabelWeb}>Subtotal:</Text>
+          <Text style={styles.summaryValueWeb}>${cartSubtotal.toFixed(2)}</Text>
+        </View>
+        <View style={styles.summaryRowWeb}>
+          <Text style={styles.summaryLabelWeb}>Tax (8.25%):</Text>
+          <Text style={styles.summaryValueWeb}>${cartTax.toFixed(2)}</Text>
+        </View>
+        {tipPercentage > 0 && (
+          <View style={styles.summaryRowWeb}>
+            <Text style={styles.summaryLabelWeb}>Tip ({tipPercentage}%):</Text>
+            <Text style={styles.summaryValueWeb}>${cartTip.toFixed(2)}</Text>
+          </View>
+        )}
+        <View style={[styles.summaryRowWeb, styles.summaryRowTotal]}>
+          <Text style={styles.summaryLabelTotal}>Total:</Text>
+          <Text style={styles.summaryValueTotal}>${cartTotal.toFixed(2)}</Text>
+        </View>
+      </View>
+      <View 
+        ref={containerRef}
+        style={styles.paypalButtonContainerWeb}
+        nativeID="paypal-button-container-web"
+      />
+      {isLoading && (
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>Loading PayPal...</Text>
+        </View>
+      )}
+    </ScrollView>
+  );
+}
+
 function CartItemRow({ item, index, removeFromCart, updateQuantity }: {
   item: CartItemType;
   index: number;
@@ -573,208 +711,285 @@ export default function CartScreen() {
                 <Text style={styles.closeButton}>✕</Text>
               </TouchableOpacity>
             </View>
-            <WebView
-              source={{
-                html: `
-                  <!DOCTYPE html>
-                  <html>
-                  <head>
-                    <meta name="viewport" content="width=device-width, initial-scale=1">
-                    <script src="https://www.paypal.com/sdk/js?client-id=ASRb-19Dl8YmFwKRbIR0P2qQ4-_VBfUavytIdj-qdQU5RAh0cT7fgjPsjxvJjniLnYZ227OLQl01AYCV&currency=USD"></script>
-                    <style>
-                      body { 
-                        margin: 0; 
-                        padding: 20px; 
-                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                        background: #f5f5f5;
-                      }
-                      #paypal-button-container { 
-                        max-width: 500px; 
-                        margin: 0 auto;
-                      }
-                      .order-summary {
-                        background: white;
-                        padding: 20px;
-                        border-radius: 12px;
-                        margin-bottom: 20px;
-                        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                      }
-                      .order-summary h3 {
-                        margin: 0 0 15px 0;
-                        color: #333;
-                      }
-                      .summary-row {
-                        display: flex;
-                        justify-content: space-between;
-                        margin-bottom: 8px;
-                        color: #666;
-                      }
-                      .summary-row.total {
-                        font-size: 18px;
-                        font-weight: bold;
-                        color: #333;
-                        padding-top: 12px;
-                        border-top: 2px solid #eee;
-                        margin-top: 12px;
-                      }
-                    </style>
-                  </head>
-                  <body>
-                    <div class="order-summary">
-                      <h3>Order Summary</h3>
-                      <div class="summary-row">
-                        <span>Subtotal:</span>
-                        <span>${cartSubtotal.toFixed(2)}</span>
-                      </div>
-                      <div class="summary-row">
-                        <span>Tax (8.25%):</span>
-                        <span>${cartTax.toFixed(2)}</span>
-                      </div>
-                      ${tipPercentage > 0 ? `
-                      <div class="summary-row">
-                        <span>Tip (${tipPercentage}%):</span>
-                        <span>${cartTip.toFixed(2)}</span>
-                      </div>
-                      ` : ''}
-                      <div class="summary-row total">
-                        <span>Total:</span>
-                        <span>${cartTotal.toFixed(2)}</span>
-                      </div>
-                    </div>
-                    <div id="paypal-button-container"></div>
-                    <script>
-                      paypal.Buttons({
-                        style: {
-                          layout: 'vertical',
-                          color: 'gold',
-                          shape: 'rect',
-                          label: 'paypal'
-                        },
-                        createOrder: function(data, actions) {
-                          return actions.order.create({
-                            purchase_units: [{
-                              amount: {
-                                value: '${cartTotal.toFixed(2)}',
-                                currency_code: 'USD',
-                                breakdown: {
-                                  item_total: { value: '${cartSubtotal.toFixed(2)}', currency_code: 'USD' },
-                                  tax_total: { value: '${(cartTax + cartTip).toFixed(2)}', currency_code: 'USD' }
-                                }
-                              },
-                              items: ${JSON.stringify(cart.map(item => ({
-                                name: `${item.name} (${item.size})`,
-                                unit_amount: { value: item.price.toFixed(2), currency_code: 'USD' },
-                                quantity: item.quantity.toString()
-                              })))}
-                            }]
-                          });
-                        },
-                        onApprove: function(data, actions) {
-                          return actions.order.capture().then(function(details) {
-                            window.ReactNativeWebView.postMessage(JSON.stringify({
-                              type: 'PAYMENT_SUCCESS',
-                              orderID: data.orderID,
-                              payerName: details.payer.name.given_name + ' ' + details.payer.name.surname,
-                              payerEmail: details.payer.email_address
-                            }));
-                          });
-                        },
-                        onError: function(err) {
-                          window.ReactNativeWebView.postMessage(JSON.stringify({
-                            type: 'PAYMENT_ERROR',
-                            error: err.toString()
-                          }));
-                        },
-                        onCancel: function(data) {
-                          window.ReactNativeWebView.postMessage(JSON.stringify({
-                            type: 'PAYMENT_CANCELLED'
-                          }));
-                        }
-                      }).render('#paypal-button-container');
-                    </script>
-                  </body>
-                  </html>
-                `,
-              }}
-              onMessage={async (event) => {
-                try {
-                  const data = JSON.parse(event.nativeEvent.data);
-                  console.log("PayPal message received:", data);
+            {Platform.OS === 'web' ? (
+              <PayPalWebCheckout
+                cartSubtotal={cartSubtotal}
+                cartTax={cartTax}
+                cartTip={cartTip}
+                cartTotal={cartTotal}
+                tipPercentage={tipPercentage}
+                cart={cart}
+                onSuccess={async (data: any) => {
+                  setShowPayPalModal(false);
+                  setIsPlacingOrder(true);
                   
-                  if (data.type === 'PAYMENT_SUCCESS') {
-                    setShowPayPalModal(false);
-                    setIsPlacingOrder(true);
+                  try {
+                    const order = await placeOrder(name.trim(), email.trim(), phone.trim(), `PayPal Order ID: ${data.orderID}\n${notes.trim()}`);
                     
                     try {
-                      const order = await placeOrder(name.trim(), email.trim(), phone.trim(), `PayPal Order ID: ${data.orderID}\n${notes.trim()}`);
+                      const itemsList = cart.map(item => 
+                        `${item.name} (${item.size}) - Quantity: ${item.quantity} - ${(item.price * item.quantity).toFixed(2)}`
+                      ).join('\n');
+
+                      const emailBody = `New PAID Order #${order.id}\n\n` +
+                        `Payment Status: PAID via PayPal\n` +
+                        `PayPal Order ID: ${data.orderID}\n\n` +
+                        `Customer: ${name.trim()}\n` +
+                        `Phone: ${phone.trim()}\n` +
+                        `Email: ${email.trim()}\n\n` +
+                        `Items:\n${itemsList}\n\n` +
+                        `Subtotal: ${cartSubtotal.toFixed(2)}\n` +
+                        `Tax (New Braunfels 8.25%): ${cartTax.toFixed(2)}\n` +
+                        (tipPercentage > 0 ? `Tip (${tipPercentage}%): ${cartTip.toFixed(2)}\n` : '') +
+                        `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                        `   💰 TOTAL PAID: ${cartTotal.toFixed(2)}\n` +
+                        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+                        (notes.trim() ? `Notes: ${notes.trim()}\n\n` : '') +
+                        `Thank you for your payment!\n` +
+                        `We will prepare your order and contact you for delivery details.\n\n` +
+                        `Please note: Local delivery is currently available only within or near the New Braunfels and San Antonio, Texas area.`;
+
+                      const mailtoUrl = `mailto:orders@aychihuahuasalsa.com?subject=${encodeURIComponent(`PAID Order #${order.id}`)}&body=${encodeURIComponent(emailBody)}`;
+                      
+                      const canOpen = await Linking.canOpenURL(mailtoUrl);
+                      if (canOpen) {
+                        await Linking.openURL(mailtoUrl);
+                      }
+                    } catch (error) {
+                      console.error("Could not open email client:", error);
+                    }
+                    
+                    setShowCheckout(false);
+                    setName("");
+                    setEmail("");
+                    setPhone("");
+                    setNotes("");
+                    setAgreedToWarning(false);
+                    setIsPlacingOrder(false);
+
+                    Alert.alert(
+                      "Payment Successful!",
+                      `Your payment has been processed successfully! Order #${order.id} has been placed. We'll contact you shortly for delivery details. Thank you!`,
+                      [{ text: "OK" }]
+                    );
+                  } catch (error) {
+                    console.error("Error placing order:", error);
+                    Alert.alert("Error", "Payment was successful but there was a problem saving your order. Please contact us.");
+                    setIsPlacingOrder(false);
+                  }
+                }}
+                onError={() => {
+                  setShowPayPalModal(false);
+                  Alert.alert("Payment Error", "There was an error processing your payment. Please try again.");
+                }}
+                onCancel={() => {
+                  setShowPayPalModal(false);
+                }}
+              />
+            ) : (
+              <WebView
+                source={{
+                  html: `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                      <meta name="viewport" content="width=device-width, initial-scale=1">
+                      <script src="https://www.paypal.com/sdk/js?client-id=ASRb-19Dl8YmFwKRbIR0P2qQ4-_VBfUavytIdj-qdQU5RAh0cT7fgjPsjxvJjniLnYZ227OLQl01AYCV&currency=USD"></script>
+                      <style>
+                        body { 
+                          margin: 0; 
+                          padding: 20px; 
+                          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                          background: #f5f5f5;
+                        }
+                        #paypal-button-container { 
+                          max-width: 500px; 
+                          margin: 0 auto;
+                        }
+                        .order-summary {
+                          background: white;
+                          padding: 20px;
+                          border-radius: 12px;
+                          margin-bottom: 20px;
+                          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                        }
+                        .order-summary h3 {
+                          margin: 0 0 15px 0;
+                          color: #333;
+                        }
+                        .summary-row {
+                          display: flex;
+                          justify-content: space-between;
+                          margin-bottom: 8px;
+                          color: #666;
+                        }
+                        .summary-row.total {
+                          font-size: 18px;
+                          font-weight: bold;
+                          color: #333;
+                          padding-top: 12px;
+                          border-top: 2px solid #eee;
+                          margin-top: 12px;
+                        }
+                      </style>
+                    </head>
+                    <body>
+                      <div class="order-summary">
+                        <h3>Order Summary</h3>
+                        <div class="summary-row">
+                          <span>Subtotal:</span>
+                          <span>${cartSubtotal.toFixed(2)}</span>
+                        </div>
+                        <div class="summary-row">
+                          <span>Tax (8.25%):</span>
+                          <span>${cartTax.toFixed(2)}</span>
+                        </div>
+                        ${tipPercentage > 0 ? `
+                        <div class="summary-row">
+                          <span>Tip (${tipPercentage}%):</span>
+                          <span>${cartTip.toFixed(2)}</span>
+                        </div>
+                        ` : ''}
+                        <div class="summary-row total">
+                          <span>Total:</span>
+                          <span>${cartTotal.toFixed(2)}</span>
+                        </div>
+                      </div>
+                      <div id="paypal-button-container"></div>
+                      <script>
+                        paypal.Buttons({
+                          style: {
+                            layout: 'vertical',
+                            color: 'gold',
+                            shape: 'rect',
+                            label: 'paypal'
+                          },
+                          createOrder: function(data, actions) {
+                            return actions.order.create({
+                              purchase_units: [{
+                                amount: {
+                                  value: '${cartTotal.toFixed(2)}',
+                                  currency_code: 'USD',
+                                  breakdown: {
+                                    item_total: { value: '${cartSubtotal.toFixed(2)}', currency_code: 'USD' },
+                                    tax_total: { value: '${(cartTax + cartTip).toFixed(2)}', currency_code: 'USD' }
+                                  }
+                                },
+                                items: ${JSON.stringify(cart.map(item => ({
+                                  name: `${item.name} (${item.size})`,
+                                  unit_amount: { value: item.price.toFixed(2), currency_code: 'USD' },
+                                  quantity: item.quantity.toString()
+                                })))}
+                              }]
+                            });
+                          },
+                          onApprove: function(data, actions) {
+                            return actions.order.capture().then(function(details) {
+                              window.ReactNativeWebView.postMessage(JSON.stringify({
+                                type: 'PAYMENT_SUCCESS',
+                                orderID: data.orderID,
+                                payerName: details.payer.name.given_name + ' ' + details.payer.name.surname,
+                                payerEmail: details.payer.email_address
+                              }));
+                            });
+                          },
+                          onError: function(err) {
+                            window.ReactNativeWebView.postMessage(JSON.stringify({
+                              type: 'PAYMENT_ERROR',
+                              error: err.toString()
+                            }));
+                          },
+                          onCancel: function(data) {
+                            window.ReactNativeWebView.postMessage(JSON.stringify({
+                              type: 'PAYMENT_CANCELLED'
+                            }));
+                          }
+                        }).render('#paypal-button-container');
+                      </script>
+                    </body>
+                    </html>
+                  `,
+                }}
+                onMessage={async (event) => {
+                  try {
+                    const data = JSON.parse(event.nativeEvent.data);
+                    console.log("PayPal message received:", data);
+                    
+                    if (data.type === 'PAYMENT_SUCCESS') {
+                      setShowPayPalModal(false);
+                      setIsPlacingOrder(true);
                       
                       try {
-                        const itemsList = cart.map(item => 
-                          `${item.name} (${item.size}) - Quantity: ${item.quantity} - ${(item.price * item.quantity).toFixed(2)}`
-                        ).join('\n');
-
-                        const emailBody = `New PAID Order #${order.id}\n\n` +
-                          `Payment Status: PAID via PayPal\n` +
-                          `PayPal Order ID: ${data.orderID}\n\n` +
-                          `Customer: ${name.trim()}\n` +
-                          `Phone: ${phone.trim()}\n` +
-                          `Email: ${email.trim()}\n\n` +
-                          `Items:\n${itemsList}\n\n` +
-                          `Subtotal: ${cartSubtotal.toFixed(2)}\n` +
-                          `Tax (New Braunfels 8.25%): ${cartTax.toFixed(2)}\n` +
-                          (tipPercentage > 0 ? `Tip (${tipPercentage}%): ${cartTip.toFixed(2)}\n` : '') +
-                          `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-                          `   💰 TOTAL PAID: ${cartTotal.toFixed(2)}\n` +
-                          `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
-                          (notes.trim() ? `Notes: ${notes.trim()}\n\n` : '') +
-                          `Thank you for your payment!\n` +
-                          `We will prepare your order and contact you for delivery details.\n\n` +
-                          `Please note: Local delivery is currently available only within or near the New Braunfels and San Antonio, Texas area.`;
-
-                        const mailtoUrl = `mailto:orders@aychihuahuasalsa.com?subject=${encodeURIComponent(`PAID Order #${order.id}`)}&body=${encodeURIComponent(emailBody)}`;
+                        const order = await placeOrder(name.trim(), email.trim(), phone.trim(), `PayPal Order ID: ${data.orderID}\n${notes.trim()}`);
                         
-                        const canOpen = await Linking.canOpenURL(mailtoUrl);
-                        if (canOpen) {
-                          await Linking.openURL(mailtoUrl);
-                        }
-                      } catch (error) {
-                        console.error("Could not open email client:", error);
-                      }
-                      
-                      setShowCheckout(false);
-                      setName("");
-                      setEmail("");
-                      setPhone("");
-                      setNotes("");
-                      setAgreedToWarning(false);
-                      setIsPlacingOrder(false);
+                        try {
+                          const itemsList = cart.map(item => 
+                            `${item.name} (${item.size}) - Quantity: ${item.quantity} - ${(item.price * item.quantity).toFixed(2)}`
+                          ).join('\n');
 
-                      Alert.alert(
-                        "Payment Successful!",
-                        `Your payment has been processed successfully! Order #${order.id} has been placed. We'll contact you shortly for delivery details. Thank you!`,
-                        [{ text: "OK" }]
-                      );
-                    } catch (error) {
-                      console.error("Error placing order:", error);
-                      Alert.alert("Error", "Payment was successful but there was a problem saving your order. Please contact us.");
-                      setIsPlacingOrder(false);
+                          const emailBody = `New PAID Order #${order.id}\n\n` +
+                            `Payment Status: PAID via PayPal\n` +
+                            `PayPal Order ID: ${data.orderID}\n\n` +
+                            `Customer: ${name.trim()}\n` +
+                            `Phone: ${phone.trim()}\n` +
+                            `Email: ${email.trim()}\n\n` +
+                            `Items:\n${itemsList}\n\n` +
+                            `Subtotal: ${cartSubtotal.toFixed(2)}\n` +
+                            `Tax (New Braunfels 8.25%): ${cartTax.toFixed(2)}\n` +
+                            (tipPercentage > 0 ? `Tip (${tipPercentage}%): ${cartTip.toFixed(2)}\n` : '') +
+                            `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+                            `   💰 TOTAL PAID: ${cartTotal.toFixed(2)}\n` +
+                            `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+                            (notes.trim() ? `Notes: ${notes.trim()}\n\n` : '') +
+                            `Thank you for your payment!\n` +
+                            `We will prepare your order and contact you for delivery details.\n\n` +
+                            `Please note: Local delivery is currently available only within or near the New Braunfels and San Antonio, Texas area.`;
+
+                          const mailtoUrl = `mailto:orders@aychihuahuasalsa.com?subject=${encodeURIComponent(`PAID Order #${order.id}`)}&body=${encodeURIComponent(emailBody)}`;
+                          
+                          const canOpen = await Linking.canOpenURL(mailtoUrl);
+                          if (canOpen) {
+                            await Linking.openURL(mailtoUrl);
+                          }
+                        } catch (error) {
+                          console.error("Could not open email client:", error);
+                        }
+                        
+                        setShowCheckout(false);
+                        setName("");
+                        setEmail("");
+                        setPhone("");
+                        setNotes("");
+                        setAgreedToWarning(false);
+                        setIsPlacingOrder(false);
+
+                        Alert.alert(
+                          "Payment Successful!",
+                          `Your payment has been processed successfully! Order #${order.id} has been placed. We'll contact you shortly for delivery details. Thank you!`,
+                          [{ text: "OK" }]
+                        );
+                      } catch (error) {
+                        console.error("Error placing order:", error);
+                        Alert.alert("Error", "Payment was successful but there was a problem saving your order. Please contact us.");
+                        setIsPlacingOrder(false);
+                      }
+                    } else if (data.type === 'PAYMENT_ERROR') {
+                      setShowPayPalModal(false);
+                      Alert.alert("Payment Error", "There was an error processing your payment. Please try again.");
+                    } else if (data.type === 'PAYMENT_CANCELLED') {
+                      setShowPayPalModal(false);
                     }
-                  } else if (data.type === 'PAYMENT_ERROR') {
-                    setShowPayPalModal(false);
-                    Alert.alert("Payment Error", "There was an error processing your payment. Please try again.");
-                  } else if (data.type === 'PAYMENT_CANCELLED') {
-                    setShowPayPalModal(false);
+                  } catch (error) {
+                    console.error("Error processing PayPal message:", error);
                   }
-                } catch (error) {
-                  console.error("Error processing PayPal message:", error);
-                }
-              }}
-              javaScriptEnabled={true}
-              domStorageEnabled={true}
-              startInLoadingState={true}
-              scalesPageToFit={true}
-              style={styles.webview}
-            />
+                }}
+                javaScriptEnabled={true}
+                domStorageEnabled={true}
+                startInLoadingState={true}
+                scalesPageToFit={true}
+                style={styles.webview}
+              />
+            )}
           </View>
         </View>
       </Modal>
@@ -1466,5 +1681,64 @@ const styles = StyleSheet.create({
   webview: {
     flex: 1,
     backgroundColor: "#f5f5f5",
+  },
+  orderSummaryWeb: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 12,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+  },
+  orderSummaryTitle: {
+    fontSize: 18,
+    fontWeight: "700" as const,
+    color: "#333",
+    marginBottom: 15,
+  },
+  summaryRowWeb: {
+    flexDirection: "row" as const,
+    justifyContent: "space-between" as const,
+    marginBottom: 8,
+  },
+  summaryLabelWeb: {
+    fontSize: 14,
+    color: "#666",
+  },
+  summaryValueWeb: {
+    fontSize: 14,
+    color: "#666",
+  },
+  summaryRowTotal: {
+    paddingTop: 12,
+    borderTopWidth: 2,
+    borderTopColor: "#eee",
+    marginTop: 12,
+  },
+  summaryLabelTotal: {
+    fontSize: 18,
+    fontWeight: "700" as const,
+    color: "#333",
+  },
+  summaryValueTotal: {
+    fontSize: 18,
+    fontWeight: "700" as const,
+    color: "#333",
+  },
+  paypalButtonContainerWeb: {
+    minHeight: 200,
+    maxWidth: 500,
+    alignSelf: "center" as const,
+    width: "100%",
+  },
+  loadingContainer: {
+    padding: 20,
+    alignItems: "center" as const,
+  },
+  loadingText: {
+    fontSize: 16,
+    color: Colors.light.textSecondary,
   },
 });
