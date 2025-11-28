@@ -25,15 +25,19 @@ export default function AboutScreen() {
 
         <View style={styles.contentCard}>
           <Text style={styles.paragraph}>
-            I grew up on the Texas border in Laredo with my mother&apos;s unforgettable salsa. Years later in New Braunfels, I started making my own. One batch turned into many. Friends asked for more. What started in my kitchen became a Texas-made family business built from faith and tradition.
+            Our story begins in the kitchens of my grandmas—the soul of our family. One was always stirring a pot, the other always seasoning something to perfection. My grandma in Laredo never served a meal without her homemade salsa, and Grandma Lois brought comfort through every dish she touched.
           </Text>
 
           <Text style={styles.paragraph}>
-            Deepest thanks to my family — Lauren, Ashleigh, my mom, and my grandmothers Amanda and Lois for holding us down when times got hot. To my customers for welcoming my salsa into your homes. And to God for guiding every step.
+            My mom learned from both of them. Working long hours to raise me and my sisters, Lauren and Ashleigh, she still brought those flavors and that love home. Even when I wasn&apos;t the easiest kid, the kitchen was where everything came together. Food healed us. Salsa connected us. Family strengthened us.
+          </Text>
+
+          <Text style={styles.paragraph}>
+            Today, that legacy lives on in Aye Chihuahua Salsa. Every batch carries memories of my grandmas&apos; kitchens, my mom&apos;s strength, and the traditions that shaped us. Those moments, that love, that heritage—they&apos;re all in every bottle of salsa we share with the world.
           </Text>
 
           <Text style={styles.signatureText}>
-            From my family to yours — thank you for being part of my story.
+            From our family to yours, thank you for being part of the journey.
           </Text>
 
           <TouchableOpacity 
