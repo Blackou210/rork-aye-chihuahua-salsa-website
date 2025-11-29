@@ -253,7 +253,7 @@ function CartItemRow({ item, index, removeFromCart, updateQuantity }: {
 }
 
 export default function CartScreen() {
-  const { cart, removeFromCart, updateQuantity, getCartSubtotal, getCartTax, getCartTip, getCartTotal, placeOrder, tipPercentage, setTipPercentage } = useCart();
+  const cartContext = useCart();
   const [showCheckout, setShowCheckout] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -263,6 +263,12 @@ export default function CartScreen() {
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [isCashAppLoading, setIsCashAppLoading] = useState(false);
   const [showPayPalModal, setShowPayPalModal] = useState(false);
+  
+  if (!cartContext) {
+    return null;
+  }
+  
+  const { cart, removeFromCart, updateQuantity, getCartSubtotal, getCartTax, getCartTip, getCartTotal, placeOrder, tipPercentage, setTipPercentage } = cartContext;
 
   const handleCheckout = async () => {
     console.log("handleCheckout called");

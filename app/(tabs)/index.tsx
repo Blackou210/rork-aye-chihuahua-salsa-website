@@ -11,9 +11,15 @@ import { router } from "expo-router";
 const SIZES: SalsaSize[] = ["4oz", "8oz", "12oz", "1gal"];
 
 export default function HomeScreen() {
-  const { addToCart, getCartItemCount } = useCart();
+  const cart = useCart();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<SalsaSize>("4oz");
+  
+  if (!cart) {
+    return null;
+  }
+  
+  const { addToCart, getCartItemCount } = cart;
   const cartItemCount = getCartItemCount();
 
 
