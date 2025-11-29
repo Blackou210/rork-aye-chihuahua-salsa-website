@@ -1,77 +1,121 @@
 # Quick Start - Cloudflare Deployment
 
-## Step-by-Step Instructions
+## Frontend Deployment (Cloudflare Pages)
 
-### 1. Export Your Web App
+### Option 1: Drag & Drop (Simplest)
+
+1. **Export your web app:**
 ```bash
-npx expo export --platform web
+npx expo export:web --output-dir docs
 ```
-This creates a `dist` folder.
 
-### 2. Deploy to Cloudflare Pages (Frontend)
+2. **Deploy to Cloudflare:**
+   - Go to https://dash.cloudflare.com
+   - Click "Workers & Pages" → "Create application" → "Pages" → "Upload assets"
+   - Drag the `docs` folder
+   - Name: `aye-chihuahua-salsa`
+   - Click "Deploy site"
 
-**Easiest Method - Drag & Drop:**
-1. Go to https://dash.cloudflare.com
-2. Click "Workers & Pages" in sidebar
-3. Click "Create application" > "Pages" > "Upload assets"
-4. Drag the `dist` folder or click to upload
-5. Name it: `aye-chihuahua-salsa`
-6. Click "Deploy site"
+✅ Your site will be live at: `https://aye-chihuahua-salsa.pages.dev`
 
-Your site will be live at: `https://aye-chihuahua-salsa.pages.dev`
+### Option 2: GitHub Integration (Auto-deploy on push)
 
-### 3. Deploy Backend (API) - If Needed
+1. **Push to GitHub:**
+```bash
+git add .
+git commit -m "Deploy setup"
+git push
+```
 
-**For the backend API:**
-1. Install Wrangler globally:
+2. **Connect to Cloudflare:**
+   - Cloudflare Dashboard → Pages → "Connect to Git"
+   - Select your repository
+   - Build settings:
+     - **Build command:** `npx expo export:web --output-dir docs`
+     - **Build output directory:** `docs`
+   - Click "Save and Deploy"
+
+✅ Now every git push auto-deploys!
+
+---
+
+## Backend Deployment (Cloudflare Workers)
+
+### Deploy Your API
+
+1. **Install Wrangler:**
 ```bash
 npm install -g wrangler
 ```
 
-2. Login to Cloudflare:
+2. **Login to Cloudflare:**
 ```bash
 wrangler login
 ```
 
-3. Copy backend files:
-```bash
-# You'll need to manually copy your backend folder structure
-# The worker.ts file in cloudflare-deploy shows the structure
-```
-
-4. Deploy:
+3. **Install dependencies:**
 ```bash
 cd cloudflare-deploy
 npm install
+```
+
+4. **Deploy:**
+```bash
 wrangler deploy
 ```
 
-### 4. Connect Frontend to Backend
+✅ Your API will be at: `https://YOUR-WORKER-NAME.workers.dev`
 
-After backend is deployed, you'll get a URL like:
-`https://aye-chihuahua-api.workers.dev`
+### Update CORS Settings
 
-Update your frontend's API URL and redeploy.
+After frontend is deployed, update `worker.ts` line 10:
+```typescript
+origin: ['https://aye-chihuahua-salsa.pages.dev', 'https://your-actual-domain.com'],
+```
 
----
-
-## Alternative: GitHub Integration (Recommended)
-
-Instead of manual uploads, connect your GitHub repo:
-
-1. Push your code to GitHub
-2. In Cloudflare Dashboard > Pages > "Connect to Git"
-3. Select your repository
-4. Build settings:
-   - **Build command:** `npx expo export --platform web`
-   - **Build output directory:** `dist`
-5. Click "Save and Deploy"
-
-Now every git push automatically deploys! 🚀
+Then redeploy:
+```bash
+wrangler deploy
+```
 
 ---
 
-## Need Help?
+## Complete Folder Structure
 
-- Cloudflare Pages Docs: https://developers.cloudflare.com/pages/
-- Cloudflare Workers Docs: https://developers.cloudflare.com/workers/
+Everything you need for Cloudflare deployment is in this folder:
+
+```
+cloudflare-deploy/
+├── worker.ts              ← Main worker file
+├── wrangler.toml          ← Cloudflare config
+├── _headers               ← Security headers
+├── backend/               ← All backend code
+│   └── trpc/
+│       ├── app-router.ts
+│       ├── create-context.ts
+│       └── routes/
+│           └── example/
+│               └── hi/
+│                   └── route.ts
+└── package.json           ← Dependencies
+```
+
+---
+
+## Troubleshooting
+
+**"Module not found" errors?**
+- All backend files are already copied to `cloudflare-deploy/backend/`
+- Run `npm install` in the cloudflare-deploy folder
+
+**CORS errors?**
+- Update the `origin` array in `worker.ts` with your actual domain
+- Redeploy with `wrangler deploy`
+
+**Need help?**
+- Cloudflare Pages: https://developers.cloudflare.com/pages/
+- Cloudflare Workers: https://developers.cloudflare.com/workers/
+
+---
+
+
