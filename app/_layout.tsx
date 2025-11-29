@@ -1,6 +1,6 @@
 import { CartProvider } from "@/context/cart";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
@@ -15,14 +15,16 @@ const queryClient = new QueryClient();
 function RootLayoutNav() {
   return (
     <Stack screenOptions={{ headerBackTitle: "Back" }}>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="splash" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>
   );
 }
 
-export default function RootLayout() {
+function NavigationController({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const [isReady, setIsReady] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -58,17 +60,42 @@ export default function RootLayout() {
     initializeApp();
   }, []);
 
+  useEffect(() => {
+    if (!isReady) return;
+
+    if (showSplash) {
+      router.replace('/splash');
+    }
+  }, [isReady, showSplash, router]);
+
+  useEffect(() => {
+    if (showSplash && isReady) {
+      const timer = setTimeout(() => {
+        setShowSplash(false);
+        router.replace('/(tabs)');
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showSplash, isReady, router]);
+
   if (!isReady) {
     return null;
   }
 
+  return <>{children}</>;
+}
+
+export default function RootLayout() {
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <CartProvider>
           <GestureHandlerRootView style={styles.container}>
-            <RootLayoutNav />
+            <NavigationController>
+              <RootLayoutNav />
+            </NavigationController>
           </GestureHandlerRootView>
         </CartProvider>
       </QueryClientProvider>
