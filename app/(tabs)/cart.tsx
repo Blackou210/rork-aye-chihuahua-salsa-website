@@ -2,7 +2,7 @@ import Colors from "@/constants/colors";
 import { useCart } from "@/context/cart";
 import { CartItem as CartItemType, SalsaSize } from "@/types/order";
 import { Image } from "expo-image";
-import { Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react-native";
+import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react-native";
 import React, { useRef, useState } from "react";
 import {
   Alert,
@@ -18,7 +18,6 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  useWindowDimensions,
 } from "react-native";
 import { WebView } from "react-native-webview";
 
@@ -254,8 +253,6 @@ function CartItemRow({ item, index, removeFromCart, updateQuantity }: {
 }
 
 export default function CartScreen() {
-  const { width } = useWindowDimensions();
-  const isDesktop = width >= 768;
   const { cart, removeFromCart, updateQuantity, getCartSubtotal, getCartTax, getCartTip, getCartTotal, placeOrder, tipPercentage, setTipPercentage } = useCart();
   const [showCheckout, setShowCheckout] = useState(false);
   const [name, setName] = useState("");
