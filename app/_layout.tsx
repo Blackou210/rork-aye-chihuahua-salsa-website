@@ -15,8 +15,8 @@ const queryClient = new QueryClient();
 function RootLayoutNav() {
   return (
     <Stack screenOptions={{ headerBackTitle: "Back" }}>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="splash" options={{ headerShown: false }} />
     </Stack>
   );
 }
@@ -36,7 +36,7 @@ export default function RootLayout() {
             if (value) {
               JSON.parse(value);
             }
-          } catch (parseError) {
+          } catch {
             console.error(`Corrupted storage found for key: ${key}, clearing...`);
             corruptedKeys.push(key);
           }
