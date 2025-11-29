@@ -1,0 +1,11 @@
+name = "aye-chihuahua-api"
+main = "worker.ts"
+compatibility_date = "2024-11-29"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+NODE_ENV = "production"
+
+# Add your environment variables here
+# [env.production.vars]
+# API_KEY = "your-api-key"
