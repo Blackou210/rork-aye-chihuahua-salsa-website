@@ -88,10 +88,9 @@ function NavigationController({ children }: { children: React.ReactNode }) {
 }
 
 export default function RootLayout() {
-
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <EventsProvider>
           <CartProvider>
             <GestureHandlerRootView style={styles.container}>
@@ -101,8 +100,8 @@ export default function RootLayout() {
             </GestureHandlerRootView>
           </CartProvider>
         </EventsProvider>
-      </QueryClientProvider>
-    </trpc.Provider>
+      </trpc.Provider>
+    </QueryClientProvider>
   );
 }
 
