@@ -8,7 +8,7 @@ const CART_KEY = "@aye_chihuahua_cart";
 const ORDERS_KEY = "@aye_chihuahua_orders";
 const ORDER_COUNTER_KEY = "@aye_chihuahua_order_counter";
 
-export const [CartProvider, useCart] = createContextHook(() => {
+const [CartProviderInternal, useCartInternal] = createContextHook(() => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [orderCounter, setOrderCounter] = useState<number>(0);
@@ -282,4 +282,6 @@ export const [CartProvider, useCart] = createContextHook(() => {
   }), [cart, orders, isLoaded, addToCart, removeFromCart, updateQuantity, clearCart, getCartSubtotal, getCartTax, getCartTip, getCartTotal, getCartItemCount, placeOrder, updateOrderStatus, deleteOrder, tipPercentage]);
 });
 
+export const CartProvider = CartProviderInternal;
+export const useCart = useCartInternal;
 
