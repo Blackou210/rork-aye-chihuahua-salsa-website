@@ -1,4 +1,5 @@
 import { CartProvider } from "@/context/cart";
+import { EventsProvider } from "@/context/events";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -91,13 +92,15 @@ export default function RootLayout() {
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <CartProvider>
-          <GestureHandlerRootView style={styles.container}>
-            <NavigationController>
-              <RootLayoutNav />
-            </NavigationController>
-          </GestureHandlerRootView>
-        </CartProvider>
+        <EventsProvider>
+          <CartProvider>
+            <GestureHandlerRootView style={styles.container}>
+              <NavigationController>
+                <RootLayoutNav />
+              </NavigationController>
+            </GestureHandlerRootView>
+          </CartProvider>
+        </EventsProvider>
       </QueryClientProvider>
     </trpc.Provider>
   );
