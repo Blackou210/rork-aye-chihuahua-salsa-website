@@ -7,7 +7,7 @@ export const PRODUCTS: Product[] = [
     id: "1",
     name: "ROJA LOCA",
     description: "The sauce that bites back! Premium handcrafted salsa with bold flavor",
-    image: "https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/81koieovumyn6le1sgfh1",
+    image: "https://r2-pub.rork.com/generated-images/cb56cef7-c426-4d9f-a05a-639daf44b4c7.png",
     prices: {
       "4oz": 5.00,
       "8oz": 8.00,
@@ -20,7 +20,7 @@ export const PRODUCTS: Product[] = [
     id: "2",
     name: "VERDE BRAVA",
     description: "Bold green salsa with a brave kick! Handcrafted with fresh ingredients",
-    image: "https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/rs5aswwfrdb0ee1tay95f",
+    image: "https://r2-pub.rork.com/generated-images/73187333-da3e-4fde-b1f4-3f8dc6a80bc6.png",
     prices: {
       "4oz": 5.00,
       "8oz": 8.00,
