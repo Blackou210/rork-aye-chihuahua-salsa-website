@@ -20,7 +20,7 @@ export default function AboutScreen() {
             <Heart size={48} color={Colors.light.primary} fill={Colors.light.primary} />
           </View>
           <Text style={styles.heroTitle}>About Us</Text>
-          <Text style={styles.heroSubtitle}>Ay Chihuahua Salsa</Text>
+          <Text style={styles.heroSubtitle}>Salsa Chihuahua</Text>
         </View>
 
         <View style={styles.contentCard}>
@@ -33,7 +33,7 @@ export default function AboutScreen() {
           </Text>
 
           <Text style={styles.paragraph}>
-            Today, that legacy lives on in Aye Chihuahua Salsa. Every batch carries memories of my grandmas&apos; kitchens, my mom&apos;s strength, and the traditions that shaped us. Those moments, that love, that heritage—they&apos;re all in every bottle of salsa we share with the world.
+            Today, that legacy lives on in Salsa Chihuahua. Every batch carries memories of my grandmas&apos; kitchens, my mom&apos;s strength, and the traditions that shaped us. Those moments, that love, that heritage—they&apos;re all in every bottle of salsa we share with the world.
           </Text>
 
           <Text style={styles.signatureText}>
